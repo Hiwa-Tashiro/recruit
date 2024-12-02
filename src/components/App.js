@@ -14,23 +14,26 @@ Amplify.configure({
   aws_user_pools_web_client_id: '21v7c1ui4627p4kt2381e8mjvk',
 });
 
-function App(){
+function App() {
   return (
-    <Authenticator hideSignUp={true}>
-      {({ signOut, user }) => (
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p>
-              Edit and save to reload.
-            </p>
-            <Link to='/about'>Go to About</Link>
+
+    <div className="App App-header">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit and save to reload.
+        </p>
+        <Link to='/about'>Go to About</Link>
+      </header>
+      <Authenticator>
+        {({ signOut, user }) => (
+          <div>
             <h1>Hello {user.username}</h1>
             <button onClick={signOut}>Sign out</button>
-          </header>
-        </div>
-      )}
-    </Authenticator>
+          </div>
+        )}
+      </Authenticator>
+    </div>
   );
 }
 
