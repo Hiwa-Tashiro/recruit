@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+
+
+.amplify-authenticator .amplify-forgot-password {
+  display: none;
+}
