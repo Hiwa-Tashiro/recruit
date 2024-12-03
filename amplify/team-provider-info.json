@@ -15,7 +15,7 @@
       "function": {
         "recruitlambda1": {
           "deploymentBucketName": "amplify-recruit-dev-0f1cc-deployment",
-          "s3Key": "amplify-builds/recruitlambda1-4a4277523035434f526d-build.zip"
+          "s3Key": "amplify-builds/recruitlambda1-794d6d35754677706363-build.zip"
         }
       },
       "auth": {
