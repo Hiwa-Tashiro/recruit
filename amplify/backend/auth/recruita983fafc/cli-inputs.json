@@ -29,7 +29,9 @@
       "email"
     ],
     "userpoolClientReadAttributes": [
-      "email"
+      "email",
+      "username",
+      "custom:recruit_year"
     ],
     "userpoolClientLambdaRole": "recruia983fafc_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
