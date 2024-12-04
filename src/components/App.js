@@ -9,14 +9,9 @@ import '@aws-amplify/ui-react/styles.css';
 import '../i18n';
 
 function App() {
-
-  const { userdata } = useAuthenticator((context) => [context.user]);
-  console.log(userdata);
-
   return (
     <Authenticator>
       {({ signOut, user }) => {
-        console.log(user);
         return (
           <div className="App">
             <header className="App-header">
