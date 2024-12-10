@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCookies } from "react-cookie";
 
-function About() {
+function App2() {
   const [data, setData] = useState();
   const [cookies] = useCookies();
 
   useEffect(() => {
     const fetchlambda = async () => {
-      const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/recruitlambda1-dev";
+      const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/recruitlambda2-dev";
       await fetch(url + "?str1=itabasisan arigatou&str2=hugahuga",
         {
           method: "POST",
@@ -47,4 +47,4 @@ function About() {
   )
 }
 
-export default About;
+export default App2;

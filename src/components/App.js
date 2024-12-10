@@ -1,17 +1,39 @@
 import React from 'react';
-import { useEffect,useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css';
 import logo from '../logo.svg';
+import { useCookies } from "react-cookie";
 
-import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import '../i18n';
 
+
 function App() {
+  const [cookies, setCookie, removeCookie] = useCookies();
+  const deleteUserData = () => {
+    removeCookie("userId");
+    removeCookie("token");
+  };
+
+  const userMesseage = (username) =>{
+    let messeage
+    if(username === 'htashiro'){
+      messeage = 'fight';
+    }
+    else if(username === 'user'){
+      messeage = 'gannba';
+    }
+    else{
+      messeage = 'donnmai';
+    }
+    return messeage;
+  }
+
   return (
     <Authenticator>
       {({ signOut, user }) => {
+
         return (
           <div className="App">
             <header className="App-header">
@@ -25,7 +47,11 @@ function App() {
             <div>
               <h1>Hello {user.userId}</h1>
               <div>{user.username}</div>
-              <button onClick={signOut}>Sign out</button>
+              <div>{userMesseage(user.username)}</div>
+              <button onClick={() => {
+                deleteUserData();
+                signOut();
+              }}>Sign out</button>
             </div>
 
           </div>
