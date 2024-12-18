@@ -24,8 +24,11 @@ const AppRoutes = () => {
                 const token = await session?.tokens?.idToken?.toString();
                 setCookie("userId", session?.userSub);
                 setCookie("token", token);
+                setCookie("user", session?.tokens?.signInDetails?.loginId);
+                if(!cookies.recruit_year){
+                    setCookie("recruit_year", new Date().getFullYear());
+                }
             }
-    
             test();
         }
     },[userId])
