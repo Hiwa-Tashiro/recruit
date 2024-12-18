@@ -1,10 +1,17 @@
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { useCookies } from "react-cookie";
 
 function Home(){
+  const [status, setStatus] = useState();
   const [name, setName] = useState();
   const [cookies, setCookie, removeCookie] = useCookies();
+  const { state } = useLocation()
+
+  useEffect(() => {
+    setStatus(state)
+    setCookie("recruit_year",2025)
+  }, [])
 
   const handlerChange = (e) => {
     setName(e.target.value);
@@ -30,7 +37,11 @@ function Home(){
           <input type="submit" value="保存" />
           <button onClick={handlerDelete}>削除</button>
           <div>{cookies.name}</div>
-          <div>{cookies.token}</div>
+          <div>{status?.student_id}</div>
+        </form>
+
+        <form>
+          <input type="datetime-local"></input>
         </form>
       </div>
 
