@@ -10,7 +10,7 @@ function Home(){
 
   useEffect(() => {
     setStatus(state)
-    setCookie("recruit_year",2025)
+    setCookie("recruit_year",2024)
   }, [])
 
   const handlerChange = (e) => {

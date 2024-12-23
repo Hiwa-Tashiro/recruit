@@ -31,6 +31,9 @@ function App2() {
               headers: { Authorization: cookies.token },
               body: JSON.stringify({
                   tabledata:result.data,
+                  recruit_year:cookies.recruit_year,
+                  functionid:'SC01',
+                  filename:datafile?.name,
                   user: cookies.user
               })
             })
@@ -64,30 +67,6 @@ function App2() {
       </form>
       <br />
       <div>{filename || null}</div>
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <th>名前</th>
-              <th>フリガナ</th>
-              <th>メールアドレス</th>
-              <th>学校名</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item) => {
-              return (
-                <tr>
-                  <td>{item['姓']} {item['名']}</td>
-                  <td>{item['姓カナ']} {item['名カナ']}</td>
-                  <td>{item['メールアドレス（メイン）']}</td>
-                  <td>{item['学校名']}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
     </div>
   )
 }

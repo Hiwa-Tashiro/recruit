@@ -19,10 +19,10 @@ function About() {
             {
                 formdata : {
                     student_id : 1,
-                    recruit_year : 2024,
+                    recruit_year : cookies.recruit_year,
                 },
                 student_id: cookies.userId,
-                user: "tashiro",
+                user: cookies.user,
             })
         }
       )
@@ -45,7 +45,6 @@ function About() {
       <div><Link to='/home' state={{ student_id: 25565 }}>Home</Link></div>
       <div><Link to='/'>App</Link></div>
       <div><Link to='/app2'>App2</Link></div>
-      <div>{data?.text1['hoge'] || "null"}</div>
     </div>
   )
 }
