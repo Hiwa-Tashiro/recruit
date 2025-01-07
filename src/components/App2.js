@@ -24,22 +24,20 @@ function App2() {
           header: true, // CSVのヘッダー行をキーとして扱う
           skipEmptyLines: true, // 空行をスキップ
           complete: (result) => {
-            setData(result.data); // パースしたデータを保存
-            const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/recruitlambda3";
+            const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/registStudents";
             fetch(url, {
               method: "POST",
               headers: { Authorization: cookies.token },
               body: JSON.stringify({
                   tabledata:result.data,
                   recruit_year:cookies.recruit_year,
-                  functionid:'SC01',
                   filename:datafile?.name,
-                  user: cookies.user
+                  user: cookies.user,
+                  functionid:'SC01',
               })
             })
             .then((res) => res.json()) // JSON形式に変換
             .then((data) => {
-              console.log(data);
             })
             .catch((error) => console.log(error)); // エラー発生時に出力
           },
