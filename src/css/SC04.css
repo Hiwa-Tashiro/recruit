@@ -1,0 +1,253 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+
+}
+
+.parent-container {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  margin-bottom: 20px; /* 下部余白を追加 */
+}
+.parent-container1 {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  margin-bottom: 20px; /* 下部余白を追加 */
+}
+.parent-container2 {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin-bottom: 20px; /* 下部余白を追加 */
+}
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; /* Adjust spacing between buttons */
+  margin-top: 20px; /* Add space above the buttons */
+}
+
+.components-wrapper {
+  position: relative;
+  display: flex;
+  gap: 20px; /* コンポーネント間のスペースを調整 */
+}
+
+.return-container {
+  display: flex;
+  width: 1000px; /* 初期幅 */
+  height: 100px;
+  margin-bottom: 0px; /* 下部余白を追加 */
+  
+}
+
+.bar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px; /* 初期幅 */
+  height: 0px;
+  margin-bottom: 0px; /* 下部余白を追加 */
+}
+
+
+.required {
+  color: red;
+  font-weight: bold;
+}
+
+
+.form-container {
+  max-width: 1500px; /* 最大横幅を制限 */
+  margin: 30px auto; /* 自動で中央揃え */
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column; /* 縦方向に並べる */
+  align-items: center; /* 中央揃え */
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 100px; /* 横の間隔を広げる */
+  grid-row-gap: 10px; /* 縦の間隔を変更しない */
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-item-agree {
+  display: flex;
+  align-items: flex-start; /* チェックボックスを上に揃える */
+  justify-content: flex-start; /* 水平方向に左寄せ */
+  margin-top: 20px; /* 上部にスペースを追加 */
+  gap: 10px;
+  
+}
+
+.grid-item-agree input[type="checkbox"] {
+  transform: scale(1.5); /* チェックボックスを1.5倍に拡大 */
+  margin-right: 10px; /* チェックボックスとラベルの間にスペース */
+  margin-top: 8px; /* チェックボックスの位置を少し下げる */
+}
+
+.grid-item-agree label {
+  font-size: 18px; /* ラベルのフォントサイズを大きく */
+  cursor: pointer; /* クリック可能であることを示す */
+  display: inline-block;
+  font-weight: bold;
+  vertical-align: top; /* ラベルをチェックボックスの上に揃える */
+}
+
+
+
+.grid-item label {
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.grid-item input,
+.grid-item select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.grid-item.full-width {
+  grid-column: span 2;
+  text-align: center;
+}
+
+.grid-item.register-delete {
+  grid-column: span 10;
+  text-align: center;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: #fbfbfb;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #ececec;
+}
+
+.remarks-input {
+  width: 450px; /* 横幅を固定 */
+  min-height: 50px; /* 最小高さ */
+  max-height: 300px; /* 必要なら最大高さを指定 */
+  padding: 10px; /* 内側の余白 */
+  border: 1px solid #ccc; /* 枠線 */
+  border-radius: 5px; /* 角丸 */
+  overflow-y: auto; /* 高さを超えた場合は縦スクロールバーを表示 */
+  resize: vertical; /* ユーザーが高さを調整可能 */
+  font-size: 16px; /* フォントサイズ */
+  line-height: 1.5; /* 行間を設定 */
+  white-space: pre-wrap; /* 折り返しを有効にする */
+  word-wrap: break-word; /* 古いブラウザ向けに折り返しをサポート */
+}
+
+.short {
+  display: flex;
+  width: 10px; /* 初期幅 */
+  height: 0px;
+  margin-bottom: 0px; /* 下部余白を追加 */
+  
+}
+
+/* 短い入力欄のスタイル */
+.short-input {
+  width: 200px; /* 幅を短く設定 */
+  max-width: 100%; /* 横幅が狭い画面では全幅を許容 */
+  padding: 8px; /* 適切な余白を設定 */
+  border: 1px solid #ccc; /* 枠線 */
+  border-radius: 4px; /* 角を丸くする */
+  font-size: 16px; /* フォントサイズを調整 */
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(180, 74, 74, 0.2);
+  text-align: center;
+}
+button.goukaku-button {
+  background-color: #4caf50; /* 緑 */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button.goukaku-button:hover {
+  background-color: #45a049; /* 緑（ホバー時） */
+}
+button.confirm-button {
+  background-color: #4caf50; /* 緑 */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.cancel-button {
+  background-color: #f44336; /* 赤 */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.confirm-button:hover {
+  background-color: #45a049; /* 緑（ホバー時） */
+}
+
+button.cancel-button:hover {
+  background-color: #d32f2f; /* 赤（ホバー時） */
+}
+
+.fixed-height {
+  height: 120px; /* Match the height of other components */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
