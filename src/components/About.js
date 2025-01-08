@@ -14,7 +14,10 @@ function About() {
       await fetch(url,
         {
           method: "POST",
-          headers: { Authorization: cookies.token },
+          headers: { 
+            "Content-Type": "application/json",
+            Authorization: cookies.token 
+          },
           body: JSON.stringify(
             {
                 formdata : {

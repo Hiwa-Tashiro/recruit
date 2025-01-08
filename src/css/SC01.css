@@ -83,7 +83,7 @@
 
 .Nendo {
   position: fixed;
-  left: 143vh;
+  right: 20vh;
   top: 15vh;
   width: 140px;
   height: 45px;
@@ -134,7 +134,7 @@ input[type="search"]:focus {
 .Studentregister {
   position: fixed;
   top: 15vh;
-  right: 20vh;
+  right: 40vh;
   display: flex;
   justify-content: flex-end;
   align-items: center;

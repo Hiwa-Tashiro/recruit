@@ -13,6 +13,7 @@ function SC03() {
   const handleClick = () => { navigate("/"); };
   const navigate = useNavigate();
   const [cookies, setCookie] = useCookies();
+  const [errorMesseage, setErrorMesseage] = useState({});
 
   const [rows, setRows] = useState([]);
   // 初期データ
@@ -22,7 +23,10 @@ function SC03() {
       await fetch(url,
         {
           method: "POST",
-          headers: { Authorization: cookies.token },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: cookies.token
+          },
           body: JSON.stringify(
             {
               recruit_year: cookies.recruit_year
@@ -47,22 +51,46 @@ function SC03() {
     let firstnum = num;
     jobfair?.map((item) => (
       item["num"] = firstnum,
-      first.push(
-        {num:item["num"], jobfair_id: item["jobfair_id"], date: item["date"], spot: item["spot"], jobfair_is_cancel: item["jobfair_is_cancel"] }
-      ),
+      first.push({
+        num: item["num"],
+        jobfair_id: item["jobfair_id"],
+        date: item["date"],
+        spot: item["spot"],
+        jobfair_is_cancel: item["jobfair_is_cancel"],
+        is_update: false,
+        updated_at: item['updated_at']
+      }),
       firstnum = firstnum + 1
     ));
     setNum(firstnum);
     setRows(first)
   }, [jobfair])
 
-  const updateJobfair = () => {
-    let errorMesseage = null;
-    rows.map((row) => {
-      if(!row['date']){
-        return
+  const updateJobfair = async () => {
+    const validateForm = () => {
+      let errorMesseage = {};
+      try {
+        rows.forEach((row) => {
+          if (row['date'] == null) {
+            errorMesseage.index = row['num'];
+            errorMesseage.messeage = <span className="required">日時は必須です。</span>;
+            throw errorMesseage;
+          }
+        });
+        return errorMesseage;
       }
-    });
+      catch (errorMesseage) {
+        return errorMesseage;
+      }
+      finally {
+        setErrorMesseage(errorMesseage);
+      }
+    }
+
+    const formErrors = await validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      return;
+    }
 
     const fetchlambda = async () => {
       const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/updateJobfair";
@@ -75,7 +103,7 @@ function SC03() {
               recruit_year: cookies.recruit_year,
               jobfair_list: rows,
               user: cookies.user,
-              function_id:'SC03',
+              function_id: 'SC03',
             })
         }
       )
@@ -85,12 +113,14 @@ function SC03() {
         })
         .catch((error) => console.log(error)); // エラー発生時に出力
     }
-    fetchlambda();
+    await fetchlambda();
+
+    await window.location.reload();
   };
 
   // 行を追加する関数
   const addRow = () => {
-    const newRow = {num:num , jobfair_id: null, date: null, spot: 0, jobfair_is_cancel: 0 };
+    const newRow = { num: num, jobfair_id: null, date: null, spot: 0, jobfair_is_cancel: 0 };
     setNum(num + 1);
     setRows([...rows, newRow]);
   };
@@ -99,14 +129,15 @@ function SC03() {
   const updateRow = (index, key, value) => {
     const updatedRows = [...rows];
     updatedRows[index][key] = value;
+    updatedRows[index]["is_update"] = true;
     setRows(updatedRows);
     console.log(rows);
   };
 
-  const deleteRow = (index,row_jobfair_id) => {
-    if(!row_jobfair_id){
+  const deleteRow = (index, row_jobfair_id) => {
+    if (!row_jobfair_id) {
       console.log(index);
-      const daletedRows = [...rows].filter((row,row_index) => row_index !== index);
+      const daletedRows = [...rows].filter((row, row_index) => row_index !== index);
       setRows(daletedRows)
     }
   };
@@ -133,7 +164,7 @@ function SC03() {
 
       <div class="jobfairtable">
         <button onClick={addRow} class="addbutton">
-          Add Row
+          +
         </button>
         <table border="1">
           <thead>
@@ -146,13 +177,14 @@ function SC03() {
           </thead>
           <tbody>
             {rows.map((row, index) => (
-              <tr key={row.num}>
+              <tr key={row.num} className={row.jobfair_is_cancel == 1 ? "cancelrow" : null}>
                 <td>
                   <input
                     type="datetime-local"
                     value={row.date}
                     onChange={(e) => updateRow(index, "date", e.target.value)}
                   />
+                  {errorMesseage.index == row.num && <p className="error-message">{errorMesseage.messeage}</p>}
                 </td>
                 <td>
                   <select
@@ -178,7 +210,7 @@ function SC03() {
                   中止
                 </td>
                 <td>
-                  <button onClick={(e) => deleteRow(index,row.jobfair_id)} class="addbutton">
+                  <button onClick={() => deleteRow(index, row.jobfair_id)} class="addbutton">
                     削除
                   </button>
                 </td>
