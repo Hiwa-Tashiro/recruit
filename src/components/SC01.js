@@ -6,19 +6,19 @@ import { useCookies } from "react-cookie";
 import Papa from 'papaparse';
 
 function SC01() {
+  //Cookies
+  const [cookies, setCookie] = useCookies();
+
+  //Studentlist
+  const [selectedIds, setSelectedIds] = useState([]);
   const [data, setData] = useState([]);
-  const username = 'arisa';
+  const user = cookies.user;
   const functionid = 'SC01';
 
   const handleRowClick = (studentId) => {
     navigate(`/SC05/${studentId}`);
   };
 
-  //Cookies
-  const [cookies, setCookie] = useCookies();
-
-  //Studentlist
-  const [selectedIds, setSelectedIds] = useState([]);
 
 
 
@@ -103,7 +103,7 @@ function SC01() {
           phase_num: phase,
           date: date,
           updated_at: updated_at,
-          user: username,
+          user: user,
           function_id: functionid
 
 
@@ -201,7 +201,7 @@ function SC01() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           function_id: functionid,
-          user: username,
+          user: user,
           recruit_year: cookies.recruit_year,
         }),
       });
@@ -224,7 +224,7 @@ function SC01() {
 
   useEffect(() => {
     fetchData();
-  }, [functionid, username]);
+  }, [functionid, user]);
 
   const handleButtonClick = async (studentId, phase, group, buttonIndex, updated_at) => {
 
@@ -243,7 +243,7 @@ function SC01() {
           buttonIndex: buttonIndex,
           updated_at: updated_at,
           function_id: functionid,
-          user: username,
+          user: user,
         }),
       });
 
@@ -380,7 +380,7 @@ function SC01() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             function_id: functionid,
-            user: username,
+            user: user,
             recruit_year: cookies.recruit_year
           }),
         });
@@ -411,7 +411,7 @@ function SC01() {
     };
 
     fetchData();
-  }, [functionid, username]);
+  }, [functionid, user]);
 
   const inputfile = useRef(null);
   async function selectFile(e) {

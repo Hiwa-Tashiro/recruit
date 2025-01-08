@@ -13,3 +13,7 @@ table {
     color: #000;
     height: 80px;
 }
+
+.cancelrow{
+    background-color: lightgray;
+}

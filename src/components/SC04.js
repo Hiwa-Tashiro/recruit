@@ -13,7 +13,6 @@ function SC04() {
   const [student_dataset, setStudentDataset] = useState([]);
   const [interview_dataset, setInterviewDataset] = useState([]);
   const [cookies, setCookie] = useCookies();
-  const user = 'hirasawasan';
   const function_id = 'SC04';
   const { state } = useLocation()
   const [status, setStatus] = useState(state);
@@ -43,7 +42,6 @@ function SC04() {
       if (!formData.know_opportunity) newErrors.know_opportunity = <span className="required">当社を知ったきっかけは必須です。</span>;
       if (!formData.tel) newErrors.tel = <span className="required">電話番号は必須です。</span>;
       if (!formData.email) newErrors.email = <span className="required">メールは必須です。</span>;
-  
       return newErrors;
     };
   
@@ -64,7 +62,10 @@ function SC04() {
   
     // 必須ではないが、確認が必要なフィールド
     const requiredFields = ["furigana", "sexual", "graduate_year", "subject"];
-    const missingFields = requiredFields.filter((field) => !formData[field]);
+    const missingFields = requiredFields.filter((field) => {
+      const value = formData[field];
+      return value === undefined || value === null || value === "" || value === false;
+    });
   
     if (missingFields.length > 0) {
       const missingFieldsInJapanese = missingFields.map((field) => fieldNames[field]);
@@ -93,10 +94,11 @@ function SC04() {
           body: JSON.stringify({
             formdata: formData,
             student_id: status?.student_id,
-            user: user,
+            user: cookies.user,
             recruit_year: cookies.recruit_year,
             function_id: function_id,
             updated_at: student_dataset.updated_at,
+            
           }),
         }
       )
@@ -137,7 +139,7 @@ function SC04() {
         },
         body: JSON.stringify({
           student_id: status?.student_id,
-          user: user,
+          user: cookies.user,
           function_id: function_id,
           updated_at: student_dataset.updated_at,
         }),
@@ -205,7 +207,7 @@ function SC04() {
         body: JSON.stringify({
           student_id: status?.student_id,
           phase_num: student_dataset.phase_num,
-          user: user,
+          user: cookies.user,
         }),
       });
 
@@ -223,14 +225,11 @@ function SC04() {
   };
   //
 
-  // 状態を切り替える関数
-  const handleSwitchComponent = (componentName) => {
-    setActiveComponent(componentName); // 状態を変更
-  };
+
 
   const [formData, setFormData] = useState({
     furigana: "", sexual: "", name: "", know_opportunity: "", birthday: "", jobfair_id: "", graduate_year: "2025年度", tel: "",
-    university: "", email_is_own: "", email: "", subject: "", file_path: "", post: "", note: "", address: "", recruit_is_decline: "0", updated_at:"",
+    university: "", email_is_own: "", email: "", subject: "", file_path: "", post: "", note: "", address: "", recruit_is_decline: "", updated_at:"",
   });
   // 初期値を student_dataset からコピー
   useEffect(() => {
@@ -239,82 +238,7 @@ function SC04() {
     }
   }, [student_dataset]);
 
-  const [isComponent42, setIsComponent42] = useState(true); // 初期状態は Component42 を表示
-  // コンポーネント切り替え用ハンドラー
-  const [activeComponent, setActiveComponent] = useState("Component42"); // 現在表示中のコンポーネント状態
 
-
-
-  const [isComponent46, setIsComponent46] = useState(true);
-  const [isComponent62, setIsComponent62] = useState(false);
-  const [isComponent46Visible, setIsComponent46Visible] = useState(true);
-  const [isComponent62Visible, setIsComponent62Visible] = useState(false); // Component62の表示状態
-  const [isComponent56Visible, setIsComponent56Visible] = useState(false); // Component56の表示状態
-  const [isComponent45Visible, setIsComponent45Visible] = useState(false);
-  const [isComponent44Visible, setIsComponent44Visible] = useState(true); // Component44の表示状態
-  useEffect(() => {
-    if (isComponent56Visible) {
-      setIsComponent46Visible(false); // Component46を非表示
-      setIsComponent45Visible(true);  // Component45を表示
-    }
-  }, [isComponent56Visible]);
-
-  // Component56が表示されたらComponent46を非表示にし、Component45を表示する
-  useEffect(() => {
-    if (isComponent56Visible) {
-      setIsComponent46Visible(false); // Component46を非表示
-    }
-  }, [isComponent56Visible]);
-
-  // Component62が表示されたらComponent44をComponent43に切り替える
-  useEffect(() => {
-    if (isComponent62Visible) {
-      setIsComponent44Visible(false); // Component44を非表示
-    }
-  }, [isComponent62Visible]);
-
-
-
-  // Component56を表示するための処理（例えばボタンをクリックで表示）
-  const handleComponent56Click = () => {
-    setIsComponent56Visible(true); // Component56を表示
-  };
-  const handleComponent46Click = () => {
-    setIsComponent46Visible(false); // Component46を非表示
-  };
-  // Component45クリック時の処理
-  const handleComponent45Click = () => {
-    setIsComponent62Visible(true); // Component62を表示
-  };
-
-  // Component62クリック時の処理
-  const handleComponent62Click = () => {
-    setIsComponent62Visible(false); // Component62を非表示
-  };
-  // 説明会日時が変更されたときの処理
-  const handleChange = (e) => {
-    const { value } = e.target;
-    setFormData({ ...formData, date: value });
-    // 説明会日時が選択されたときだけ Component54 を表示
-    if (value) {
-      setActiveComponent("Component54");
-    } else {
-      setActiveComponent("Component42"); // "null" または空の値が選ばれた場合は Component42
-    }
-  };
-  // Component54 クリック時の処理
-  const handleComponent54Click = () => {
-    if (formData.date) {
-      setActiveComponent("Component56");
-      setIsComponent46(true); // 必要であれば初期化
-    }
-  };
-
-  useEffect(() => {
-    if (activeComponent === "Component56" && isComponent46) {
-      setIsComponent46(false); // Component46をComponent45に切り替える
-    }
-  }, [activeComponent, isComponent46]);
 
   const [errors, setErrors] = useState({});
 
@@ -390,7 +314,7 @@ function SC04() {
   // 数字以外の文字を検出する正規表現
   const isValidNumber  = /^[0-9+\-*/#]*$/;
 
-  // 電話番号が16桁以上であれば入力を制限
+  // 電話番号が13桁以上であれば入力を制限
   if (name === "tel" && value.length > 13) {
     return;
   }
@@ -451,7 +375,8 @@ function SC04() {
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
-    setFormData({ ...formData, [name]: checked ? "1" : "0" });
+    console.log(name, checked)
+    setFormData({ ...formData, [name]: checked ? 1 : 0 });
   };
   const validateTel = (tel,) => {
     const telPattern = /^[0-9]*$/; // 数字のみ許可
@@ -464,9 +389,6 @@ function SC04() {
       setErrors({ ...errors, tel: <span className="required">電話番号は数字のみ入れてください。</span> });
     } else {
       setErrors({ ...errors, [name]: "" });
-    }
-    if (name === "date" && value !== "") {
-      setIsComponent42(false); // Component42 を Component54 に切り替え
     }
     setFormData({ ...formData, [name]: value });
     // 入力のたびにエラーをクリア
@@ -612,7 +534,7 @@ function SC04() {
             onChange={handleInputChange}
             className="short-input"
           >
-            <option value=""></option>
+            <option value="null"></option>
             <option value="0">男性</option>
             <option value="1">女性</option>
             <option value="2">その他</option>
@@ -656,6 +578,7 @@ function SC04() {
               name="birthday"
               value={formData.birthday || ""}
               onChange={handleAgeChange}
+              className="short-input"
             />
           </div>
           {age !== null && (
@@ -709,6 +632,8 @@ function SC04() {
             value={formData.tel || ""}
             placeholder="例: 08012345678"
             onChange={handleTelChange}
+            className="short-input"
+            
           />
           {errors.tel && <p className="error-message">{errors.tel}</p>}
         </div>
@@ -830,8 +755,9 @@ function SC04() {
             type="checkbox"
             id="recruit_is_decline"
             name="recruit_is_decline"
-            checked={formData.recruit_is_decline === "1"}
-            onChange={handleCheckboxChange}
+            checked={formData.recruit_is_decline}
+            onClick={handleCheckboxChange}
+            
           />
           <label htmlFor="recruit_is_decline">辞退</label>
         </div>
