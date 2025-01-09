@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
 function SC03() {
-  const [data, setData] = useState();
+  const [data, setData] = useState({});
   const [num, setNum] = useState(0);
   const [jobfair, setJobfair] = useState([]);
   const [spot, setSpot] = useState([]);
@@ -14,6 +14,7 @@ function SC03() {
   const navigate = useNavigate();
   const [cookies, setCookie] = useCookies();
   const [errorMesseage, setErrorMesseage] = useState({});
+  const [popup, setPopup] = useState({});
 
   const [rows, setRows] = useState([]);
   // 初期データ
@@ -134,12 +135,55 @@ function SC03() {
     console.log(rows);
   };
 
-  const deleteRow = (index, row_jobfair_id) => {
-    if (!row_jobfair_id) {
-      console.log(index);
-      const daletedRows = [...rows].filter((row, row_index) => row_index !== index);
-      setRows(daletedRows)
+  const openPopup = (index, row_jobfair_id) => {
+    setPopup({
+      ispopup: true,
+      index: index,
+      row_jobfair_id: row_jobfair_id
+    })
+  }
+
+
+  const deleteRow = async (delete_flag) => {
+    if (delete_flag) {
+      if (popup.row_jobfair_id) {
+        const jobfair = rows[popup.index];
+        const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/delateJobfair";
+        const response = await fetch(url,
+          {
+            method: "POST",
+            headers: { Authorization: cookies.token },
+            body: JSON.stringify(
+              {
+                jobfair: jobfair,
+                user: cookies.user,
+                function_id: 'SC03',
+              })
+          }
+        )
+          .then((res) => res.json()) // JSON形式に変換
+          .then((data) => {
+            console.log(data);
+            return data;
+          })
+          .catch((error) => console.log(error)); // エラー発生時に出力
+
+        if (response.errorMesseage) {
+          alert(response.errorMesseage);
+        }
+        else {
+          const daletedRows = [...rows].filter((row, row_index) => row_index !== popup.index);
+          setRows(daletedRows)
+        }
+
+      }
+      else {
+        const daletedRows = [...rows].filter((row, row_index) => row_index !== popup.index);
+        setRows(daletedRows)
+      }
     }
+
+    setPopup({ ispopup: false })
   };
 
   const selectCheckbox = (index, key, value, checked) => {
@@ -159,14 +203,14 @@ function SC03() {
       </div>
 
       <div classspot="Return">
-        <button onClick={updateJobfair} class="updatebutton">更新</button>
+        <button onClick={updateJobfair} class="updatebutton">登録</button>
       </div>
 
       <div class="jobfairtable">
         <table border="1">
           <thead>
             <tr>
-              <th>
+              <th style={{ zIndex: 3 }}>
                 <button onClick={addRow} class="addbutton">
                   +
                 </button>
@@ -180,7 +224,7 @@ function SC03() {
           <tbody>
             {rows.map((row, index) => (
               <tr key={row.num} className={row.jobfair_is_cancel == 1 ? "cancelrow" : null}>
-                <th style={{backgroundColor: 'white', border: 'none'}}></th>
+                <th style={{ backgroundColor: 'white', border: 'none' }}></th>
                 <td>
                   <input
                     type="datetime-local"
@@ -213,7 +257,7 @@ function SC03() {
                   中止
                 </td>
                 <td>
-                  <button onClick={() => deleteRow(index, row.jobfair_id)} class="addbutton">
+                  <button onClick={() => openPopup(index, row.jobfair_id)} class="deletebutton">
                     削除
                   </button>
                 </td>
@@ -221,6 +265,15 @@ function SC03() {
             ))}
           </tbody>
         </table>
+        {popup?.ispopup && (
+          <div className="popup">
+            <div className="popup-content">
+              <p>削除しますか？</p>
+              <button className="confirm-button" onClick={() => deleteRow(true)}>削除する</button>
+              <button className="cancel-button" onClick={() => deleteRow(false)}>キャンセル</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
