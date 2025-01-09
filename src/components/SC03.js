@@ -159,16 +159,18 @@ function SC03() {
       </div>
 
       <div classspot="Return">
-        <button onClick={updateJobfair}>update</button>
+        <button onClick={updateJobfair} class="updatebutton">更新</button>
       </div>
 
       <div class="jobfairtable">
-        <button onClick={addRow} class="addbutton">
-          +
-        </button>
         <table border="1">
           <thead>
             <tr>
+              <th>
+                <button onClick={addRow} class="addbutton">
+                  +
+                </button>
+              </th>
               <th>日時</th>
               <th>会場</th>
               <th>ステータス</th>
@@ -178,6 +180,7 @@ function SC03() {
           <tbody>
             {rows.map((row, index) => (
               <tr key={row.num} className={row.jobfair_is_cancel == 1 ? "cancelrow" : null}>
+                <th style={{backgroundColor: 'white', border: 'none'}}></th>
                 <td>
                   <input
                     type="datetime-local"

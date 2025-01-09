@@ -8,10 +8,12 @@ table {
     display: flex;
 }
 
+.updatebutton{
+    border: 1px solid !important;
+}
 
 .addbutton{
     color: #000;
-    height: 80px;
 }
 
 .cancelrow{
