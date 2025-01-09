@@ -1,6 +1,6 @@
 import '../css/SC01.css';
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import SiscoBear from '../ui-components/siscobear.png'; // 画像をインポート
 import { useCookies } from "react-cookie";
 import Papa from 'papaparse';
@@ -14,13 +14,6 @@ function SC01() {
   const [data, setData] = useState([]);
   const user = cookies.user;
   const functionid = 'SC01';
-
-  const handleRowClick = (studentId) => {
-    navigate(`/SC05/${studentId}`);
-  };
-
-
-
 
   //checkbok
   const handleCheckboxChange = (studentId) => {
@@ -609,10 +602,11 @@ function SC01() {
                     </td>
                     <td
                       className="name"
-                      onClick={() => handleRowClick(student.student_id)}
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: "pointer"}}
                     >
-                      {student.name}
+                      <Link to='/SC04' state={{student_id:student.student_id}} style={{height:'100%',display:'block'}}>
+                        {student.name}
+                      </Link>
                     </td>
 
                     <td>{student.furigana}</td>

@@ -404,15 +404,12 @@ input[type="search"]:focus {
 }
 
 .page-button {
-  width: 40px;
-  height: 40px;
   border-radius: 50%;
   border: 1px solid #ccc;
   background-color: white;
   color: black;
   font-size: 18px;
   text-align: center;
-  line-height: 40px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -450,15 +447,12 @@ input[type="search"]:focus {
 }
 
 .page-button1 {
-  width: 40px;
-  height: 40px;
   border-radius: 50%;
   border: 1px solid #ccc;
   background-color: white;
   color: black;
   font-size: 18px;
   text-align: center;
-  line-height: 40px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
