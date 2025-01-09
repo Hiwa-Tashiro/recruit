@@ -105,6 +105,7 @@ function SC04() {
         .then((res) => res.json())
         .then((json) => console.log(json));
       navigate("/");
+      window.location.reload();
     } catch (error) {
       console.error("Error sending data to Lambda:", error);
       alert("Failed to send data to Lambda: " + error.message);
@@ -255,24 +256,6 @@ function SC04() {
 
   const handleNameChange = (e) => {
     const { name, value } = e.target;
-  
-    // Regular expression to disallow Kana characters
-    const disallowedCharacters = /[ァ-ヶーｦ-ﾟ]/g;
-  
-    if (disallowedCharacters.test(value)) {
-      setErrors({
-        ...errors,
-        [name]: "カナ文字は入力できません。",
-      });
-      return; // Stop updating the form data
-    }
-  
-    // Clear errors if valid
-    setErrors({
-      ...errors,
-      [name]: "",
-    });
-  
     // Update form data
     setFormData({
       ...formData,
