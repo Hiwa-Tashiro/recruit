@@ -41,7 +41,7 @@ const AppRoutes = () => {
     }, [userId])
 
     return (
-        <Authenticator hideSignUp={true}>
+        <Authenticator>
             {({ user }) => {
                 setUserId(user.userId);
                 return (

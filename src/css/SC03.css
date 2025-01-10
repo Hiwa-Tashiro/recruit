@@ -1,3 +1,13 @@
+.header{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+}
+
 table {
     position: static;
     width: 100%;
@@ -8,9 +18,23 @@ table {
     display: flex;
 }
 
-.updatebutton{
-    border: 1px solid !important;
+.updatecontent{
+    width: 187px;
+    display: flex;
+    justify-content: center;
 }
+
+.updatebutton{
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background-color: #CFF1F6;
+    width: 147px;
+    font-family: Inter;
+    font-size: 32px;
+    display: flex;
+    justify-content: center;
+}
+
 
 .addbutton{
     color: #000;

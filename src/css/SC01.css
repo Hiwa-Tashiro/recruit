@@ -297,6 +297,134 @@ input[type="search"]:focus {
   cursor: pointer;
 }
 
+.Bulkregister {
+  position: fixed;
+  right: 14vh;
+  top: 39vh;
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.Bulkregister button {
+  background-color: #CFF1F6;
+  border-radius: 5px;
+  border: 1px solid #000000;
+  padding: 10px 40px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.error-message-container {
+  position: fixed; /* 画面全体の中央に配置 */
+  top: 50%; /* 上からの距離を50%に設定 */
+  left: 50%; /* 左からの距離を50%に設定 */
+  transform: translate(-50%, -50%); /* 中央に配置するための調整 */
+  background-color: white; /* 背景色を白に設定 */
+  padding: 20px; /* コンテナの余白を設定 */
+  border: 1px solid #ccc; /* 枠線を設定 */
+  border-radius: 8px; /* 角を丸くする */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* シャドウを設定 */
+  text-align: center; /* テキストを中央揃えにする */
+  z-index: 1000; /* 他の要素より前面に表示 */
+}
+
+.error-message-text {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.close-error-button {
+  background-color: #7bbbff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.close-error-button:hover {
+  background-color: #0056b3;
+}
+
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 50%;
+  text-align: center;
+}
+
+.popup-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.close-button,
+.register-button {
+  background-color: #007bff;
+  color: #000000;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.close-button {
+  background-color: #dc3545;
+}
+
+.register-button {
+  background-color: #C7E0FF; 
+}
+
+.close-button:hover,
+.register-button:hover {
+  opacity: 0.8;
+}
+
+.studenttbl {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px; 
+  table-layout: fixed;
+}
+
+.studenttbl th,
+.studenttbl td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+  width: 50%;
+}
+
+.studenttbl th {
+  background-color: #f5f5f5;
+}
+
 
 .Studentsituation {
   display: flex;
