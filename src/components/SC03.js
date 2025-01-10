@@ -198,14 +198,17 @@ function SC03() {
 
   return (
     <div>
-      <div classspot="Return">
-        <button onClick={handleClick}><Return data={data} /></button>
+      <div className='header'>
+        <div classspot="Return">
+          <button onClick={handleClick}><Return data={data} /></button>
+        </div>
+        <h1>会社説明会</h1>
+        <div classspot="Return" className='updatecontent'>
+          <button onClick={updateJobfair} className="updatebutton">
+            <div class="buttoncontent">登録</div>
+          </button>
+        </div>
       </div>
-
-      <div classspot="Return">
-        <button onClick={updateJobfair} class="updatebutton">登録</button>
-      </div>
-
       <div class="jobfairtable">
         <table border="1">
           <thead>

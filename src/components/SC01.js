@@ -6,14 +6,20 @@ import { useCookies } from "react-cookie";
 import Papa from 'papaparse';
 
 function SC01() {
+  const [data, setData] = useState([]);
+
   //Cookies
   const [cookies, setCookie] = useCookies();
+  useEffect(() => {
+    setCookie("user", 'arisa');
+  }, [])
+  const functionid = 'SC01';
+
 
   //Studentlist
   const [selectedIds, setSelectedIds] = useState([]);
-  const [data, setData] = useState([]);
-  const user = cookies.user;
-  const functionid = 'SC01';
+
+
 
   //checkbok
   const handleCheckboxChange = (studentId) => {
@@ -37,6 +43,7 @@ function SC01() {
   const [selectedPhase, setSelectedPhase] = useState(0); // フェーズの選択状態を管理
   const [filteredData, setFilteredData] = useState([]);
   const [totalPhaseCount, setTotalPhaseCount] = useState(0);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const handlePhaseChange = (phase) => {
     setSelectedPhase(phase); // フェーズを更新
     if (phase === 0) {
@@ -44,11 +51,79 @@ function SC01() {
     } else {
       setFilteredData(data.filter((student) => student.phase_num >= phase)); // フィルタリング
     }
-    const totalCount =
-      phaseData[phase]?.[`phase${phase}_count`] || 0; // 指定フェーズの人数
+    const totalCount = phaseData[phase]?.[`phase${phase}_count`] || 0; // 指定フェーズの人数
     setTotalPhaseCount(totalCount);
   };
 
+
+  //Popup
+  const [errorMessage, setErrorMessage] = useState("");
+  const openPopup = () => {
+    if (selectedIds.length === 0) {
+      setErrorMessage("登録する学生を選択してください。");
+      return;
+    }
+    setErrorMessage("");
+    setIsPopupOpen(true);
+  };
+  const closeErrorMessage = () => {
+    setErrorMessage("");
+  };
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+  const registerPopup = () => {
+    console.log(`フェーズ${selectedPhase}の学生を登録しました`);
+    setIsPopupOpen(false);
+  };
+  const getPopupContent = () => {
+    const phaseTitles = [
+      "説明会参加者",
+      "履歴書提出者",
+      "一次面接合格者",
+      "座談会合格者",
+      "最終面接合格者",
+      "内定者",
+    ];
+
+    if (selectedPhase > 5) return null;
+
+    const selectedStudents = students.filter((student) =>
+      selectedIds.includes(student.student_id)
+    );
+
+    return (
+      <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+        <h2>{`以下の学生を${phaseTitles[selectedPhase]}に登録しますか？`}</h2>
+
+        <table className="studenttbl">
+          <thead>
+            <tr>
+              <th>氏名</th>
+              <th>大学名</th>
+            </tr>
+          </thead>
+          <tbody>
+            {selectedStudents.map((student) => (
+              <tr key={student.student_id}>
+                <td>{student.name || ""}</td>
+                <td>{student.university || ""}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <div className="popup-buttons">
+          <button className="close-button" onClick={closePopup}>
+            閉じる
+          </button>
+          <button className="register-button" onClick={registerPopup}>
+            登録
+          </button>
+        </div>
+      </div>
+    );
+  };
 
 
   //Day
@@ -96,7 +171,7 @@ function SC01() {
           phase_num: phase,
           date: date,
           updated_at: updated_at,
-          user: user,
+          user: cookies.user,
           function_id: functionid
 
 
@@ -194,7 +269,7 @@ function SC01() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           function_id: functionid,
-          user: user,
+          user: cookies.user,
           recruit_year: cookies.recruit_year,
         }),
       });
@@ -217,7 +292,7 @@ function SC01() {
 
   useEffect(() => {
     fetchData();
-  }, [functionid, user]);
+  }, [functionid]);
 
   const handleButtonClick = async (studentId, phase, group, buttonIndex, updated_at) => {
 
@@ -236,7 +311,7 @@ function SC01() {
           buttonIndex: buttonIndex,
           updated_at: updated_at,
           function_id: functionid,
-          user: user,
+          user: cookies.user,
         }),
       });
 
@@ -286,6 +361,7 @@ function SC01() {
   const handleNextPage = () => {
     setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
   };//次のページへ進む
+  
 
 
 
@@ -333,19 +409,6 @@ function SC01() {
 
 
 
-  //Popup
-  const [isPopupOpen, setIsPopupOpen] = useState(null);
-  const openPopup = () => {
-    setIsPopupOpen(true);
-  };
-  const closePopup = () => {
-    setIsPopupOpen(false);
-  };
-  const registerPopup = () => {
-    setIsPopupOpen(false);
-  };
-
-
   const formatDate = (date) => {
     if (date) {
       const dateObj = new Date(date);
@@ -373,7 +436,7 @@ function SC01() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             function_id: functionid,
-            user: user,
+            user: cookies.user,
             recruit_year: cookies.recruit_year
           }),
         });
@@ -404,7 +467,7 @@ function SC01() {
     };
 
     fetchData();
-  }, [functionid, user]);
+  }, [functionid]);
 
   const inputfile = useRef(null);
   async function selectFile(e) {
@@ -417,7 +480,7 @@ function SC01() {
         const readerfile = event.target.result;
 
         Papa.parse(readerfile, {
-          header: true, // CSVのヘッダー行をキーとして扱う
+          header: true,
           skipEmptyLines: true, // 空行をスキップ
           complete: (result) => {
             const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/registStudents";
@@ -446,7 +509,6 @@ function SC01() {
       reader.readAsText(datafile, 'Shift-JIS')
     }
   }
-
 
   return (
     <div className="App">
@@ -555,17 +617,21 @@ function SC01() {
 
 
           <div>
+            {errorMessage && (
+              <div className="error-message-container">
+                <p className="error-message-text">{errorMessage}</p>
+                <button className="close-error-button" onClick={closeErrorMessage}>
+                  閉じる
+                </button>
+              </div>
+            )}
+
             <div className="Bulkregister" onClick={openPopup}>
-              <button >一括登録</button>
+              <button>一括登録</button>
             </div>
             {isPopupOpen && (
               <div className="popup-overlay" onClick={closePopup}>
-                <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-                  <h2>ポップアップのタイトル</h2>
-                  <p>ここにポップアップの内容を記述します。</p>
-                  <button onClick={closePopup}>閉じる</button>
-                  <button onClick={registerPopup}>登録</button>
-                </div>
+                {getPopupContent()}
               </div>
             )}
           </div>
@@ -602,9 +668,9 @@ function SC01() {
                     </td>
                     <td
                       className="name"
-                      style={{ cursor: "pointer"}}
+                      style={{ cursor: "pointer" }}
                     >
-                      <Link to='/SC04' state={{student_id:student.student_id}} style={{height:'100%',display:'block'}}>
+                      <Link to='/SC04' state={{ student_id: student.student_id }} style={{ height: '100%', display: 'block' }}>
                         {student.name}
                       </Link>
                     </td>
