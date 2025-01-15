@@ -471,44 +471,54 @@ function SC01() {
 
   const inputfile = useRef(null);
   async function selectFile(e) {
-    e.preventDefault();
-    const datafile = inputfile.current.files[0];
-    if (datafile) {
-      const reader = new FileReader()
-
-      reader.onload = (event) => {
-        const readerfile = event.target.result;
-
-        Papa.parse(readerfile, {
-          header: true,
-          skipEmptyLines: true, // 空行をスキップ
-          complete: (result) => {
-            const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/registStudents";
-            fetch(url, {
-              method: "POST",
-              headers: { Authorization: cookies.token },
-              body: JSON.stringify({
-                tabledata: result.data,
-                recruit_year: cookies.recruit_year,
-                filename: datafile?.name,
-                user: cookies.user,
-                functionid: 'SC01',
+      e.preventDefault();
+      const datafile = inputfile.current.files[0];
+      if (datafile) {
+        const reader = new FileReader()
+  
+        reader.onload = (event) => {
+          const readerfile = event.target.result;
+  
+          Papa.parse(readerfile, {
+            header: true,
+            skipEmptyLines: true, // 空行をスキップ
+            complete: async(result) => {
+              const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/registStudents";
+              await fetch(url, {
+                method: "POST",
+                headers: { Authorization: cookies.token },
+                body: JSON.stringify({
+                  tabledata: result.data,
+                  recruit_year: cookies.recruit_year,
+                  filename: datafile?.name,
+                  user: cookies.user,
+                  functionid: 'SC01',
+                })
               })
-            })
-              .then((res) => res.json()) // JSON形式に変換
-              .then((data) => {
-                console.log(data);
-              })
-              .catch((error) => console.log(error)); // エラー発生時に出力
-          },
-          error: (error) => {
-            console.error('Error while parsing CSV:', error);
-          },
-        });
+                .then((res) => res.json()) // JSON形式に変換
+                .then((data) => {
+                  console.log(data);
+                  if (data?.errorMesseage) {
+                    alert(data?.errorMesseage);
+                  }
+                  else{
+                    alert("アップロードに成功しました");
+                    window.location.reload();
+                  }
+                })
+                .catch((error) => {
+                  console.log(error)
+                  alert("アップロードに失敗しました");
+                }); // エラー発生時に出力
+            },
+            error: (error) => {
+              console.error('Error while parsing CSV:', error);
+            },
+          });
+        }
+        reader.readAsText(datafile, 'Shift-JIS')
       }
-      reader.readAsText(datafile, 'Shift-JIS')
     }
-  }
 
   return (
     <div className="App">
@@ -1213,38 +1223,6 @@ function SC01() {
               &gt;
             </button>
           </div>
-
-          <div className="Pagination1">
-            <button
-              onClick={handlePreviousPage}
-              disabled={currentPage === 1}
-              className="page-button"
-            >
-              &lt;
-            </button>
-
-            {Array.from({ length: totalPages }, (_, index) => (
-              <button
-                key={index + 1}
-                onClick={() => setCurrentPage(index + 1)}
-                className={`page-button ${currentPage === index + 1 ? "active" : ""}`}
-              >
-                {index + 1}
-              </button>
-            ))}
-
-            {totalPages > 5 && <span className="dots">...</span>}
-
-            <button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              className="page-button1"
-            >
-              &gt;
-            </button>
-          </div>
-
-
 
         </main>
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import AppRoutes from './AppRoutes.js'
-import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { CookiesProvider } from "react-cookie"
 
