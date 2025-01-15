@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../css/SC04.css";
-import { Bar, Component42, Component43, Component44, Component45, Component46, Component47, Component48, Component49, Component50, Component52, Component54, Component56, Component58, Component62, Itizi3, Itizi4, Delete, Register, Return, Flag3, Job1, Jobfair1, Jobfair4, Jobfair3, Jobfair5, Resume1, Resume2, Resume4, Resume5, Itizi2, Itizi1, Itizi5, Zadan2, Zadan3, Zadan4, Zadan5, Zadan1, Yaku, Sei, J1, J3, J4, J5, R1, R2, R4, R5, I1, I2, I3, I4, I5, Z1, Z2, Z3, Z4, Z5 } from '../ui-components';
+import { Bar, Component42, Component43, Component44, Component45, Component46, Component47, Component48, Component49, Component50, Component52, Component54, Component56, Component58, Component62, Itizi3, Itizi4, Delete, Register, Return, Flag3, Job1, Jobfair1, Jobfair4, Jobfair3, Jobfair5, Resume1, Resume2, Resume4, Resume5, Itizi2, Itizi1, Itizi5, Zadan2, Zadan3, Zadan4, Zadan5, Zadan1, Yaku, Sei, J1,J3,J4,J5,R1,R2,R4,R5,I1,I2,I3,I4,I5,Z1,Z2,Z3,Z4,Z5 } from '../ui-components';
 import { BrowserRouter as Router, Routes, Route, useNavigate, data, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { Link } from 'react-router-dom';
@@ -20,10 +20,7 @@ function SC04() {
     setStatus(state)
   }, [])
 
-  let nendo = [];
-  for (let i = -2; i <= 3; i++) {
-    nendo.push(cookies.recruit_year + i)
-  }
+
 
   const navigate = useNavigate();
   const [isPopupVisible, setIsPopupVisible] = useState(false); // ポップアップの表示状態を管理
@@ -47,14 +44,14 @@ function SC04() {
       if (!formData.email) newErrors.email = <span className="required">メールは必須です。</span>;
       return newErrors;
     };
-
+  
     // バリデーションチェック
     const formErrors = validateForm();
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors); // エラーを表示
       return; // エラーがある場合は送信中止
     }
-
+  
     // 確認ダイアログ用の設定
     const fieldNames = {
       furigana: "フリガナ",
@@ -62,14 +59,14 @@ function SC04() {
       graduate_year: "卒業年度",
       subject: "学部学科",
     };
-
+  
     // 必須ではないが、確認が必要なフィールド
     const requiredFields = ["furigana", "sexual", "graduate_year", "subject"];
     const missingFields = requiredFields.filter((field) => {
       const value = formData[field];
       return value === undefined || value === null || value === "" || value === false;
     });
-
+  
     if (missingFields.length > 0) {
       const missingFieldsInJapanese = missingFields.map((field) => fieldNames[field]);
       const confirmMessage = `以下の項目が未入力です。送信を続けますか？\n\n${missingFieldsInJapanese.join(", ")}`;
@@ -77,15 +74,15 @@ function SC04() {
       setIsPopupVisible(true); // ポップアップを表示
       return; // 送信を中止
     }
-
+    
     // 問題がない場合は送信
     sendFormData();
   };
-
+  
   // データ送信処理を関数に分離
   const sendFormData = () => {
     console.log("Current formData:", formData);
-
+  
     try {
       fetch(
         "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/insertFormData",
@@ -101,7 +98,7 @@ function SC04() {
             recruit_year: cookies.recruit_year,
             function_id: function_id,
             updated_at: student_dataset.updated_at,
-
+            
           }),
         }
       )
@@ -114,9 +111,9 @@ function SC04() {
       alert("Failed to send data to Lambda: " + error.message);
     }
   };
+  
 
-
-
+  
   // ポップアップの続行ボタン処理
   const confirmSend = () => {
     setIsPopupVisible(false); // ポップアップを非表示
@@ -185,9 +182,9 @@ function SC04() {
         const json = await response.json();
         console.log(json);
         await setJobfairOptions(json['jobfairlist']);
-        if (status?.student_id) {
+        if(status?.student_id){
           await setStudentDataset(json['student_dataset'][0]);
-          if (json['student_dataset'][0]['phase_num'] >= 3) {
+          if(json['student_dataset'][0]['phase_num'] >= 3){
             await setInterviewDataset(json['interview_dataset'][json['student_dataset'][0]['phase_num'] - 3]);
             console.log(json['interview_dataset'][json['student_dataset'][0]['phase_num'] - 3]);
           }
@@ -233,7 +230,7 @@ function SC04() {
 
   const [formData, setFormData] = useState({
     furigana: "", sexual: "", name: "", know_opportunity: "", birthday: "", jobfair_id: "", graduate_year: "2025年度", tel: "",
-    university: "", email_is_own: "", email: "", subject: "", file_path: "", post: "", note: "", address: "", recruit_is_decline: "", updated_at: "",
+    university: "", email_is_own: "", email: "", subject: "", file_path: "", post: "", note: "", address: "", recruit_is_decline: "", updated_at:"",
   });
   // 初期値を student_dataset からコピー
   useEffect(() => {
@@ -265,7 +262,7 @@ function SC04() {
       [name]: value,
     });
   };
-
+  
 
   // 満何歳かの計算
   const calculateAge = (birthdayDate) => {
@@ -297,48 +294,48 @@ function SC04() {
   const handleTelChange = (e) => {
     const { name, value } = e.target;
 
-    // 数字以外の文字を検出する正規表現
-    const isValidNumber = /^[0-9+\-*/#]*$/;
+  // 数字以外の文字を検出する正規表現
+  const isValidNumber  = /^[0-9+\-*/#]*$/;
 
-    // 電話番号が13桁以上であれば入力を制限
-    if (name === "tel" && value.length > 13) {
-      return;
-    }
+  // 電話番号が13桁以上であれば入力を制限
+  if (name === "tel" && value.length > 13) {
+    return;
+  }
 
-    // バリデーション: 数字以外が入力された場合の警告
-    if (!isValidNumber.test(value)) {
+  // バリデーション: 数字以外が入力された場合の警告
+  if (!isValidNumber.test(value)) {
+    setErrors({
+      ...errors,
+      [name]: "正しい値を入力してください",
+    });
+    return; // 数字以外が入力された場合、フォームデータを更新しない
+  } else {
+    setErrors({
+      ...errors,
+      [name]: "", // エラーをクリア
+    });
+  }
+
+  setFormData({
+    ...formData,
+    [name]: value,
+  });
+
+  // 電話番号の長さチェック
+  if (name === "tel") {
+    if (value.length < 10) {
       setErrors({
         ...errors,
-        [name]: "正しい値を入力してください",
+        [name]: "電話番号は10桁以上で入力してください。",
       });
-      return; // 数字以外が入力された場合、フォームデータを更新しない
     } else {
       setErrors({
         ...errors,
-        [name]: "", // エラーをクリア
+        [name]: "",
       });
     }
-
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-
-    // 電話番号の長さチェック
-    if (name === "tel") {
-      if (value.length < 10) {
-        setErrors({
-          ...errors,
-          [name]: "電話番号は10桁以上で入力してください。",
-        });
-      } else {
-        setErrors({
-          ...errors,
-          [name]: "",
-        });
-      }
-    }
-  };
+  }
+};
 
   // 郵便番号の処理
   const handlePostChange = (e) => {
@@ -417,7 +414,7 @@ function SC04() {
     <div className="form-container">
       <h1>登録者情報</h1>
       <div className="return-container">
-        <button onClick={() => navigate(-1)}><Return /></button></div>
+      <button onClick={() => navigate(-1)}><Return /></button></div>
       <div className="parent-container">
         <div className="components-wrapper">
           <div style={{ display: "flex", gap: "20px" }}>
@@ -438,7 +435,7 @@ function SC04() {
             {(() => {
               if (student_dataset.student_id && student_dataset.jobfair_id) {
                 if (student_dataset.jobfair_is_attend === 0 && student_dataset.phase_num == 1 && student_dataset.resume_is_submit === 0) {
-                  return <div className="fixed-height"><button type="button" onClick={handleRirekisho}><R2 /></button></div>;
+                  return <div className="fixed-height"><button type="button"  onClick={handleRirekisho}><R2 /></button></div>;
                 } else if (student_dataset.phase_num === 2 && student_dataset.resume_is_submit === 1) {
                   return <div className="fixed-height"><button type="button" onClick={handleRirekisho}><R4 /></button></div>;
                 } else if (student_dataset.phase_num >= 3) {
@@ -587,7 +584,7 @@ function SC04() {
             {jobfairOptions?.map((option) => {
               const dateObj = new Date(option.date);
               const formattedDate = `${dateObj.getMonth() + 1
-                }月${dateObj.getDate()}日${dateObj.getHours()}時${dateObj.getMinutes()}分`;
+              }月${dateObj.getDate()}日${dateObj.getHours()}時${dateObj.getMinutes()}分`;
               return (
                 <option value={option.jobfair_id}>
                   {formattedDate}
@@ -601,15 +598,11 @@ function SC04() {
           <select
             id="graduate_year"
             name="graduate_year"
-            value={formData.graduate_year || cookies.recruit_year}
+            value={formData.graduate_year || ""}
             onChange={handleInputChange}
             className="short-input"
           >
-            {nendo.map((year) => (
-              <option key={year} value={year}>
-                {year}年
-              </option>
-            ))}
+            <option value={cookies.recruit_year}>{cookies.recruit_year}年</option>
           </select>
           {errors.graduate_year && <p className="error-message">{errors.graduate_year}</p>}
         </div>
@@ -623,7 +616,7 @@ function SC04() {
             placeholder="例: 08012345678"
             onChange={handleTelChange}
             className="short-input"
-
+            
           />
           {errors.tel && <p className="error-message">{errors.tel}</p>}
         </div>
@@ -741,13 +734,13 @@ function SC04() {
         </div>
 
         <div className="grid-item-agree">
-          <input
+        <input
             type="checkbox"
             id="recruit_is_decline"
             name="recruit_is_decline"
             checked={formData.recruit_is_decline}
             onClick={handleCheckboxChange}
-
+            
           />
           <label htmlFor="recruit_is_decline">辞退</label>
         </div>
@@ -757,28 +750,28 @@ function SC04() {
             < Register />
           </button>
           {isPopupVisible && (
-            <div className="popup">
-              <div className="popup-content">
-                <p>{popupMessage}</p>
-                <button className="confirm-button" onClick={confirmSend}>送信を続ける</button>
-                <button className="cancel-button" onClick={closePopup}>キャンセル</button>
-              </div>
-            </div>
-          )}</div>
-        <div className="parent-container2">
+  <div className="popup">
+    <div className="popup-content">
+      <p>{popupMessage}</p>
+      <button className="confirm-button" onClick={confirmSend}>送信を続ける</button>
+      <button className="cancel-button" onClick={closePopup}>キャンセル</button>
+    </div>
+  </div>
+)}</div>
+<div className="parent-container2">
           <button onClick={handleDelete}
-            disabled={!status?.student_id} // Disable the button if `student_id` is null or undefined
-            style={!status?.student_id ? { cursor: "not-allowed", opacity: 0.5 } : {}}>
-            < Delete /></button>
+          disabled={!status?.student_id} // Disable the button if `student_id` is null or undefined
+          style={!status?.student_id ? { cursor: "not-allowed", opacity: 0.5 } : {}}>
+      < Delete /></button>
           {isDeletePopupVisible && (
-            <div className="popup">
-              <div className="popup-content">
-                <p>{deleteConfirmMessage}</p>
-                <button className="confirm-button" onClick={confirmDelete}>はい</button>
-                <button className="cancel-button" onClick={closeDeletePopup}>いいえ</button>
-              </div>
-            </div>
-          )}
+        <div className="popup">
+          <div className="popup-content">
+            <p>{deleteConfirmMessage}</p>
+            <button className="confirm-button" onClick={confirmDelete}>はい</button>
+            <button className="cancel-button" onClick={closeDeletePopup}>いいえ</button>
+          </div>
+        </div>
+      )}
         </div>
       </form>
     </div>

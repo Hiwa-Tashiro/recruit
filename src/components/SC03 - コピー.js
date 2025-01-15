@@ -1,4 +1,4 @@
-import SC03_css from '../css/SC03.module.css';
+import '../css/SC03.css';
 import React from "react";
 import { Return } from '../ui-components';
 import { useState, useEffect } from "react";
@@ -10,11 +10,10 @@ function SC03() {
   const [num, setNum] = useState(0);
   const [jobfair, setJobfair] = useState([]);
   const [spot, setSpot] = useState([]);
-  const [editingcalender, setEditingcalender] = useState();
   const handleClick = () => { navigate("/"); };
   const navigate = useNavigate();
   const [cookies, setCookie] = useCookies();
-  const [errorMesseages, seterrorMesseages] = useState([]);
+  const [errorMesseage, setErrorMesseage] = useState({});
   const [popup, setPopup] = useState({});
 
   const [rows, setRows] = useState([]);
@@ -68,20 +67,14 @@ function SC03() {
     setRows(first)
   }, [jobfair])
 
-  //更新ボタン
   const updateJobfair = async () => {
-    if(errorMesseages.length > 0){
-      alert("編集が必要な項目があります。");
-      return
-    }
     const validateForm = () => {
       let errorMesseage = {};
       try {
         rows.forEach((row) => {
           if (row['date'] == null) {
-            errorMesseage.num = row['num'];
-            errorMesseage.status = 1;
-            errorMesseage.messeage = <span className={SC03_css.required}>日時は必須です。</span>;
+            errorMesseage.index = row['num'];
+            errorMesseage.messeage = <span className="required">日時は必須です。</span>;
             throw errorMesseage;
           }
         });
@@ -91,13 +84,12 @@ function SC03() {
         return errorMesseage;
       }
       finally {
-        seterrorMesseages([...errorMesseages, errorMesseage]);
+        setErrorMesseage(errorMesseage);
       }
     }
 
     const formErrors = await validateForm();
     if (Object.keys(formErrors).length > 0) {
-      alert("編集が必要な項目があります。");
       return;
     }
 
@@ -127,68 +119,33 @@ function SC03() {
     await window.location.reload();
   };
 
-  //行追加
+  // 行を追加する関数
   const addRow = () => {
     const newRow = { num: num, jobfair_id: null, date: null, spot: 0, jobfair_is_cancel: 0 };
     setNum(num + 1);
     setRows([...rows, newRow]);
   };
 
-  //日付のフォーマッタ
-  const formatDate = (date) =>{
-    let formatdate = null;
-    if(date){
-      const date1 = new Date(date)
-      formatdate = String(new Date(date1.getFullYear(), date1.getMonth(), date1.getDate()));
-    }
-    return formatdate;
-  }
-
-  //行のデータの変更
+  // 行のデータを変更する関数
   const updateRow = (index, key, value) => {
     const updatedRows = [...rows];
     updatedRows[index][key] = value;
     updatedRows[index]["is_update"] = true;
-    if(key == "date"){
-      let newErrorMesseages = [...errorMesseages]
-      if(errorMesseages.find((item) => item.num == updatedRows[index].num)?.status == 1){
-        newErrorMesseages = newErrorMesseages.filter((item) => item.num != updatedRows[index].num)
-      }
-      updatedRows.forEach((row) => {
-        if(row.date) {
-          if(updatedRows.filter((item) => item.num != row.num).find((item) => formatDate(item.date) == formatDate(row.date))){
-            let errorMesseage = {}
-            errorMesseage.num = row['num'];
-            errorMesseage.status = 2;
-            errorMesseage.messeage = <span className={SC03_css.required}>同じ日付が存在します。</span>;
-            newErrorMesseages = [...newErrorMesseages, errorMesseage]
-          }
-          if(!updatedRows.filter((item) => item.num != row.num).find((item) => formatDate(item.date) == formatDate(row.date)) && errorMesseages.find((item) => item.num == row.num)){
-            newErrorMesseages = newErrorMesseages.filter((item) => item.num != row.num)
-          }
-        }
-      })
-      seterrorMesseages(newErrorMesseages)
-    }
     setRows(updatedRows);
+    console.log(rows);
   };
-  
-  //ポップアップ
-  const openPopup = (index, row) => {
+
+  const openPopup = (index, row_jobfair_id) => {
     setPopup({
       ispopup: true,
       index: index,
-      num: row.num,
-      row_jobfair_id: row.jobfair_id,
-      date: row.date
+      row_jobfair_id: row_jobfair_id
     })
   }
 
 
-  //行削除
   const deleteRow = async (delete_flag) => {
     if (delete_flag) {
-      const daletedRows = [...rows].filter((row, row_index) => row_index !== popup.index);
       if (popup.row_jobfair_id) {
         const jobfair = rows[popup.index];
         const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/delateJobfair";
@@ -213,42 +170,20 @@ function SC03() {
 
         if (response.errorMesseage) {
           alert(response.errorMesseage);
-          return;
         }
+        else {
+          const daletedRows = [...rows].filter((row, row_index) => row_index !== popup.index);
+          setRows(daletedRows)
+        }
+
       }
-
-      setRows(daletedRows)
-
-      if (popup.date) {
-        let newErrorMesseages = [...errorMesseages].filter((item) => item.num != popup.num)
-        daletedRows.forEach((row) => {
-          if(row.date) {
-            if(!daletedRows.filter((item) => item.num != row.num).find((item) => formatDate(item.date) == formatDate(row.date)) && errorMesseages.find((item) => item.num == row.num)){
-              newErrorMesseages = newErrorMesseages.filter((item) => item.num != row.num)
-            }
-          }
-        })
-        seterrorMesseages(newErrorMesseages)
+      else {
+        const daletedRows = [...rows].filter((row, row_index) => row_index !== popup.index);
+        setRows(daletedRows)
       }
     }
 
     setPopup({ ispopup: false })
-  };
-
-  //表示の日付フォーマッタ
-  const formatJapaneseDate = (datetime) => {
-    if (!datetime) return "日付を入力してください";
-
-    const date = new Date(datetime);
-    const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
-
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // 月 (0-11なので+1)
-    const day = String(date.getDate()).padStart(2, "0");
-    const dayOfWeek = daysOfWeek[date.getDay()];
-    const hours = String(date.getHours()).padStart(2, "0");   // 2桁表示
-    const minutes = String(date.getMinutes()).padStart(2, "0"); // 2桁表示
-
-    return `${month}月${day}日 (${dayOfWeek}) ${hours}:${minutes}`;
   };
 
   const selectCheckbox = (index, key, value, checked) => {
@@ -263,25 +198,23 @@ function SC03() {
 
   return (
     <div>
-      <div className={SC03_css.header}>
+      <div className="header">
         <div classspot="Return">
-          <button onClick={handleClick} className={SC03_css.backbutton}>
-            <div className={SC03_css.buttoncontent}>戻る</div>
-            </button>
+          <button onClick={handleClick}><Return data={data} /></button>
         </div>
         <h1>会社説明会</h1>
-        <div classspot="Return" className={SC03_css.updatecontent}>
-          <button onClick={updateJobfair} className={SC03_css.updatebutton}>
-            <div className={SC03_css.buttoncontent}>登録</div>
+        <div classspot="Return" className="updatecontent">
+          <button onClick={updateJobfair} className="updatebutton">
+            <div class="buttoncontent">登録</div>
           </button>
         </div>
       </div>
-      <div className={SC03_css.jobfair}>
-        <table className={SC03_css.jobfairtable} border="1">
+      <div className="jobfair">
+        <table border="1">
           <thead>
             <tr>
               <th style={{ zIndex: 3 }}>
-                <button onClick={addRow} className={SC03_css.addbutton}>
+                <button onClick={addRow} class="addbutton">
                   +
                 </button>
               </th>
@@ -293,24 +226,15 @@ function SC03() {
           </thead>
           <tbody>
             {rows.map((row, index) => (
-              <tr key={row.num} className={row.jobfair_is_cancel == 1 ? SC03_css.cancelrow : null}>
+              <tr key={row.num} className={row.jobfair_is_cancel == 1 ? "cancelrow" : null}>
                 <th style={{ backgroundColor: "white", border: "none" }}></th>
                 <td>
-                  {editingcalender == row.num ? (
-                    <input
-                      type="datetime-local"
-                      value={row.date}
-                      onChange={(e) => updateRow(index, "date", e.target.value)}
-                      onBlur={() => setEditingcalender(null)}
-                      autoFocus
-                    />
-                  ) : (
-                    <div
-                    onClick={() => setEditingcalender(row.num)}
-                    >{formatJapaneseDate(row.date)}</div>
-                  )
-                  }
-                  {errorMesseages.find((item) => item.num == row.num) && <p>{errorMesseages.find((item) => item.num == row.num).messeage}</p>}
+                  <input
+                    type="datetime-local"
+                    value={row.date}
+                    onChange={(e) => updateRow(index, "date", e.target.value)}
+                  />
+                  {errorMesseage.index == row.num && <p className="error-message">{errorMesseage.messeage}</p>}
                 </td>
                 <td>
                   <select
@@ -336,7 +260,7 @@ function SC03() {
                   中止
                 </td>
                 <td>
-                  <button onClick={() => openPopup(index, row)} className={SC03_css.deletebutton}>
+                  <button onClick={() => openPopup(index, row.jobfair_id)} class="deletebutton">
                     削除
                   </button>
                 </td>
@@ -345,11 +269,11 @@ function SC03() {
           </tbody>
         </table>
         {popup?.ispopup && (
-          <div className={SC03_css.popup}>
-            <div className={SC03_css.popup_content}>
+          <div className="popup">
+            <div className="popup-content">
               <p>削除しますか？</p>
-              <button className={SC03_css.confirm_button} onClick={() => deleteRow(true)}>削除する</button>
-              <button className={SC03_css.cancel_button} onClick={() => deleteRow(false)}>キャンセル</button>
+              <button className="confirm-button" onClick={() => deleteRow(true)}>削除する</button>
+              <button className="cancel-button" onClick={() => deleteRow(false)}>キャンセル</button>
             </div>
           </div>
         )}
