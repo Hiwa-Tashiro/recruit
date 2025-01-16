@@ -17,6 +17,7 @@ import SC01 from "./components/SC01"; // 遷移元のページ
 import SC03 from "./components/SC03"; // 遷移先のページ
 import SC04 from "./components/SC04";
 import SC05 from "./components/SC05";
+import SC06 from "./components/SC06";
 import Henshu from "./components/Henshu";
 
 
@@ -56,6 +57,7 @@ const AppRoutes = () => {
                             <Route path="/SC03" element={<SC03 />} />
                             <Route path="/SC04" element={<SC04 />} />
                             <Route path="/SC05" element={<SC05 />} />
+                            <Route path="/SC06" element={<SC06 />} />
                             <Route path="/henshu" element={<Henshu />} />
                         </Routes>
                     </BrowserRouter>

@@ -1,4 +1,4 @@
-import '../css/SC01.css';
+import SC01_css from '../css/SC01.module.css';
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import SiscoBear from '../ui-components/siscobear.png'; // 画像をインポート
@@ -20,7 +20,6 @@ function SC01() {
   const [selectedIds, setSelectedIds] = useState([]);
 
 
-
   //checkbok
   const handleCheckboxChange = (studentId) => {
     setSelectedIds((prevSelectedIds) => {
@@ -32,11 +31,13 @@ function SC01() {
     });
   };
 
+
   //AppRoute
   const navigate = useNavigate();
   const handleClick = () => { navigate("/SC03"); };
   const handleClick2 = () => { navigate("/SC04"); };
   const handleClick3 = () => { navigate("/SC05"); };
+
 
   // Phase
   const [phaseData, setPhaseData] = useState({});
@@ -46,6 +47,9 @@ function SC01() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const handlePhaseChange = (phase) => {
     setSelectedPhase(phase); // フェーズを更新
+    setCurrentPage(1);
+    setSelectedIds([]);
+
     if (phase === 0) {
       setFilteredData(data); // 全データ表示
     } else {
@@ -63,19 +67,68 @@ function SC01() {
       setErrorMessage("登録する学生を選択してください。");
       return;
     }
-    setErrorMessage("");
+    setErrorMessage(""); // Clear any previous error message
     setIsPopupOpen(true);
   };
+  
   const closeErrorMessage = () => {
-    setErrorMessage("");
+    setErrorMessage(""); // Clear error message
   };
+  
   const closePopup = () => {
     setIsPopupOpen(false);
   };
-  const registerPopup = () => {
-    console.log(`フェーズ${selectedPhase}の学生を登録しました`);
-    setIsPopupOpen(false);
+  
+  
+  const registerPopup = async () => {
+    try {
+      if (selectedIds.length === 0) {
+        setErrorMessage("登録する学生を選択してください。");
+        return;
+      }
+  
+      const requestData = {
+        phase_num: selectedPhase,
+        students: selectedIds.map((studentId) => {
+          const student = students.find((s) => s.student_id === studentId);
+          return {
+            student_id: studentId,
+            name: student?.name || "",
+            university: student?.university || "",
+            resume_is_submit: student?.resume_is_submit || null,
+            jobfair_is_attend: student?.jobfair_is_attend || null,
+            result: student?.result || null,
+          };
+        }),
+        user: cookies.user,
+        function_id: functionid,
+        updated_at: new Date().toISOString(),
+        recruit_year: cookies.recruit_year,
+      };
+
+      const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/bulkRegister";
+  
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestData),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const result = await response.json();
+      console.log("登録成功:", result);
+  
+      setIsPopupOpen(false);
+    } catch (error) {
+      console.error("登録エラー:", error);
+      alert("登録中にエラーが発生しました。");
+    }
   };
+  
+  // Render the popup content
   const getPopupContent = () => {
     const phaseTitles = [
       "説明会参加者",
@@ -85,18 +138,18 @@ function SC01() {
       "最終面接合格者",
       "内定者",
     ];
-
-    if (selectedPhase > 5) return null;
-
+  
+    if (selectedPhase > 5) return null; // Prevent invalid phase selection
+  
     const selectedStudents = students.filter((student) =>
       selectedIds.includes(student.student_id)
     );
-
+  
     return (
-      <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+      <div className={SC01_css.popup_content} onClick={(e) => e.stopPropagation()}>
         <h2>{`以下の学生を${phaseTitles[selectedPhase]}に登録しますか？`}</h2>
-
-        <table className="studenttbl">
+  
+        <table className={SC01_css.studenttbl}>
           <thead>
             <tr>
               <th>氏名</th>
@@ -112,12 +165,12 @@ function SC01() {
             ))}
           </tbody>
         </table>
-
-        <div className="popup-buttons">
-          <button className="close-button" onClick={closePopup}>
+  
+        <div className={SC01_css.popup_buttons}>
+          <button className={SC01_css.close_button} onClick={closePopup}>
             閉じる
           </button>
-          <button className="register-button" onClick={registerPopup}>
+          <button className={SC01_css.register_button} onClick={registerPopup}>
             登録
           </button>
         </div>
@@ -133,8 +186,8 @@ function SC01() {
     const date = new Date(datetime);
     const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
 
-    const month = date.getMonth() + 1; // 月 (0-11なので+1)
-    const day = date.getDate();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // 月を2桁に
+    const day = String(date.getDate()).padStart(2, "0"); // 日を2桁に
     const dayOfWeek = daysOfWeek[date.getDay()];
 
     return `${month}月${day}日 (${dayOfWeek})`;
@@ -143,8 +196,8 @@ function SC01() {
     if (!datetime) return "";
 
     const date = new Date(datetime);
-    const hours = date.getHours(); // 時
-    const minutes = date.getMinutes(); // 分
+    const hours = String(date.getHours()).padStart(2, "0"); // 時を2桁に
+    const minutes = String(date.getMinutes()).padStart(2, "0"); // 分を2桁に
 
     return `${hours}時${minutes}分`;
   };
@@ -222,7 +275,6 @@ function SC01() {
           });
 
         const json = await response.json();
-        console.log("Fetched Data:", json);
         setStudents(json["tabledata"]);
         await setJobfairOptions(json['jobfairlist']);
 
@@ -257,7 +309,6 @@ function SC01() {
   };
 
 
-
   // Studentstatus
   const [selectedButtons, setSelectedButtons] = useState({});
   const fetchData = async () => {
@@ -289,11 +340,9 @@ function SC01() {
       console.error("Error fetching data:", error);
     }
   };
-
   useEffect(() => {
     fetchData();
   }, [functionid]);
-
   const handleButtonClick = async (studentId, phase, group, buttonIndex, updated_at) => {
 
     const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/rec2-status";
@@ -344,9 +393,6 @@ function SC01() {
   };
 
 
-
-
-
   //Page
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -361,17 +407,13 @@ function SC01() {
   const handleNextPage = () => {
     setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
   };//次のページへ進む
-  
-
 
 
   //Nendo
   const baseYear = cookies.recruit_year;
   const range = 3; // 範囲（-2～+3）
   const [selectedYear, setSelectedYear] = useState(baseYear);
-
   const years = Array.from({ length: range * 2 + 1 }, (_, i) => baseYear - range + i);
-
   const handleChange = (event) => {
     setSelectedYear(event.target.value);
     setCookie("recruit_year", event.target.value);
@@ -382,7 +424,6 @@ function SC01() {
 
   //Search
   const [searchQuery, setSearchQuery] = useState("");
-
   const handleInputChange = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
@@ -408,24 +449,21 @@ function SC01() {
   };
 
 
-
+  //datetime
   const formatDate = (date) => {
     if (date) {
       const dateObj = new Date(date);
       const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
       const dayOfWeek = weekdays[dateObj.getDay()];
-      const datePart = `${dateObj.getMonth() + 1}月${dateObj.getDate()}日（${dayOfWeek}）`;
-      const timePart = `${dateObj.getHours()}時${dateObj.getMinutes()}分`;
+      const datePart = `${(dateObj.getMonth() + 1).toString().padStart(2, "0")}月${dateObj.getDate().toString().padStart(2, "0")}日（${dayOfWeek}）`;
+      const timePart = `${dateObj.getHours().toString().padStart(2, "0")}時${dateObj.getMinutes().toString().padStart(2, "0")}分`;
       return { datePart, timePart };
     } else {
       return null;
     }
   };
 
-
-
-
-
+  //Upload
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -446,7 +484,6 @@ function SC01() {
         }
 
         const json = await response.json();
-        console.log("Fetched Data:", json); // デバッグ用
 
         const initialButtons = {};
         (json["tabledata"] || []).forEach((student) => {
@@ -458,9 +495,9 @@ function SC01() {
         });
         setSelectedButtons(initialButtons);
 
-        setData(json["tabledata"] || []); // テーブルデータ
-        setFilteredData(json["tabledata"] || []); // 初期表示用
-        setPhaseData(json["phases"] || {}); // フェーズデータ
+        setData(json["tabledata"] || []);
+        setFilteredData(json["tabledata"] || []);
+        setPhaseData(json["phases"] || {});
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -471,78 +508,69 @@ function SC01() {
 
   const inputfile = useRef(null);
   async function selectFile(e) {
-      e.preventDefault();
-      const datafile = inputfile.current.files[0];
-      if (datafile) {
-        const reader = new FileReader()
-  
-        reader.onload = (event) => {
-          const readerfile = event.target.result;
-  
-          Papa.parse(readerfile, {
-            header: true,
-            skipEmptyLines: true, // 空行をスキップ
-            complete: async(result) => {
-              const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/registStudents";
-              await fetch(url, {
-                method: "POST",
-                headers: { Authorization: cookies.token },
-                body: JSON.stringify({
-                  tabledata: result.data,
-                  recruit_year: cookies.recruit_year,
-                  filename: datafile?.name,
-                  user: cookies.user,
-                  functionid: 'SC01',
-                })
+    e.preventDefault();
+    const datafile = inputfile.current.files[0];
+    if (datafile) {
+      const reader = new FileReader()
+
+      reader.onload = (event) => {
+        const readerfile = event.target.result;
+
+        Papa.parse(readerfile, {
+          header: true,
+          skipEmptyLines: true, // 空行をスキップ
+          complete: (result) => {
+            const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/registStudents";
+            fetch(url, {
+              method: "POST",
+              headers: { Authorization: cookies.token },
+              body: JSON.stringify({
+                tabledata: result.data,
+                recruit_year: cookies.recruit_year,
+                filename: datafile?.name,
+                user: cookies.user,
+                functionid: 'SC01',
               })
-                .then((res) => res.json()) // JSON形式に変換
-                .then((data) => {
-                  console.log(data);
-                  if (data?.errorMesseage) {
-                    alert(data?.errorMesseage);
-                  }
-                  else{
-                    alert("アップロードに成功しました");
-                    window.location.reload();
-                  }
-                })
-                .catch((error) => {
-                  console.log(error)
-                  alert("アップロードに失敗しました");
-                }); // エラー発生時に出力
-            },
-            error: (error) => {
-              console.error('Error while parsing CSV:', error);
-            },
-          });
-        }
-        reader.readAsText(datafile, 'Shift-JIS')
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                console.log(data);
+              })
+              .catch((error) => console.log(error)); // エラー発生時に出力
+          },
+          error: (error) => {
+            console.error('Error while parsing CSV:', error);
+          },
+        });
       }
+      reader.readAsText(datafile, 'Shift-JIS')
     }
+  }
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className={SC01_css.App}>
+      <header className={SC01_css.App_header}>
         <main>
-          <div className="Phase" >
+          <div className={SC01_css.Phase} >
             {[...Array(7).keys()].map((phase) => (
               <div
                 key={phase}
-                className="phase-wrapper"
+                className={SC01_css.phase_wrapper}
                 style={{
                   position: "relative",
                   marginBottom: "20px",
                 }}
               >
                 {selectedPhase === phase && (
-                  <div className="siscoBear">
+                  <div className={SC01_css.siscoBear}>
                     <img src={SiscoBear} alt="Sisco Bear" />
                   </div>
                 )}
+
                 <button
                   onClick={() => handlePhaseChange(phase)}
                   disabled={selectedPhase === phase}
-                  className={`phase-button ${selectedPhase === phase ? "disabled" : ""
+                  className={`${SC01_css.phase_button} ${selectedPhase === phase ? SC01_css.disabled : ""
                     }`}
                 >
                   <div>
@@ -557,17 +585,17 @@ function SC01() {
             ))}
           </div>
 
-          <div className="Number">
+          <div className={SC01_css.Number}>
             <p>件数: {filteredData.length} 人</p>
           </div>
 
 
-          <div className="Studentregister">
+          <div className={SC01_css.Studentregister}>
             <button onClick={handleClick2}>学生登録</button>
           </div>
 
 
-          <div className="Nendo">
+          <div className={SC01_css.Nendo}>
             <select id="year-select" value={selectedYear} onChange={handleChange} >
               {years.map((year) => (
                 <option key={year} value={year}>
@@ -577,19 +605,18 @@ function SC01() {
             </select>
           </div>
 
-          <div className="Infor2">
+          <div className={SC01_css.Infor2}>
             <select
               id="date"
               name="date"
-              className="short-input"
+              className={SC01_css.short_input}
               value={formatDate.date}
               onChange={handleDateSelect}
             >
               <option value="">説明会日時</option>
               {jobfairOptions?.map((option) => {
                 const dateObj = new Date(option.date);
-                const formattedDate = `${dateObj.getMonth() + 1
-                  }月${dateObj.getDate()}日${dateObj.getHours()}時${dateObj.getMinutes()}分`;
+                const formattedDate = `${(dateObj.getMonth() + 1).toString().padStart(2)}月${dateObj.getDate().toString().padStart(2, '0')}日 ${dateObj.getHours().toString().padStart(2, '0')}時${dateObj.getMinutes().toString().padStart(2, '0')}分`;
 
                 return (
                   <option key={option.jobfair_id} value={option.jobfair_id}>
@@ -602,14 +629,15 @@ function SC01() {
 
 
 
-          <div className="Upload">
+
+          <div className={SC01_css.Upload}>
             <form onSubmit={selectFile}>
               <input type="file" accept="text/csv" ref={inputfile} />
               <button type="submit">アップロード</button>
             </form>
           </div>
 
-          <div className="Search">
+          <div className={SC01_css.Search}>
             <input
               type="search"
               id="search"
@@ -619,7 +647,7 @@ function SC01() {
             />
           </div>
 
-          <div className="Inforsessionschedule">
+          <div className={SC01_css.Inforsessionschedule}>
             <button onClick={handleClick}>
               説明会日程
             </button>
@@ -628,62 +656,81 @@ function SC01() {
 
           <div>
             {errorMessage && (
-              <div className="error-message-container">
-                <p className="error-message-text">{errorMessage}</p>
-                <button className="close-error-button" onClick={closeErrorMessage}>
+              <div className={SC01_css.error_message_container}>
+                <p className={SC01_css.error_message_text}>{errorMessage}</p>
+                <button className={SC01_css.close_error_button} onClick={closeErrorMessage}>
                   閉じる
                 </button>
               </div>
             )}
 
-            <div className="Bulkregister" onClick={openPopup}>
+            <div className={SC01_css.Bulkregister} onClick={openPopup}>
               <button>一括登録</button>
             </div>
             {isPopupOpen && (
-              <div className="popup-overlay" onClick={closePopup}>
+              <div className={SC01_css.popup_overlay} onClick={closePopup}>
                 {getPopupContent()}
               </div>
             )}
           </div>
 
-          <div className="table-container">
-            <table className="student-table">
+          <div className={SC01_css.table_container}>
+            <table className={SC01_css.student_table}>
               <thead>
                 <tr>
-                  <th colSpan="10" className="table-title">学生一覧</th>
+                  <th colSpan="10" className={SC01_css.table_title}>学生一覧</th>
                 </tr>
                 <tr>
-                  <th>選択</th>
-                  <th>氏名</th>
-                  <th>フリガナ</th>
-                  <th>大学</th>
-                  <th>説明会日時</th>
-                  <th>一次面接日時</th>
-                  <th>座談会日時</th>
-                  <th>最終面接日時</th>
-                  <th>当社を知ったきっかけ</th>
-                  <th>学生状況</th>
+                  <th className={SC01_css.checkbox_column}>選択</th>
+                  <th className={SC01_css.table_header}>氏名</th>
+                  <th className={SC01_css.table_header}>フリガナ</th>
+                  <th className={SC01_css.table_header}>大学</th>
+                  <th className={SC01_css.table_header_phase}>説明会日時</th>
+                  <th className={SC01_css.table_header_phase}>一次面接日時</th>
+                  <th className={SC01_css.table_header_phase}>座談会日時</th>
+                  <th className={SC01_css.table_header_phase}>最終面接日時</th>
+                  <th className={SC01_css.table_header}>当社を知ったきっかけ</th>
+                  <th className={SC01_css.long_text_column}>学生状況</th>
                 </tr>
               </thead>
               <tbody>
                 {paginatedData.map((student) => (
-                  <tr key={student.student_id}>
+                  <tr
+                    key={student.student_id}
+                    className={`${student.recruit_is_decline === 1 ? SC01_css.decline_row : ""} ${student.recruit_is_decline === 1 ? SC01_css.disabled_row : ""
+                      }`}
+                  >
+
                     <td>
                       <input
                         type="checkbox"
-                        className="checkbox"
+                        className={SC01_css.checkbox}
                         checked={selectedIds.includes(student.student_id)}
                         onChange={() => handleCheckboxChange(student.student_id)}
+                        disabled={student.recruit_is_decline === 1}
                       />
                     </td>
+
                     <td
-                      className="name"
-                      style={{ cursor: "pointer" }}
+                      className={`${SC01_css.name} ${student.recruit_is_decline === 1 ? SC01_css.disabled_name : ""}`}
+                      style={{
+                        cursor: student.recruit_is_decline === 1 ? "not-allowed" : "pointer",
+                        color: student.recruit_is_decline === 1 ? "gray" : "inherit", // グレー色に変更
+                      }}
                     >
-                      <Link to='/SC04' state={{ student_id: student.student_id }} style={{ height: '100%', display: 'block' }}>
+                      <Link
+                        to="/SC04"
+                        state={{ student_id: student.student_id }}
+                        style={{
+                          height: "100%",
+                          display: "block",
+                          pointerEvents: student.recruit_is_decline === 1 ? "none" : "auto", // 無効化
+                        }}
+                      >
                         {student.name}
                       </Link>
                     </td>
+
 
                     <td>{student.furigana}</td>
                     <td>{student.university}</td>
@@ -699,7 +746,8 @@ function SC01() {
                       {activeCalendar?.student_id === student.student_id &&
                         activeCalendar?.field === "interview_date" ? (
                         selectedButtons[student.student_id]?.Studentsituation1 === 1 &&
-                          student.phase_num >= 1 ? (
+                          student.phase_num >= 2 &&
+                          student.recruit_is_decline !== 1 ? ( // recruit_is_decline のチェックを追加
                           <input
                             type="datetime-local"
                             value={student.interview_date || ""}
@@ -714,7 +762,7 @@ function SC01() {
                               setActiveCalendar(null);
                               setCalendar(
                                 student.student_id,
-                                student.phase_num,
+                                3,
                                 e.target.value,
                                 student.interview_updated_at
                               );
@@ -723,8 +771,12 @@ function SC01() {
                           />
                         ) : (
                           <div
-                            className="calendar-disabled"
-                            style={{ color: "gray", cursor: "not-allowed" }}
+                            className={`${SC01_css.calendar_disabled} ${student.recruit_is_decline === 1 ? SC01_css.disabled : ""
+                              }`}
+                            style={{
+                              color: "gray",
+                              cursor: "not-allowed",
+                            }}
                           >
                           </div>
                         )
@@ -733,25 +785,29 @@ function SC01() {
                           onClick={() => {
                             if (
                               selectedButtons[student.student_id]?.Studentsituation1 === 1 &&
-                              student.phase_num >= 1
+                              student.phase_num >= 2 &&
+                              student.recruit_is_decline !== 1
                             ) {
                               toggleCalendar(student.student_id, "interview_date");
                             }
                           }}
-                          className={`calendar-placeholder ${selectedButtons[student.student_id]?.Studentsituation1 !== 1 ||
-                            student.phase_num < 1
-                            ? "disabled"
+                          className={`${SC01_css.calendar_placeholder} ${selectedButtons[student.student_id]?.Studentsituation1 !== 1 ||
+                            student.phase_num < 3 ||
+                            student.recruit_is_decline === 1
+                            ? SC01_css.disabled
                             : ""
                             }`}
                           style={{
                             color:
                               selectedButtons[student.student_id]?.Studentsituation1 !== 1 ||
-                                student.phase_num < 1
+                                student.phase_num < 1 ||
+                                student.recruit_is_decline === 1
                                 ? "gray"
                                 : "inherit",
                             cursor:
                               selectedButtons[student.student_id]?.Studentsituation1 !== 1 ||
-                                student.phase_num < 1
+                                student.phase_num < 1 ||
+                                student.recruit_is_decline === 1
                                 ? "not-allowed"
                                 : "pointer",
                           }}
@@ -770,11 +826,13 @@ function SC01() {
 
 
 
+
                     <td>
                       {activeCalendar?.student_id === student.student_id &&
                         activeCalendar?.field === "roundtable_date" ? (
                         selectedButtons[student.student_id]?.Studentsituation2 === 0 &&
-                          student.phase_num >= 3 ? (
+                          student.phase_num >= 3 &&
+                          student.recruit_is_decline !== 1 ? ( // recruit_is_decline のチェックを追加
                           <input
                             type="datetime-local"
                             value={student.roundtable_date || ""}
@@ -789,7 +847,7 @@ function SC01() {
                               setActiveCalendar(null);
                               setCalendar(
                                 student.student_id,
-                                student.phase_num,
+                                4,
                                 e.target.value,
                                 student.roundtable_updated_at
                               );
@@ -798,8 +856,12 @@ function SC01() {
                           />
                         ) : (
                           <div
-                            className="calendar-disabled"
-                            style={{ color: "gray", cursor: "not-allowed" }}
+                            className={`${SC01_css.calendar_disabled} ${student.recruit_is_decline === 1 ? SC01_css.disabled : ""
+                              }`}
+                            style={{
+                              color: "gray",
+                              cursor: "not-allowed",
+                            }}
                           >
                           </div>
                         )
@@ -808,25 +870,29 @@ function SC01() {
                           onClick={() => {
                             if (
                               selectedButtons[student.student_id]?.Studentsituation2 === 0 &&
-                              student.phase_num >= 3
+                              student.phase_num >= 3 &&
+                              student.recruit_is_decline !== 1 // recruit_is_decline のチェックを追加
                             ) {
                               toggleCalendar(student.student_id, "roundtable_date");
                             }
                           }}
-                          className={`calendar-placeholder ${selectedButtons[student.student_id]?.Studentsituation2 !== 0 ||
-                            student.phase_num < 3
-                            ? "disabled"
+                          className={`${SC01_css.calendar_placeholder} ${selectedButtons[student.student_id]?.Studentsituation2 !== 0 ||
+                            student.phase_num < 3 ||
+                            student.recruit_is_decline === 1
+                            ? SC01_css.disabled
                             : ""
                             }`}
                           style={{
                             color:
                               selectedButtons[student.student_id]?.Studentsituation2 !== 0 ||
-                                student.phase_num < 3
+                                student.phase_num < 3 ||
+                                student.recruit_is_decline === 1
                                 ? "gray"
                                 : "inherit",
                             cursor:
                               selectedButtons[student.student_id]?.Studentsituation2 !== 0 ||
-                                student.phase_num < 3
+                                student.phase_num < 3 ||
+                                student.recruit_is_decline === 1
                                 ? "not-allowed"
                                 : "pointer",
                           }}
@@ -844,11 +910,13 @@ function SC01() {
 
 
 
+
                     <td>
                       {activeCalendar?.student_id === student.student_id &&
                         activeCalendar?.field === "final_date" ? (
                         selectedButtons[student.student_id]?.Studentsituation2 === 0 &&
-                          student.phase_num >= 4 ? (
+                          student.phase_num >= 4 &&
+                          student.recruit_is_decline !== 1 ? (
                           <input
                             type="datetime-local"
                             value={student.final_date || ""}
@@ -863,7 +931,7 @@ function SC01() {
                               setActiveCalendar(null);
                               setCalendar(
                                 student.student_id,
-                                student.phase_num,
+                                5,
                                 e.target.value,
                                 student.final_updated_at
                               );
@@ -872,8 +940,12 @@ function SC01() {
                           />
                         ) : (
                           <div
-                            className="calendar-disabled"
-                            style={{ color: "gray", cursor: "not-allowed" }}
+                            className={`${SC01_css.calendar_disabled} ${student.recruit_is_decline === 1 ? SC01_css.disabled : ""
+                              }`}
+                            style={{
+                              color: "gray",
+                              cursor: "not-allowed",
+                            }}
                           >
                           </div>
                         )
@@ -882,25 +954,29 @@ function SC01() {
                           onClick={() => {
                             if (
                               selectedButtons[student.student_id]?.Studentsituation2 === 0 &&
-                              student.phase_num >= 4
+                              student.phase_num >= 4 &&
+                              student.recruit_is_decline !== 1 // recruit_is_decline のチェックを追加
                             ) {
                               toggleCalendar(student.student_id, "final_date");
                             }
                           }}
-                          className={`calendar-placeholder ${selectedButtons[student.student_id]?.Studentsituation2 !== 0 ||
-                            student.phase_num < 4
-                            ? "disabled"
+                          className={`${SC01_css.calendar_placeholder} ${selectedButtons[student.student_id]?.Studentsituation2 !== 0 ||
+                            student.phase_num < 4 ||
+                            student.recruit_is_decline === 1
+                            ? SC01_css.disabled
                             : ""
                             }`}
                           style={{
                             color:
                               selectedButtons[student.student_id]?.Studentsituation2 !== 0 ||
-                                student.phase_num < 4
+                                student.phase_num < 4 ||
+                                student.recruit_is_decline === 1
                                 ? "gray"
                                 : "inherit",
                             cursor:
                               selectedButtons[student.student_id]?.Studentsituation2 !== 0 ||
-                                student.phase_num < 4
+                                student.phase_num < 4 ||
+                                student.recruit_is_decline === 1
                                 ? "not-allowed"
                                 : "pointer",
                           }}
@@ -918,275 +994,272 @@ function SC01() {
 
 
 
+
                     <td>{student.know_opportunity}</td>
                     <td>
-                      {(student.phase_num === 0) && (
-                        <div>
-                          <p className="Studentsituation-label">説明会</p>
-                          <div className="Studentsituation">
-                            <button
-                              className={
-                                selectedButtons[student.student_id]?.Studentsituation === 0 ? "active" : ""}
-                              onClick={() =>
-                                handleButtonClick(
-                                  student.student_id,
-                                  student.phase_num,
-                                  "Studentsituation",
-                                  0,
-                                  student.updated_at)
-                              }
-                            >
-                              出席
-                            </button>
-                            <button
-                              className={
-                                selectedButtons[student.student_id]?.Studentsituation === 1 ? "active" : ""}
-                              onClick={() =>
-                                handleButtonClick(
-                                  student.student_id,
-                                  student.phase_num,
-                                  "Studentsituation",
-                                  1,
-                                  student.updated_at)
-                              }
-                            >
-                              欠席
-                            </button>
-                            <button
-                              className={
-                                selectedButtons[student.student_id]?.Studentsituation === 2 ? "active" : ""}
-                              onClick={() =>
-                                handleButtonClick(
-                                  student.student_id,
-                                  student.phase_num,
-                                  "Studentsituation",
-                                  2,
-                                  student.updated_at)
-                              }
-                            >
-                              キャンセル
-                            </button>
-                          </div>
-                        </div>
+                      {student.recruit_is_decline !== 1 && (
+                        <>
+                          {student.phase_num === 0 || (student.phase_num === 1 && (student.jobfair_is_attend !== 0 || student.jobfair_is_attend === null)) ? (
+                            <div>
+                              <p className={SC01_css.Studentsituation_label}>説明会</p>
+                              <div className={SC01_css.Studentsituation}>
+                                <button
+                                  className={
+                                    selectedButtons[student.student_id]?.Studentsituation === 0 ? SC01_css.active : ""
+                                  }
+                                  onClick={() =>
+                                    handleButtonClick(
+                                      student.student_id,
+                                      student.phase_num,
+                                      "Studentsituation",
+                                      0,
+                                      student.updated_at
+                                    )
+                                  }
+                                >
+                                  出席
+                                </button>
+                                <button
+                                  className={
+                                    selectedButtons[student.student_id]?.Studentsituation === 1 ? SC01_css.active : ""
+                                  }
+                                  onClick={() =>
+                                    handleButtonClick(
+                                      student.student_id,
+                                      student.phase_num,
+                                      "Studentsituation",
+                                      1,
+                                      student.updated_at
+                                    )
+                                  }
+                                >
+                                  欠席
+                                </button>
+                                <button
+                                  className={
+                                    selectedButtons[student.student_id]?.Studentsituation === 2 ? SC01_css.active : ""
+                                  }
+                                  onClick={() =>
+                                    handleButtonClick(
+                                      student.student_id,
+                                      student.phase_num,
+                                      "Studentsituation",
+                                      2,
+                                      student.updated_at
+                                    )
+                                  }
+                                >
+                                  cancel
+                                </button>
+                              </div>
+                            </div>
+                          ) : student.phase_num === 1 || (student.phase_num === 2 && (student.resume_is_submit !== null || student.resume_is_submit === null)) ? (
+                            <div>
+                              <p className={SC01_css.Studentsituation_label}>履歴書</p>
+                              <div className={SC01_css.Studentsituation1}>
+                                <button
+                                  className={
+                                    selectedButtons[student.student_id]?.Studentsituation1 === 1 ? SC01_css.active : ""
+                                  }
+                                  onClick={() =>
+                                    handleButtonClick(
+                                      student.student_id,
+                                      student.phase_num,
+                                      "Studentsituation1",
+                                      1,
+                                      student.updated_at
+                                    )
+                                  }
+                                >
+                                  提出
+                                </button>
+                                <button
+                                  className={
+                                    selectedButtons[student.student_id]?.Studentsituation1 === 0
+                                      ? SC01_css.active
+                                      : ""
+                                  }
+                                  onClick={() =>
+                                    handleButtonClick(
+                                      student.student_id,
+                                      student.phase_num,
+                                      "Studentsituation1",
+                                      0,
+                                      student.updated_at
+                                    )
+                                  }
+                                >
+                                  未提出
+                                </button>
+                              </div>
+                            </div>
+                          ) : student.phase_num === 3 ? (
+                            <div>
+                              <p className={SC01_css.Studentsituation_label}>一次面接</p>
+                              <div className={SC01_css.Studentsituation2}>
+                                <button
+                                  className={
+                                    selectedButtons[student.student_id]?.Studentsituation2 === 0 ? SC01_css.active : ""
+                                  }
+                                  onClick={() =>
+                                    handleButtonClick(
+                                      student.student_id,
+                                      student.phase_num,
+                                      "Studentsituation2",
+                                      0,
+                                      student.updated_at
+                                    )
+                                  }
+                                >
+                                  合格
+                                </button>
+                                <button
+                                  className={
+                                    selectedButtons[student.student_id]?.Studentsituation2 === 1 ? SC01_css.active : ""
+                                  }
+                                  onClick={() =>
+                                    handleButtonClick(
+                                      student.student_id,
+                                      student.phase_num,
+                                      "Studentsituation2",
+                                      1,
+                                      student.updated_at
+                                    )
+                                  }
+                                >
+                                  不合格
+                                </button>
+                                <button
+                                  className={
+                                    selectedButtons[student.student_id]?.Studentsituation2 === 2 ? SC01_css.active : ""
+                                  }
+                                  onClick={() =>
+                                    handleButtonClick(
+                                      student.student_id,
+                                      student.phase_num,
+                                      "Studentsituation2",
+                                      2,
+                                      student.updated_at
+                                    )
+                                  }
+                                >
+                                  未定
+                                </button>
+                              </div>
+                            </div>
+                          ) : student.phase_num === 4 ? (
+                            <div>
+                              <p className={SC01_css.Studentsituation_label}>座談会</p>
+                              <div className={SC01_css.Studentsituation2}>
+                                <button
+                                  className={
+                                    selectedButtons[student.student_id]?.Studentsituation2 === 0 ? SC01_css.active : ""
+                                  }
+                                  onClick={() =>
+                                    handleButtonClick(
+                                      student.student_id,
+                                      student.phase_num,
+                                      "Studentsituation2",
+                                      0,
+                                      student.updated_at
+                                    )
+                                  }
+                                >
+                                  合格
+                                </button>
+                                <button
+                                  className={
+                                    selectedButtons[student.student_id]?.Studentsituation2 === 1 ? SC01_css.active : ""
+                                  }
+                                  onClick={() =>
+                                    handleButtonClick(
+                                      student.student_id,
+                                      student.phase_num,
+                                      "Studentsituation2",
+                                      1,
+                                      student.updated_at
+                                    )
+                                  }
+                                >
+                                  不合格
+                                </button>
+                                <button
+                                  className={
+                                    selectedButtons[student.student_id]?.Studentsituation2 === 2 ? SC01_css.active : ""
+                                  }
+                                  onClick={() =>
+                                    handleButtonClick(
+                                      student.student_id,
+                                      student.phase_num,
+                                      "Studentsituation2",
+                                      2,
+                                      student.updated_at
+                                    )
+                                  }
+                                >
+                                  未定
+                                </button>
+                              </div>
+                            </div>
+                          ) : student.phase_num === 5 ? (
+                            <div>
+                              <p className={SC01_css.Studentsituation_label}>最終面接</p>
+                              <div className={SC01_css.Studentsituation2}>
+                                <button
+                                  className={
+                                    selectedButtons[student.student_id]?.Studentsituation2 === 0 ? SC01_css.active : ""
+                                  }
+                                  onClick={() =>
+                                    handleButtonClick(
+                                      student.student_id,
+                                      student.phase_num,
+                                      "Studentsituation2",
+                                      0,
+                                      student.updated_at
+                                    )
+                                  }
+                                >
+                                  合格
+                                </button>
+                                <button
+                                  className={
+                                    selectedButtons[student.student_id]?.Studentsituation2 === 1 ? SC01_css.active : ""
+                                  }
+                                  onClick={() =>
+                                    handleButtonClick(
+                                      student.student_id,
+                                      student.phase_num,
+                                      "Studentsituation2",
+                                      1,
+                                      student.updated_at
+                                    )
+                                  }
+                                >
+                                  不合格
+                                </button>
+                                <button
+                                  className={
+                                    selectedButtons[student.student_id]?.Studentsituation2 === 2 ? SC01_css.active : ""
+                                  }
+                                  onClick={() =>
+                                    handleButtonClick(
+                                      student.student_id,
+                                      student.phase_num,
+                                      "Studentsituation2",
+                                      2,
+                                      student.updated_at
+                                    )
+                                  }
+                                >
+                                  未定
+                                </button>
+                              </div>
+                            </div>
+                          ) : null}
+                        </>
                       )}
-
-                      {(student.phase_num === 1 || student.phase_num === 2) && (
-                        <div>
-                          <p className="Studentsituation-label">履歴書</p>
-                          <div className="Studentsituation1">
-                            <button
-                              className={
-                                selectedButtons[student.student_id]?.Studentsituation1 === 1 ? "active" : ""}
-                              onClick={() =>
-                                handleButtonClick(
-                                  student.student_id,
-                                  student.phase_num,
-                                  "Studentsituation1",
-                                  1,
-                                  student.updated_at)
-                              }
-                            >
-                              提出
-                            </button>
-                            <button
-                              className={
-                                selectedButtons[student.student_id]?.Studentsituation1 === 0
-                                  ? "active"
-                                  : ""
-                              }
-                              onClick={() =>
-                                handleButtonClick(
-                                  student.student_id,
-                                  student.phase_num,
-                                  "Studentsituation1",
-                                  0,
-                                  student.updated_at)
-                              }
-                            >
-                              未提出
-                            </button>
-                          </div>
-                        </div>
-                      )}
-
-
-
-                      {(student.phase_num === 3) && (
-                        <div>
-                          <p className="Studentsituation-label">一次面接</p>
-                          <div className="Studentsituation2">
-                            <button
-                              className={
-                                selectedButtons[student.student_id]?.Studentsituation2 === 0
-                                  ? "active"
-                                  : ""
-                              }
-                              onClick={() =>
-                                handleButtonClick(
-                                  student.student_id,
-                                  student.phase_num,
-                                  "Studentsituation2",
-                                  0,
-                                  student.updated_at)
-                              }
-                            >
-                              合格
-                            </button>
-                            <button
-                              className={
-                                selectedButtons[student.student_id]?.Studentsituation2 === 1
-                                  ? "active"
-                                  : ""
-                              }
-                              onClick={() =>
-                                handleButtonClick(
-                                  student.student_id,
-                                  student.phase_num,
-                                  "Studentsituation2",
-                                  1,
-                                  student.updated_at)
-                              }
-                            >
-                              不合格
-                            </button>
-                            <button
-                              className={
-                                selectedButtons[student.student_id]?.Studentsituation2 === 2
-                                  ? "active"
-                                  : ""
-                              }
-                              onClick={() =>
-                                handleButtonClick(
-                                  student.student_id,
-                                  student.phase_num,
-                                  "Studentsituation2",
-                                  2,
-                                  student.updated_at)
-                              }
-                            >
-                              未定
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                      {(student.phase_num === 4) && (
-                        <div>
-                          <p className="Studentsituation-label">座談会</p>
-                          <div className="Studentsituation2">
-                            <button
-                              className={
-                                selectedButtons[student.student_id]?.Studentsituation2 === 0
-                                  ? "active"
-                                  : ""
-                              }
-                              onClick={() =>
-                                handleButtonClick(
-                                  student.student_id,
-                                  student.phase_num,
-                                  "Studentsituation2",
-                                  0,
-                                  student.updated_at)
-                              }
-                            >
-                              合格
-                            </button>
-                            <button
-                              className={
-                                selectedButtons[student.student_id]?.Studentsituation2 === 1
-                                  ? "active"
-                                  : ""
-                              }
-                              onClick={() =>
-                                handleButtonClick(
-                                  student.student_id,
-                                  student.phase_num,
-                                  "Studentsituation2",
-                                  1,
-                                  student.updated_at)
-                              }
-                            >
-                              不合格
-                            </button>
-                            <button
-                              className={
-                                selectedButtons[student.student_id]?.Studentsituation2 === 2
-                                  ? "active"
-                                  : ""
-                              }
-                              onClick={() =>
-                                handleButtonClick(
-                                  student.student_id,
-                                  student.phase_num,
-                                  "Studentsituation2",
-                                  2,
-                                  student.updated_at)
-                              }
-                            >
-                              未定
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                      {(student.phase_num === 5) && (
-                        <div>
-                          <p className="Studentsituation-label">最終面接</p>
-                          <div className="Studentsituation2">
-                            <button
-                              className={
-                                selectedButtons[student.student_id]?.Studentsituation2 === 0
-                                  ? "active"
-                                  : ""
-                              }
-                              onClick={() =>
-                                handleButtonClick(
-                                  student.student_id,
-                                  student.phase_num,
-                                  "Studentsituation2",
-                                  0,
-                                  student.updated_at)
-                              }
-                            >
-                              合格
-                            </button>
-                            <button
-                              className={
-                                selectedButtons[student.student_id]?.Studentsituation2 === 1
-                                  ? "active"
-                                  : ""
-                              }
-                              onClick={() =>
-                                handleButtonClick(
-                                  student.student_id,
-                                  student.phase_num,
-                                  "Studentsituation2",
-                                  1,
-                                  student.updated_at)
-                              }
-                            >
-                              不合格
-                            </button>
-                            <button
-                              className={
-                                selectedButtons[student.student_id]?.Studentsituation2 === 2
-                                  ? "active"
-                                  : ""
-                              }
-                              onClick={() =>
-                                handleButtonClick(
-                                  student.student_id,
-                                  student.phase_num,
-                                  "Studentsituation2",
-                                  2,
-                                  student.updated_at)
-                              }
-                            >
-                              未定
-                            </button>
-                          </div>
-                        </div>
-                      )}
-
                     </td>
+
                   </tr>
                 ))}
               </tbody>
@@ -1194,11 +1267,11 @@ function SC01() {
             </table>
           </div>
 
-          <div className="Pagination">
+          <div className={SC01_css.Pagination}>
             <button
               onClick={handlePreviousPage}
               disabled={currentPage === 1}
-              className="page-button"
+              className={SC01_css.page_button}
             >
               &lt;
             </button>
@@ -1207,18 +1280,18 @@ function SC01() {
               <button
                 key={index + 1}
                 onClick={() => setCurrentPage(index + 1)}
-                className={`page-button ${currentPage === index + 1 ? "active" : ""}`}
+                className={`${SC01_css.page_button} ${currentPage === index + 1 ? SC01_css.active : ""}`}
               >
                 {index + 1}
               </button>
             ))}
 
-            {totalPages > 5 && <span className="dots">...</span>}
+            {totalPages > 5 && <span className={SC01_css.dots}>...</span>}
 
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
-              className="page-button"
+              className={SC01_css.page_button1}
             >
               &gt;
             </button>
