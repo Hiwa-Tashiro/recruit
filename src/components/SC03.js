@@ -348,8 +348,8 @@ function SC03() {
           <div className={SC03_css.popup}>
             <div className={SC03_css.popup_content}>
               <p>削除しますか？</p>
-              <button className={SC03_css.confirm_button} onClick={() => deleteRow(true)}>削除する</button>
-              <button className={SC03_css.cancel_button} onClick={() => deleteRow(false)}>キャンセル</button>
+              <button className={SC03_css.confirm_button} onClick={() => deleteRow(true)}>はい</button>
+              <button className={SC03_css.cancel_button} onClick={() => deleteRow(false)}>いいえ</button>
             </div>
           </div>
         )}
