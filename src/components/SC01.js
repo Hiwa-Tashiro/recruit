@@ -1,12 +1,23 @@
 import SC01_css from '../css/SC01.module.css';
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
+
 import SiscoBear from '../ui-components/siscobear.png'; // 画像をインポート
 import { useCookies } from "react-cookie";
 import Papa from 'papaparse';
 
 function SC01() {
   const [data, setData] = useState([]);
+
+  const SC05 = () => {
+    const location = useLocation();
+    const studentId = new URLSearchParams(location.search).get("student_id");
+
+    console.log("Student ID:", studentId);
+
+    return <div>Student ID: {studentId}</div>;
+  };
+
 
   //Cookies
   const [cookies, setCookie] = useCookies();
@@ -36,7 +47,6 @@ function SC01() {
   const navigate = useNavigate();
   const handleClick = () => { navigate("/SC03"); };
   const handleClick2 = () => { navigate("/SC04"); };
-  const handleClick3 = () => { navigate("/SC05"); };
 
 
   // Phase
@@ -46,109 +56,144 @@ function SC01() {
   const [totalPhaseCount, setTotalPhaseCount] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const handlePhaseChange = (phase) => {
-    setSelectedPhase(phase); // フェーズを更新
+    setSelectedPhase(phase);
     setCurrentPage(1);
     setSelectedIds([]);
 
-    if (phase === 0) {
-      setFilteredData(data); // 全データ表示
-    } else {
-      setFilteredData(data.filter((student) => student.phase_num >= phase)); // フィルタリング
-    }
-    const totalCount = phaseData[phase]?.[`phase${phase}_count`] || 0; // 指定フェーズの人数
+    applyFilters(searchQuery, formData.date, phase);
+
+    const totalCount = phaseData[phase]?.[`phase${phase}_count`] || 0;
     setTotalPhaseCount(totalCount);
   };
+
 
 
   //Popup
   const [errorMessage, setErrorMessage] = useState("");
   const openPopup = () => {
+    const hasInvalidStudents = selectedIds.some((studentId) => {
+      const student = students.find((s) => s.student_id === studentId);
+
+      if (!student) return false;
+
+      if (selectedPhase === 3) {
+        return selectedButtons[studentId]?.Studentsituation2 === 1; // 一次面接で不合格
+      } else if (selectedPhase === 4) {
+        return selectedButtons[studentId]?.Studentsituation2 === 1; // 座談会で不合格
+      } else if (selectedPhase === 5) {
+        return selectedButtons[studentId]?.Studentsituation2 === 1; // 最終面接で不合格
+      }
+
+      return false;
+    });
+
     if (selectedIds.length === 0) {
       setErrorMessage("登録する学生を選択してください。");
       return;
     }
-    setErrorMessage(""); // Clear any previous error message
+
+    if (hasInvalidStudents) {
+      setErrorMessage("不合格が選択された学生を含めることはできません。");
+      return;
+    }
+
+    setErrorMessage("");
     setIsPopupOpen(true);
   };
-  
+
+
   const closeErrorMessage = () => {
-    setErrorMessage(""); // Clear error message
+    setErrorMessage("");
   };
-  
+
   const closePopup = () => {
     setIsPopupOpen(false);
   };
-  
-  
+
+
   const registerPopup = async () => {
     try {
       if (selectedIds.length === 0) {
         setErrorMessage("登録する学生を選択してください。");
         return;
       }
-  
+
       const requestData = {
         phase_num: selectedPhase,
         students: selectedIds.map((studentId) => {
           const student = students.find((s) => s.student_id === studentId);
+          let updated_at = null;
+
+          if (selectedPhase <= 2) {
+            updated_at = student?.updated_at;
+          } else if (selectedPhase == 3) {
+            updated_at = student?.interview_updated_at || null;
+          } else if (selectedPhase == 4) {
+            updated_at = student?.roundtable_updated_at || null;
+          } else if (selectedPhase == 5) {
+            updated_at = student?.final_updated_at || null;
+          }
+
+
           return {
             student_id: studentId,
             name: student?.name || "",
             university: student?.university || "",
             resume_is_submit: student?.resume_is_submit || null,
             jobfair_is_attend: student?.jobfair_is_attend || null,
-            result: student?.result || null,
+            result: student?.result,
+            updated_at: updated_at,
           };
         }),
         user: cookies.user,
         function_id: functionid,
-        updated_at: new Date().toISOString(),
         recruit_year: cookies.recruit_year,
       };
 
+
       const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/bulkRegister";
-  
+
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestData),
       });
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
+
       const result = await response.json();
       console.log("登録成功:", result);
-  
+
       setIsPopupOpen(false);
     } catch (error) {
       console.error("登録エラー:", error);
       alert("登録中にエラーが発生しました。");
     }
   };
-  
-  // Render the popup content
+
   const getPopupContent = () => {
     const phaseTitles = [
       "説明会参加者",
       "履歴書提出者",
+      "",
       "一次面接合格者",
       "座談会合格者",
       "最終面接合格者",
-      "内定者",
+      "内定者"
     ];
-  
-    if (selectedPhase > 5) return null; // Prevent invalid phase selection
-  
+
+    if (selectedPhase > 5) return null;
+
     const selectedStudents = students.filter((student) =>
       selectedIds.includes(student.student_id)
     );
-  
+
     return (
       <div className={SC01_css.popup_content} onClick={(e) => e.stopPropagation()}>
         <h2>{`以下の学生を${phaseTitles[selectedPhase]}に登録しますか？`}</h2>
-  
+
         <table className={SC01_css.studenttbl}>
           <thead>
             <tr>
@@ -165,7 +210,7 @@ function SC01() {
             ))}
           </tbody>
         </table>
-  
+
         <div className={SC01_css.popup_buttons}>
           <button className={SC01_css.close_button} onClick={closePopup}>
             閉じる
@@ -256,9 +301,11 @@ function SC01() {
 
 
   //Infor
+  const [searchQuery, setSearchQuery] = useState("");
   const [jobfairOptions, setJobfairOptions] = useState([]);
   const [formData, setFormData] = useState({ date: "" });
   const [students, setStudents] = useState([]);
+
   useEffect(() => {
     const fetchJobfairDates = async () => {
       try {
@@ -272,41 +319,59 @@ function SC01() {
             body: JSON.stringify({
               recruit_year: cookies?.recruit_year,
             }),
-          });
+          }
+        );
 
         const json = await response.json();
         setStudents(json["tabledata"]);
-        await setJobfairOptions(json['jobfairlist']);
-
+        setFilteredData(json["tabledata"]); // 初期状態では全データ表示
+        setJobfairOptions(json["jobfairlist"]);
       } catch (error) {
         console.log(error);
       }
     };
+
     fetchJobfairDates();
   }, []);
+
+  const handleInputChange = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+
+    applyFilters(query, formData.date);
+  };
+
   const handleDateSelect = (e) => {
     const selectedJobfairId = e.target.value;
-    console.log(selectedJobfairId);
     setFormData({ date: selectedJobfairId });
 
+    applyFilters(searchQuery, selectedJobfairId);
+  };
+
+  const applyFilters = (query, selectedJobfairId, selectedPhaseNum) => {
     let filtered = students;
 
+    if (selectedPhaseNum > 0) {
+      filtered = filtered.filter((student) => student.phase_num >= selectedPhaseNum);
+    }
+
     if (selectedJobfairId) {
-      filtered = filtered.filter(
-        (student) => student.jobfair_id == selectedJobfairId
+      filtered = filtered.filter((student) => student.jobfair_id == selectedJobfairId);
+    }
+
+    if (query) {
+      filtered = filtered.filter((student) =>
+        student.name.includes(query) ||
+        student.university.includes(query) ||
+        student.email?.includes(query) ||
+        student.know_opportunity.includes(query)
       );
     }
 
-    if (searchQuery) {
-      filtered = filtered.filter((student) =>
-        student.name.includes(searchQuery) ||
-        student.university.includes(searchQuery) ||
-        student.email?.includes(searchQuery) ||
-        student.know_opportunity.includes(searchQuery)
-      );
-    }
     setFilteredData(filtered);
   };
+
+
 
 
   // Studentstatus
@@ -344,7 +409,6 @@ function SC01() {
     fetchData();
   }, [functionid]);
   const handleButtonClick = async (studentId, phase, group, buttonIndex, updated_at) => {
-
     const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/rec2-status";
 
     try {
@@ -367,8 +431,7 @@ function SC01() {
       if (!response.ok) {
         const errorData = await response.json();
         if (errorData.error === "Record has been updated by another process.") {
-          alert("他のユーザーによってデータが変更されました。最新の情報を再取得してください。");
-          await fetchData();
+          await refetchData();
           return;
         } else {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -377,15 +440,25 @@ function SC01() {
         const result = await response.json();
         console.log("Update successful:", result);
 
-        setSelectedButtons((prevState) => ({
-          ...prevState,
-          [studentId]: {
-            ...prevState[studentId],
-            [group]: buttonIndex,
-          },
-        }));
+        setSelectedButtons((prevState) => {
+          const newState = {
+            ...prevState,
+            [studentId]: {
+              ...prevState[studentId],
+              [group]: buttonIndex,
+            },
+          };
 
-        await fetchData();
+          if (group === "Studentsituation2" && buttonIndex === 1) {
+            newState[studentId].isDeclined = true; // 不合格フラグ
+          } else if (group === "Studentsituation2") {
+            newState[studentId].isDeclined = false;
+          }
+
+          return newState;
+        });
+
+        await refetchData();
       }
     } catch (error) {
       console.error("Error sending button index to Lambda:", error);
@@ -393,10 +466,46 @@ function SC01() {
   };
 
 
+
+
+  const refetchData = async () => {
+    try {
+      const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/selectStudent";
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          function_id: functionid,
+          user: cookies.user,
+          recruit_year: cookies.recruit_year,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const json = await response.json();
+      console.log("Refetched Data:", json);
+
+      setStudents(json["tabledata"] || []);
+      setPhaseData(json["phases"] || {});
+
+      applyFilters(searchQuery, formData.date, selectedPhase);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+
+
+
+
   //Page
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage); //全体の長さを割る
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginatedData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -409,43 +518,18 @@ function SC01() {
   };//次のページへ進む
 
 
-  //Nendo
-  const baseYear = cookies.recruit_year;
-  const range = 3; // 範囲（-2～+3）
+  // Nendo
+  const currentYear = new Date().getFullYear();
+  const baseYear = cookies.recruit_year || currentYear;
+  const range = 3; // 範囲（-3～+3）
   const [selectedYear, setSelectedYear] = useState(baseYear);
   const years = Array.from({ length: range * 2 + 1 }, (_, i) => baseYear - range + i);
   const handleChange = (event) => {
-    setSelectedYear(event.target.value);
-    setCookie("recruit_year", event.target.value);
-    console.log(cookies.recruit_year)
+    const newYear = parseInt(event.target.value, 10);
+    setSelectedYear(newYear);
+    setCookie("recruit_year", newYear);
+    console.log("Selected year:", newYear);
     window.location.reload();
-  };
-
-
-  //Search
-  const [searchQuery, setSearchQuery] = useState("");
-  const handleInputChange = (event) => {
-    const query = event.target.value;
-    setSearchQuery(query);
-
-    let filtered = students;
-
-    if (formData.date) {
-      filtered = filtered.filter(
-        (student) => student.jobfair_id == formData.date
-      );
-    }
-
-    if (query) {
-      filtered = filtered.filter((student) =>
-        student.name.includes(query) ||
-        student.university.includes(query) ||
-        student.email?.includes(query) ||
-        student.know_opportunity.includes(query)
-      );
-    }
-
-    setFilteredData(filtered);
   };
 
 
@@ -488,9 +572,9 @@ function SC01() {
         const initialButtons = {};
         (json["tabledata"] || []).forEach((student) => {
           initialButtons[student.student_id] = {
-            Studentsituation: student.jobfair_is_attend || 0,
+            Studentsituation: student.jobfair_is_attend,
             Studentsituation1: student.resume_is_submit || 0,
-            Studentsituation2: student.result
+            Studentsituation2: student.result 
           }
         });
         setSelectedButtons(initialButtons);
@@ -519,9 +603,9 @@ function SC01() {
         Papa.parse(readerfile, {
           header: true,
           skipEmptyLines: true, // 空行をスキップ
-          complete: (result) => {
+          complete: async(result) => {
             const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/registStudents";
-            fetch(url, {
+            await fetch(url, {
               method: "POST",
               headers: { Authorization: cookies.token },
               body: JSON.stringify({
@@ -529,14 +613,24 @@ function SC01() {
                 recruit_year: cookies.recruit_year,
                 filename: datafile?.name,
                 user: cookies.user,
-                functionid: 'SC01',
+                functionid: functionid,
               })
             })
-              .then((res) => res.json())
+              .then((res) => res.json()) // JSON形式に変換
               .then((data) => {
                 console.log(data);
+                if (data?.errorMesseage) {
+                  alert(data?.errorMesseage);
+                }
+                else{
+                  alert("アップロードに成功しました");
+                  window.location.reload();
+                }
               })
-              .catch((error) => console.log(error)); // エラー発生時に出力
+              .catch((error) => {
+                console.log(error)
+                alert("アップロードに失敗しました");
+              }); // エラー発生時に出力
           },
           error: (error) => {
             console.error('Error while parsing CSV:', error);
@@ -605,6 +699,7 @@ function SC01() {
             </select>
           </div>
 
+
           <div className={SC01_css.Infor2}>
             <select
               id="date"
@@ -627,15 +722,14 @@ function SC01() {
             </select>
           </div>
 
-
-
-
           <div className={SC01_css.Upload}>
             <form onSubmit={selectFile}>
               <input type="file" accept="text/csv" ref={inputfile} />
               <button type="submit">アップロード</button>
             </form>
           </div>
+
+
 
           <div className={SC01_css.Search}>
             <input
@@ -664,9 +758,12 @@ function SC01() {
               </div>
             )}
 
-            <div className={SC01_css.Bulkregister} onClick={openPopup}>
-              <button>一括登録</button>
+            <div className={SC01_css.Bulkregister} onClick={selectedPhase !== 2 ? openPopup : null}>
+              <button disabled={selectedPhase === 2} className={selectedPhase === 2 ? SC01_css.disabled : ""}>
+                一括登録
+              </button>
             </div>
+
             {isPopupOpen && (
               <div className={SC01_css.popup_overlay} onClick={closePopup}>
                 {getPopupContent()}
@@ -697,7 +794,12 @@ function SC01() {
                 {paginatedData.map((student) => (
                   <tr
                     key={student.student_id}
-                    className={`${student.recruit_is_decline === 1 ? SC01_css.decline_row : ""} ${student.recruit_is_decline === 1 ? SC01_css.disabled_row : ""
+                    className={`${student.recruit_is_decline === 1 || selectedButtons[student.student_id]?.Studentsituation2 === 1
+                      ? SC01_css.decline_row
+                      : ""
+                      } ${student.recruit_is_decline === 1 || selectedButtons[student.student_id]?.Studentsituation2 === 1
+                        ? SC01_css.disabled_row
+                        : ""
                       }`}
                   >
 
@@ -714,21 +816,20 @@ function SC01() {
                     <td
                       className={`${SC01_css.name} ${student.recruit_is_decline === 1 ? SC01_css.disabled_name : ""}`}
                       style={{
-                        cursor: student.recruit_is_decline === 1 ? "not-allowed" : "pointer",
                         color: student.recruit_is_decline === 1 ? "gray" : "inherit", // グレー色に変更
                       }}
                     >
                       <Link
-                        to="/SC04"
-                        state={{ student_id: student.student_id }}
+                        to="/SC05"
+                        state={{ student_id: student?.student_id }}
                         style={{
                           height: "100%",
                           display: "block",
-                          pointerEvents: student.recruit_is_decline === 1 ? "none" : "auto", // 無効化
                         }}
                       >
                         {student.name}
                       </Link>
+
                     </td>
 
 
@@ -747,7 +848,7 @@ function SC01() {
                         activeCalendar?.field === "interview_date" ? (
                         selectedButtons[student.student_id]?.Studentsituation1 === 1 &&
                           student.phase_num >= 2 &&
-                          student.recruit_is_decline !== 1 ? ( // recruit_is_decline のチェックを追加
+                          student.recruit_is_decline !== 1 ? (
                           <input
                             type="datetime-local"
                             value={student.interview_date || ""}
@@ -1001,7 +1102,7 @@ function SC01() {
                         <>
                           {student.phase_num === 0 || (student.phase_num === 1 && (student.jobfair_is_attend !== 0 || student.jobfair_is_attend === null)) ? (
                             <div>
-                              <p className={SC01_css.Studentsituation_label}>説明会</p>
+                              <div className={SC01_css.Studentsituation_label}>説明会</div>
                               <div className={SC01_css.Studentsituation}>
                                 <button
                                   className={
@@ -1055,7 +1156,7 @@ function SC01() {
                             </div>
                           ) : student.phase_num === 1 || (student.phase_num === 2 && (student.resume_is_submit !== null || student.resume_is_submit === null)) ? (
                             <div>
-                              <p className={SC01_css.Studentsituation_label}>履歴書</p>
+                              <div className={SC01_css.Studentsituation_label}>履歴書</div>
                               <div className={SC01_css.Studentsituation1}>
                                 <button
                                   className={
@@ -1095,7 +1196,7 @@ function SC01() {
                             </div>
                           ) : student.phase_num === 3 ? (
                             <div>
-                              <p className={SC01_css.Studentsituation_label}>一次面接</p>
+                              <div className={SC01_css.Studentsituation_label}>一次面接</div>
                               <div className={SC01_css.Studentsituation2}>
                                 <button
                                   className={
@@ -1149,7 +1250,7 @@ function SC01() {
                             </div>
                           ) : student.phase_num === 4 ? (
                             <div>
-                              <p className={SC01_css.Studentsituation_label}>座談会</p>
+                              <div className={SC01_css.Studentsituation_label}>座談会</div>
                               <div className={SC01_css.Studentsituation2}>
                                 <button
                                   className={
@@ -1203,7 +1304,7 @@ function SC01() {
                             </div>
                           ) : student.phase_num === 5 ? (
                             <div>
-                              <p className={SC01_css.Studentsituation_label}>最終面接</p>
+                              <div className={SC01_css.Studentsituation_label}>最終面接</div>
                               <div className={SC01_css.Studentsituation2}>
                                 <button
                                   className={

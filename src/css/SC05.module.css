@@ -1,0 +1,351 @@
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+
+}
+
+.title {
+font-size: 50px; /* 文字サイズを指定 */
+font-weight: bold; /* 太字 */
+color: #333; /* 色を変更 (任意) */
+text-align: center; /* 中央揃え (任意) */
+margin-bottom: 20px; /* 下部余白を設定 */
+}
+
+
+.parent_container {
+display: flex;
+justify-content: center;
+align-items: center;
+width: 100%;
+}
+.parent_container1 {
+
+display: flex;
+justify-content: right;
+align-items: center;
+padding: 20px; /* 下部余白を追加 */
+margin-bottom: 20px; /* 下部余白を追加 */
+}
+.parent_container2 {
+display: flex;
+justify-content: left;
+align-items: center;
+margin-bottom: 20px; /* 下部余白を追加 */
+}
+.button_container {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 20px; /* Adjust spacing between buttons */
+margin-top: 20px; /* Add space above the buttons */
+}
+
+.components_wrapper {
+justify-content: space-between;
+width: 100%;
+}
+
+
+.bar_container {
+display: flex;
+justify-content: center;
+align-items: center;
+width: 80px; /* 初期幅 */
+height: 0px;
+margin-bottom: 0px; /* 下部余白を追加 */
+}
+
+
+.required {
+color: red;
+font-weight: bold;
+}
+
+
+.form_container {
+max-width: 1500px; /* 最大横幅を制限 */
+margin: 30px auto; /* 自動で中央揃え */
+padding: 20px;
+background-color: white;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+border-radius: 8px;
+display: flex;
+flex-direction: column; /* 縦方向に並べる */
+align-items: center; /* 中央揃え */
+}
+
+.h1 {
+text-align: center;
+margin-bottom: 20px;
+}
+
+.grid_container {
+display: grid;
+grid-template-columns: 1fr 1fr;
+grid-column-gap: 100px; /* 横の間隔を広げる */
+grid-row-gap: 10px; /* 縦の間隔を変更しない */
+}
+
+.grid_item {
+display: flex;
+flex-direction: column;
+}
+
+.grid_item_agree {
+display: flex;
+align-items: flex-start; /* チェックボックスを上に揃える */
+justify-content: flex-start; /* 水平方向に左寄せ */
+margin-top: 20px; /* 上部にスペースを追加 */
+gap: 10px;
+
+}
+.grid_item_agree label {
+position: relative;
+left: 20px; /* 必要に応じて調整 */
+top: 10px;
+color: #333; /* 文字色の調整も可能 */
+}
+
+.grid_item_agree input[type="checkbox"] {
+transform: scale(3.5); /* チェックボックスを1.5倍に拡大 */
+margin-right: 15px; /* チェックボックスとラベルの間にスペース */
+margin-top: 20px; /* チェックボックスの位置を少し下げる */
+}
+
+.grid_item_agree label {
+font-size: 18px; /* ラベルのフォントサイズを大きく */
+cursor: pointer; /* クリック可能であることを示す */
+display: inline-block;
+font-weight: bold;
+vertical-align: top; /* ラベルをチェックボックスの上に揃える */
+}
+
+
+
+.grid_item label {
+margin-bottom: 8px;
+font-weight: bold;
+}
+
+.grid_item input,
+.grid_item select {
+padding: 8px;
+border: 1px solid #ccc;
+border-radius: 4px;
+font-size: 16px;
+}
+
+.grid_item.full_width {
+grid-column: span 2;
+text-align: center;
+}
+
+.grid_item.register_delete {
+grid-column: span 10;
+text-align: center;
+}
+
+.main_button {
+padding: 10px 20px;
+font-size: 16px;
+color: white;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+
+
+
+.remarks_input {
+width: 450px; /* 横幅を固定 */
+min-height: 50px; /* 最小高さ */
+max-height: 300px; /* 必要なら最大高さを指定 */
+padding: 10px; /* 内側の余白 */
+border: 1px solid #ccc; /* 枠線 */
+border-radius: 5px; /* 角丸 */
+overflow-y: auto; /* 高さを超えた場合は縦スクロールバーを表示 */
+resize: vertical; /* ユーザーが高さを調整可能 */
+font-size: 16px; /* フォントサイズ */
+line-height: 1.5; /* 行間を設定 */
+white-space: pre-wrap; /* 折り返しを有効にする */
+word-wrap: break-word; /* 古いブラウザ向けに折り返しをサポート */
+}
+
+.short {
+display: flex;
+width: 10px; /* 初期幅 */
+height: 0px;
+margin-bottom: 0px; /* 下部余白を追加 */
+
+}
+
+/* 短い入力欄のスタイル */
+.short_input {
+width: 200px; /* 幅を短く設定 */
+max-width: 100%; /* 横幅が狭い画面では全幅を許容 */
+padding: 8px; /* 適切な余白を設定 */
+border: 1px solid #ccc; /* 枠線 */
+border-radius: 4px; /* 角を丸くする */
+font-size: 16px; /* フォントサイズを調整 */
+}
+
+.popup {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.5);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 1000;
+}
+
+.popup_content {
+background-color: #fff;
+padding: 20px;
+border-radius: 8px;
+box-shadow: 0 4px 8px rgba(180, 74, 74, 0.2);
+text-align: center;
+}
+button.goukaku_button {
+background-color: #4caf50; /* 緑 */
+color: white;
+padding: 10px 20px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+}
+button.goukaku_button:hover {
+background-color: #45a049; /* 緑（ホバー時） */
+}
+button.confirm_button {
+background-color: #4caf50; /* 緑 */
+color: white;
+padding: 10px 20px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+}
+
+button.cancel_button {
+background-color: #f44336; /* 赤 */
+color: white;
+padding: 10px 20px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+}
+
+button.confirm_button:hover {
+background-color: #45a049; /* 緑（ホバー時） */
+}
+
+button.cancel_button:hover {
+background-color: #d32f2f; /* 赤（ホバー時） */
+}
+
+.fixed_height {
+height: 120px; /* Match the height of other components */
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.bordered_container {
+border: 1px solid #000000; /* 枠線の色と太さを指定 */
+margin: 0px 0; /* 外側の余白を指定 */
+background-color: #ffffff; /* 背景色を薄いグレーにする（任意） */
+height: 130px;
+width: 90%;
+}
+
+.line_overlay {
+width: 88%;
+height: 2px;
+background-color: #aadffe;
+z-index: 0;
+position: relative;
+top: 35%;
+margin-left: auto;
+margin-right: auto;
+}
+
+.inline_label {
+min-width: 80px; /* ラベルの幅を調整 */
+text-align: right; /* ラベルのテキストを右揃え */
+}
+.inline_input {
+flex-grow: 1; /* 入力欄を可能な限り広げる */
+max-width: 200px; /* 必要に応じて最大幅を設定 */
+}
+
+
+
+.modoru {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    padding: 10px 20px;
+    font-size: 25px;
+    color: #cb0000;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    color: #333; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 10%; /* 幅をパーセント指定 */
+    height: 10%; /* 高さをパーセント指定 */
+  }
+.modoru_button{
+background-color: #eeeeee;
+}
+
+.button {
+padding: 12px 50px;
+font-size: 20px;
+border: 1px solid #000000;
+border-radius: 4px;
+color: #333; 
+cursor: pointer;
+}
+
+.button:disabled {
+background-color: #ccc;
+cursor: not-allowed;
+}
+
+.register_button {
+background-color: #cff1f6;
+}
+
+.delete_button {
+background-color: #eeeeee; 
+}
+
+.button:hover:not(:disabled) {
+opacity: 0.8;
+}
+
+
+.table_style {
+border: 1px solid black;
+border-collapse: collapse;
+width: 100%;
+text-align: left;
+}
+
+.table-style th, .table-style td {
+border: 1px solid black;
+padding: 8px;
+}
+
+.table{
+    border: 1px solid black; 
+    width: 90%;
+    table-layout: fixed;
+    border-collapse: 'collapse';
+}

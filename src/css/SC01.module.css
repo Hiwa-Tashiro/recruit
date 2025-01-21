@@ -1,8 +1,16 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
 .siscoBear img {
-  width: 170px;
-  height: 80px;
+  width: 9vw; 
+  max-width: 170px;
+  height: auto;
   position: absolute;
-  top: -65px;
+  top: -32px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -16,20 +24,21 @@
   width: 100%;
   position: fixed;
   top: 18vh;
-  left: 2vh;
+  left: 0;
 }
 
 .phase_button {
-  width: 160px;
-  height: 110px;
-  font-size: 20px;
-  font-weight: bold;
+  width: 9vw;
+  max-width: 160px;
+  height: 11vh;
+  font-size: 0.9rem;
+  font-weight: normal; /* 通常は太文字ではない */
   border-radius: 12px;
   transition: transform 0.2s ease, background-color 0.2s ease;
   background: #ffffff;
   border: 2px solid #ccc;
   cursor: pointer;
-  padding: 15px;
+  padding: 10px;
   margin: 10px;
   display: flex;
   flex-direction: column;
@@ -39,9 +48,16 @@
 
 .phase_button.disabled {
   background-color: #E9E9E9;
-  color: #a0a0a0;
+  color: #000000;
   cursor: not-allowed;
+  font-weight: bold;
 }
+
+.phase_button.selected {
+  font-weight: bold;
+}
+
+
 
 .phase_button:hover:not(.disabled) {
   transform: scale(1.1);
@@ -52,7 +68,7 @@
 .Inforsessionschedule {
   position: fixed;
   top: 2vh;
-  left: 50px;
+  left: 5vh;
   display: inline-block;
   margin-bottom: 20px;
   border-radius: 5px;
@@ -64,7 +80,7 @@
   border-radius: 8px;
   border: 1px solid #000000;
   color: #000;
-  padding: 20px 60px;
+  padding: 10px 40px;
   font-size: 28px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
@@ -83,10 +99,11 @@
 
 .Nendo {
   position: fixed;
-  right: 23vh;
-  top: 7vh;
-  width: 140px;
-  height: 45px;
+  right: 24vh;
+  top: 9vh;
+  width: 11vh;
+  max-width: 140px;
+  height: 4vh;
   padding: 5px;
   border-radius: 4px;
   border: 1px solid #000000;
@@ -95,12 +112,65 @@
 .Nendo select {
   width: 100%;
   height: 100%;
-  font-size: 18px;
+  font-size: 1.2rem; 
   border: none;
   outline: none;
   background-color: rgb(255, 255, 255);
 }
 
+@media (max-width: 768px) {
+  .Inforsessionschedule button {
+    padding: 10px 40px;
+    font-size: 1.5rem; 
+  }
+  .Nendo {
+    right: 10%; 
+    width: 20vw; 
+  }
+
+  .Nendo select {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .Inforsessionschedule button {
+    padding: 8px 30px;
+    font-size: 1.2rem;
+  }
+
+  .Nendo {
+    right: 15%;
+    width: 30vw;
+  }
+
+  .Nendo select {
+    font-size: 0.9rem;
+  }
+}
+
+.Search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: fixed;
+  top: 2vh;
+  left: 0;
+  z-index: 5; /* Searchバーの優先度を高める */
+}
+
+.Search input[type="search"] {
+  width: 50vw;
+  height: 5vh;
+  padding: 1vh;
+  font-size: 1.2rem;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  background-color: #fbedff;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
 
 input[type="search"]:focus {
   outline: none;
@@ -109,24 +179,24 @@ input[type="search"]:focus {
 }
 
 
-.Search input[type="search"] {
-  width: 800px;
-  height: 40px;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 30px;
-  margin-bottom: 20px;
-  position: fixed;
-  left: 45vh;
-  top: 2vh;
-  background-color: #fbedff;
-  box-sizing: border-box;
+@media (max-width: 768px) {
+  .Search input[type="search"] {
+    width: 70vw;
+    font-size: 1rem;
+  }
 }
+
+@media (max-width: 480px) {
+  .Search input[type="search"] {
+    width: 90vw;
+    font-size: 0.9rem;
+  }
+}
+
 
 .Studentregister {
   position: fixed;
-  top: 7vh;
+  top: 9vh;
   right: 40vh;
   display: flex;
   justify-content: flex-end;
@@ -138,8 +208,9 @@ input[type="search"]:focus {
   background-color: #CFF1F6;
   border-radius: 8px;
   border: 1px solid #000000;
-  padding: 8px 35px;
-  font-size: 28px;
+  height: 6vh;
+  width: 15vh;
+  font-size: 1.5vw;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
@@ -154,15 +225,18 @@ input[type="search"]:focus {
   transform: scale(0.95);
 }
 
+
+
 .Upload {
   position: fixed;
   top: 2vh;
   right: 0vh;
   border-radius: 10px;
+  z-index: 10;
 }
 
 .Upload input[type="file"] {
-  font-size: 18px;
+  font-size: 1.2vw;
   padding: 10px;
   width: 100%;
 }
@@ -172,7 +246,7 @@ input[type="search"]:focus {
   position: fixed;
   top: 7vh;
   right: 7vh;
-  font-size: 20px;
+  font-size: 1.2vw;
   padding: 3px 5px;
   background-color: #dedede;
   color: rgb(0, 0, 0);
@@ -184,22 +258,44 @@ input[type="search"]:focus {
   background-color: #0056b3;
 }
 
+@media (max-width: 768px) {
+  .Studentregister button,
+  .Upload button {
+    font-size: 4vw;
+    padding: 2vw 3vw;
+  }
+
+  .Upload input[type="file"] {
+    font-size: 4vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .Studentregister button,
+  .Upload button {
+    font-size: 5vw;
+    padding: 2.5vw 4vw;
+  }
+
+  .Upload input[type="file"] {
+    font-size: 5vw;
+  }
+}
 
 .Infor2 {
   position: fixed;
-  top: 24vh;
-  left: 11vh;
-  width: 170px;
-  height: auto;
-  padding: 10px;
+  top: 29vh;
+  left: 10vh;
+  width: 10vw;
+  padding: 1vw;
   border-radius: 8px;
+  z-index: 10;
 }
 
 .Infor2 select {
   width: 100%;
-  height: 50px;
-  font-size: 18px;
-  padding: 10px;
+  font-size: 1vw;
+  padding: 0.5vw;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #fff;
@@ -213,8 +309,8 @@ input[type="search"]:focus {
 }
 
 .Infor2 option {
-  font-size: 16px;
-  padding: 5px;
+  font-size: 1vw;
+  padding: 0.2vw;
 }
 
 
@@ -228,15 +324,62 @@ input[type="search"]:focus {
 
 .Bulkregister button {
   position: fixed;
-  top: 24vh;
-  right: 8vh;
+  top: 27vh;
+  right: 4vh;
   background-color: #CFF1F6;
   border-radius: 5px;
   border: 1px solid #000000;
-  padding: 10px 40px;
-  font-size: 24px;
+  padding: 5px 20px;
+  font-size: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.Bulkregister button:hover {
+  background-color: #b0c4de;
+  transform: scale(1.05);
+}
+
+.Bulkregister button:disabled {
+  background-color: #E9E9E9;
+  color: #A0A0A0;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .Infor2 {
+    top: 25%;
+    left: 5%;
+    width: 20vw;
+  }
+
+  .Bulkregister {
+    top: 25%;
+    right: 5%;
+  }
+
+  .Bulkregister button {
+    font-size: 3vw; 
+    padding: 1.5vw 4vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .Infor2 {
+    top: 30%;
+    left: 5%;
+    width: 80%;
+  }
+
+  .Bulkregister {
+    top: 30%;
+    right: 5%;
+  }
+
+  .Bulkregister button {
+    font-size: 4vw;
+    padding: 2vw 5vw;
+  }
 }
 
 .popup_overlay {
@@ -289,39 +432,19 @@ input[type="search"]:focus {
   cursor: pointer;
 }
 
-.Bulkregister {
-  position: fixed;
-  right: 14vh;
-  top: 39vh;
-  flex: 1 1 auto;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  border-radius: 5px;
-}
-
-.Bulkregister button {
-  background-color: #CFF1F6;
-  border-radius: 5px;
-  border: 1px solid #000000;
-  padding: 10px 40px;
-  font-size: 24px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
 
 .error_message_container {
-  position: fixed; /* 画面全体の中央に配置 */
-  top: 50%; /* 上からの距離を50%に設定 */
-  left: 50%; /* 左からの距離を50%に設定 */
-  transform: translate(-50%, -50%); /* 中央に配置するための調整 */
-  background-color: white; /* 背景色を白に設定 */
-  padding: 20px; /* コンテナの余白を設定 */
-  border: 1px solid #ccc; /* 枠線を設定 */
-  border-radius: 8px; /* 角を丸くする */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* シャドウを設定 */
-  text-align: center; /* テキストを中央揃えにする */
-  z-index: 1000; /* 他の要素より前面に表示 */
+  position: fixed; 
+  top: 50%; 
+  left: 50%;
+  transform: translate(-50%, -50%); 
+  background-color: white; 
+  padding: 20px; 
+  border: 1px solid #ccc; 
+  border-radius: 8px; 
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center; 
+  z-index: 1000; 
 }
 
 .error_message_text {
@@ -417,12 +540,16 @@ input[type="search"]:focus {
   background-color: #f5f5f5;
 }
 
+.Studentsituation_label {
+  font-weight: bold;
+  margin-top: 8px;
+  display: block;
+}
 
 .Studentsituation {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 2px;
+  justify-content: center; /* 中央寄せ */
+  gap: 2px; /* ボタン同士の幅を指定 */
   position: relative;
   top: 0vh;
   left: 0vh;
@@ -434,9 +561,9 @@ input[type="search"]:focus {
   color: #000;
   padding: 10px 20px;
   border-radius: 5px;
-  font-size: 13px;
+  font-size: 9px;
   height: 40px;
-  width: 80px;
+  width: 70px;
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -447,19 +574,19 @@ input[type="search"]:focus {
   color: #fff;
 }
 
+
 .Studentsituation button:last-child {
-  font-size: 12px;
+  font-size: 9px;
 }
 
 
 .Studentsituation1 {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 2px;
+  justify-content: center; /* 中央寄せ */
+  gap: 2px; /* ボタン同士の幅を指定 */
   position: relative;
   top: 0vh;
-  left: 4vh;
+  left: 0vh;
 }
 
 .Studentsituation1 button {
@@ -468,9 +595,9 @@ input[type="search"]:focus {
   color: #000;
   padding: 10px 20px;
   border-radius: 5px;
-  font-size: 12px;
+  font-size: 9px;
   height: 40px;
-  width: 80px;
+  width: 70px;
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -482,11 +609,11 @@ input[type="search"]:focus {
 }
 
 
+
 .Studentsituation2 {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 2px;
+  justify-content: center; /* 中央寄せ */
+  gap: 2px; /* ボタン同士の幅を指定 */
   position: relative;
   top: 0vh;
   left: 0vh;
@@ -498,9 +625,9 @@ input[type="search"]:focus {
   color: #000;
   padding: 10px 20px;
   border-radius: 5px;
-  font-size: 12px;
+  font-size: 9px;
   height: 40px;
-  width: 80px;
+  width: 70px;
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -512,11 +639,12 @@ input[type="search"]:focus {
 }
 
 
+
 .Pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 1.5vw;
   position: fixed;
   bottom: 10%;
   left: 50%; 
@@ -529,9 +657,9 @@ input[type="search"]:focus {
   border: 1px solid #ccc;
   background-color: white;
   color: black;
-  font-size: 18px;
-  width: 40px;
-  height: 40px;
+  font-size: 1.8vw;
+  width: 2vw;
+  height: 2vw;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -563,42 +691,83 @@ input[type="search"]:focus {
   border: 1px solid #ccc;
   background-color: white;
   color: black;
-  font-size: 18px;
-  width: 40px;
-  height: 40px;
+  font-size: 1.8vw;
+  width: 2vw;
+  height: 2vw;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 
-.image {
-  position: relative;
-  left: -1490px;
-  top: -100px;
-  width: 200px;
-  height: auto;
-
-}
-
 .Number {
   position: fixed;
-  top: 28vh;
-  right: 10vh;
-  font-size: 22px;
+  top: 31vh;
+  right: 6vh;
+  font-size: 1.5vw;
   color: #000;
   text-align: center; 
 }
 
 
+@media (max-width: 768px) {
+  .Number {
+    top: 30%;
+    right: 5%;
+    font-size: 3vw;
+  }
+
+  .Pagination {
+    bottom: 12%;
+    gap: 2vw;
+  }
+
+  .page_button,
+  .page_button1 {
+    font-size: 2.5vw;
+    width: 7vw;
+    height: 7vw;
+  }
+
+  .dots {
+    font-size: 2.5vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .Number {
+    top: 35%;
+    right: 5%;
+    font-size: 4vw;
+  }
+
+  .Pagination {
+    bottom: 15%;
+    gap: 2.5vw;
+  }
+
+  .page_button,
+  .page_button1 {
+    font-size: 3.5vw;
+    width: 10vw;
+    height: 10vw;
+  }
+
+  .dots {
+    font-size: 3.5vw;
+  }
+}
+
+
 .table_container {
   position: fixed;
-  top: 34vh;
+  top: 37vh;
   left: 0;
+  margin: 0 auto;
   width: 100%;
   border: 1px solid rgb(125, 170, 255);
   background-color: #fff;
-  max-height: 660px;
+  max-height: 58vh;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -705,3 +874,4 @@ td:nth-child(10) {
 .disabled_name {
   color: gray; 
 }
+
