@@ -261,15 +261,18 @@ button.cancel_button:hover {
   padding: 16px; /* 内側の余白を指定 */
   margin: 16px 0; /* 外側の余白を指定 */
   background-color: #ffffff; /* 背景色を薄いグレーにする（任意） */
+  height: 130px;
 }
 
 .line_overlay {
-  position: absolute;
-  width: 60.3%; /* 幅を100%に設定 */
-  height: 2px; /* 線の太さ */
-  background-color: #aadffe; /* 線の色（黒） */
-  top: 50.5%; /* 親要素の中央に配置 */
-  z-index: 1; /* 他の要素より前面に表示 */
+  width: 85%;
+  height: 2px;
+  background-color: #aadffe;
+  z-index: 0;
+  position: relative;
+  top: 35%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .inline_label {
@@ -295,9 +298,10 @@ button.cancel_button:hover {
   color: #333; 
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 140px;
-  height: 70px;
+  width: 10%; /* 幅をパーセント指定 */
+  height: 10%; /* 高さをパーセント指定 */
 }
+
 .modoru_button{
   background-color: #eeeeee;
 }
@@ -317,7 +321,7 @@ button.cancel_button:hover {
 }
 
 .register_button {
-  background-color: #7ddce5;
+  background-color: #cff1f6;
 }
 
 .delete_button {
@@ -327,3 +331,33 @@ button.cancel_button:hover {
 .button:hover:not(:disabled) {
   opacity: 0.8;
 }
+
+.popup_content label {
+  
+ 
+  display: flex; /* Arrange labels in a vertical stack */
+    margin-bottom: 8px; /* Add spacing between the labels */
+    font-size: 16px; /* Optional: Adjust font size for better visibility */
+    margin-right: 80px;
+    margin-top: 20px;
+  }
+  
+  .popup_content input[type="radio"] {
+    margin-right: 8px; /* Add some spacing between the radio button and the label text */
+  }
+
+  button.popup_confirm_button {
+    background-color: #9FECFF; 
+    color: rgb(0, 0, 0);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #000000;
+  }
+
+  .warning_message {
+    color: red;
+    font-size: 14px;
+    margin-top: 30px;
+  }
