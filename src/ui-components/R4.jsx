@@ -8,8 +8,7 @@
 import * as React from "react";
 import { getOverrideProps } from "./utils";
 import Flag3 from "./Flag3";
-import R3 from "./R3";
-import { View } from "@aws-amplify/ui-react";
+import { Text, View } from "@aws-amplify/ui-react";
 export default function R4(props) {
   const { overrides, ...rest } = props;
   return (
@@ -35,26 +34,69 @@ export default function R4(props) {
         position="absolute"
         top="0%"
         bottom="59.84%"
-        left="41.45%"
-        right="37.5%"
+        left="44.74%"
+        right="34.21%"
         padding="0px 0px 0px 0px"
         {...getOverrideProps(overrides, "flag3")}
       ></Flag3>
-      <R3
+      <View
         width="152px"
-        height="122px"
+        height="61px"
         display="block"
         gap="unset"
         alignItems="unset"
         justifyContent="unset"
         position="absolute"
-        top="0%"
+        top="50%"
         bottom="0%"
         left="0%"
         right="0%"
         padding="0px 0px 0px 0px"
-        {...getOverrideProps(overrides, "r3")}
-      ></R3>
+        {...getOverrideProps(overrides, "jobfair2")}
+      >
+        <View
+          width="112px"
+          height="61px"
+          display="block"
+          gap="unset"
+          alignItems="unset"
+          justifyContent="unset"
+          position="absolute"
+          top="0%"
+          bottom="0%"
+          left="13.16%"
+          right="13.16%"
+          border="1px SOLID rgba(0,0,0,1)"
+          borderRadius="3px"
+          padding="0px 0px 0px 0px"
+          backgroundColor="rgba(207,241,246,1)"
+          {...getOverrideProps(overrides, "Rectangle 273")}
+        ></View>
+        <Text
+          fontFamily="Inter"
+          fontSize="20px"
+          fontWeight="400"
+          color="rgba(0,16,102,1)"
+          lineHeight="24.204544067382812px"
+          textAlign="center"
+          display="block"
+          direction="column"
+          justifyContent="unset"
+          width="152px"
+          height="16px"
+          gap="unset"
+          alignItems="unset"
+          position="absolute"
+          top="24.59%"
+          bottom="49.18%"
+          left="0%"
+          right="0%"
+          padding="0px 0px 0px 0px"
+          whiteSpace="pre-wrap"
+          children="履歴書提出"
+          {...getOverrideProps(overrides, "\u8AAC\u660E\u4F1A\u51FA\u5E2D")}
+        ></Text>
+      </View>
     </View>
   );
 }

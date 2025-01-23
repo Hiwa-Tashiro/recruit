@@ -7,6 +7,7 @@
 import * as React from "react";
 import { Component88Props } from "./Component88";
 import { Component72Props } from "./Component72";
+import { Flag1Props } from "./Flag1";
 import { ViewProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
@@ -23,6 +24,7 @@ export declare type Z2OverridesProps = {
     Z2?: PrimitiveOverrideProps<ViewProps>;
     "Component 88"?: Component88Props;
     "Component 72/\u30C7\u30D5\u30A9\u30EB\u30C8"?: Component72Props;
+    flag1?: Flag1Props;
 } & EscapeHatchProps;
 export declare type Z2Props = React.PropsWithChildren<Partial<ViewProps> & {
     overrides?: Z2OverridesProps | undefined | null;

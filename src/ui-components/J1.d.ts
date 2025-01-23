@@ -7,6 +7,7 @@
 import * as React from "react";
 import { Component72Props } from "./Component72";
 import { Jobfair1Props } from "./Jobfair1";
+import { Flag1Props } from "./Flag1";
 import { ViewProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
@@ -23,6 +24,7 @@ export declare type J1OverridesProps = {
     J1?: PrimitiveOverrideProps<ViewProps>;
     "Component 73"?: Component72Props;
     jobfair1?: Jobfair1Props;
+    flag1?: Flag1Props;
 } & EscapeHatchProps;
 export declare type J1Props = React.PropsWithChildren<Partial<ViewProps> & {
     overrides?: J1OverridesProps | undefined | null;

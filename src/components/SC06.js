@@ -1,4 +1,5 @@
 import React from 'react';
+import SC06_css from '../css/SC06.module.css';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCookies } from "react-cookie";
@@ -8,6 +9,7 @@ function SC06() {
     const [interview, setInterview] = useState();
     const [attend, setAttend] = useState([]);
     const [result, setResult] = useState([]);
+    const [student, setStudent] = useState([]);
     const [cookies] = useCookies();
     const { state } = useLocation();
     const function_id = 'SC06';
@@ -46,6 +48,7 @@ function SC06() {
                             note: null
                         });
                     }
+                    setStudent(data.student);
                     setAttend(data.attend);
                     setResult(data.result);
                     console.log(data);
@@ -91,14 +94,53 @@ function SC06() {
         return `${month}月${day}日 (${dayOfWeek}) ${hours}:${minutes}`;
     };
 
-    const confirmInterview = () =>{
-        if(interview.attend != 0 && interview.result != ""){
-            alert("面接に出席していません")
+    const confirmInterview = async () => {
+        console.log(interview.attend)
+        console.log(interview.result)
+        if (String(interview.attend) === "0" || String(interview.result) == "" || interview.result == null) {
+            const fetchlambda = async () => {
+                const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/updateInterview";
+                await fetch(url,
+                    {
+                        method: "POST",
+                        headers: { Authorization: cookies.token },
+                        body: JSON.stringify(
+                            {
+                                student_id: status?.student_id,
+                                phase_num: status?.phase_num,
+                                interview: interview,
+                                student : student,
+                                user: cookies.user,
+                                function_id: function_id
+                            })
+                    }
+                )
+                    .then((res) => res.json()) // JSON形式に変換
+                    .then((data) => {
+                        console.log(data);
+                        if (data?.errorMesseage) {
+                            alert(data?.errorMesseage);
+                            return
+                        }
+                        else {
+                            navigate('/SC04', { state: { student_id: status?.student_id } });
+                        }
+                    })
+                    .catch((error) => console.log(error)); // エラー発生時に出力
+            }
+
+            await fetchlambda();
+        }
+        else {
+            alert("面接に出席していません。")
             return;
         }
 
+    }
+
+    const deleteInterview = async () => {
         const fetchlambda = async () => {
-            const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/updateInterview";
+            const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/deleteInterview";
             await fetch(url,
                 {
                     method: "POST",
@@ -108,6 +150,7 @@ function SC06() {
                             student_id: status?.student_id,
                             phase_num: status?.phase_num,
                             interview: interview,
+                            student : student,
                             user: cookies.user,
                             function_id: function_id
                         })
@@ -116,15 +159,18 @@ function SC06() {
                 .then((res) => res.json()) // JSON形式に変換
                 .then((data) => {
                     console.log(data);
+                    if (data?.errorMesseage) {
+                        alert(data?.errorMesseage);
+                        return
+                    }
+                    else {
+                        navigate('/SC04', { state: { student_id: status?.student_id } });
+                    }
                 })
                 .catch((error) => console.log(error)); // エラー発生時に出力
         }
-        fetchlambda();
-        navigate('/SC04',{state:{ student_id: status?.student_id }});
-    }
 
-    const deleteInterview = () =>{
-        console.log(interview)
+        await fetchlambda();
     }
 
     return (
@@ -134,7 +180,11 @@ function SC06() {
                     <div>戻る</div>
                 </Link>
             </div>
-            <h1 style={{textAlign: "center"}}>一次面接</h1>
+            <h1 style={{ textAlign: "center" }}>
+                {status?.phase_num == 3 && (<label>一次面接</label>)}
+                {status?.phase_num == 4 && (<label>座談会</label>)}
+                {status?.phase_num == 5 && (<label>役員面接</label>)}
+            </h1>
 
             <div>
                 {editingcalender ? (

@@ -119,12 +119,11 @@ function SC03() {
         .then((res) => res.json()) // JSON形式に変換
         .then((data) => {
           console.log(data);
+          window.location.reload();
         })
         .catch((error) => console.log(error)); // エラー発生時に出力
     }
     await fetchlambda();
-
-    await window.location.reload();
   };
 
   //行追加
@@ -252,6 +251,7 @@ function SC03() {
   };
 
   const selectCheckbox = (index, key, value, checked) => {
+    console.log(rows[index]);
     if (checked) {
       value = 1;
     }

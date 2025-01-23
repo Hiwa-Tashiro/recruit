@@ -521,14 +521,14 @@ function SC04() {
     <div className={SC04_css.form_container}>
       <h1 className={`${SC04_css.h1} ${SC04_css.title}`}>登録者情報</h1>
       <div className={SC04_css.return_container}>
-      <button onClick={() => navigate(-1)}
+      <button onClick={() => navigate("/SC05", {state:{ student_id: status?.student_id}})}
         className={`${SC04_css.modoru} ${SC04_css.main_button}`}>
           戻る</button></div>
       <div className={SC04_css.parent_container}>
       <div className={SC04_css.bordered_container}>
       <div className={SC04_css.line_overlay}></div> 
         <div className={SC04_css.components_wrapper}>
-          <div style={{ display: "flex", gap: "20px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             {(() => {
               if (student_dataset.student_id && student_dataset.jobfair_id) {
                 if (student_dataset.phase_num === 0) {

@@ -6,8 +6,7 @@
 
 import * as React from "react";
 import { Flag3Props } from "./Flag3";
-import { R3Props } from "./R3";
-import { ViewProps } from "@aws-amplify/ui-react";
+import { TextProps, ViewProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -22,7 +21,9 @@ export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes
 export declare type R4OverridesProps = {
     R4?: PrimitiveOverrideProps<ViewProps>;
     flag3?: Flag3Props;
-    r3?: R3Props;
+    jobfair2?: PrimitiveOverrideProps<ViewProps>;
+    "Rectangle 273"?: PrimitiveOverrideProps<ViewProps>;
+    "\u8AAC\u660E\u4F1A\u51FA\u5E2D"?: PrimitiveOverrideProps<TextProps>;
 } & EscapeHatchProps;
 export declare type R4Props = React.PropsWithChildren<Partial<ViewProps> & {
     overrides?: R4OverridesProps | undefined | null;

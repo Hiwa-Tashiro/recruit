@@ -7,6 +7,7 @@
 import * as React from "react";
 import { Component72Props } from "./Component72";
 import { Component95Props } from "./Component95";
+import { Flag1Props } from "./Flag1";
 import { ViewProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
@@ -23,6 +24,7 @@ export declare type YakuOverridesProps = {
     Yaku?: PrimitiveOverrideProps<ViewProps>;
     "Component 72/\u30C7\u30D5\u30A9\u30EB\u30C8"?: Component72Props;
     "Component 95"?: Component95Props;
+    flag1?: Flag1Props;
 } & EscapeHatchProps;
 export declare type YakuProps = React.PropsWithChildren<Partial<ViewProps> & {
     overrides?: YakuOverridesProps | undefined | null;
