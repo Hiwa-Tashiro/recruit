@@ -6,6 +6,7 @@
 
 import * as React from "react";
 import { IconProps, TextProps, ViewProps } from "@aws-amplify/ui-react";
+import { Flag1Props } from "./Flag1";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -26,6 +27,7 @@ export declare type R2OverridesProps = {
     "Rectangle 331"?: PrimitiveOverrideProps<ViewProps>;
     "Ellipse 13"?: PrimitiveOverrideProps<IconProps>;
     "Polygon 11"?: PrimitiveOverrideProps<IconProps>;
+    flag1?: Flag1Props;
 } & EscapeHatchProps;
 export declare type R2Props = React.PropsWithChildren<Partial<ViewProps> & {
     overrides?: R2OverridesProps | undefined | null;

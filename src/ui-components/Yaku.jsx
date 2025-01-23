@@ -9,6 +9,7 @@ import * as React from "react";
 import { getOverrideProps } from "./utils";
 import Component72 from "./Component72";
 import Component95 from "./Component95";
+import Flag1 from "./Flag1";
 import { View } from "@aws-amplify/ui-react";
 export default function Yaku(props) {
   const { overrides, ...rest } = props;
@@ -58,6 +59,21 @@ export default function Yaku(props) {
         padding="0px 0px 0px 0px"
         {...getOverrideProps(overrides, "Component 95")}
       ></Component95>
+      <Flag1
+        width="15px"
+        height="15px"
+        display="block"
+        gap="unset"
+        alignItems="unset"
+        justifyContent="unset"
+        position="absolute"
+        top="29.51%"
+        bottom="58.2%"
+        left="43.42%"
+        right="46.71%"
+        padding="0px 0px 0px 0px"
+        {...getOverrideProps(overrides, "flag1")}
+      ></Flag1>
     </View>
   );
 }

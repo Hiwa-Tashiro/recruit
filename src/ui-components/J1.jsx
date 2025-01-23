@@ -9,6 +9,7 @@ import * as React from "react";
 import { getOverrideProps } from "./utils";
 import Component72 from "./Component72";
 import Jobfair1 from "./Jobfair1";
+import Flag1 from "./Flag1";
 import { View } from "@aws-amplify/ui-react";
 export default function J1(props) {
   const { overrides, ...rest } = props;
@@ -55,6 +56,21 @@ export default function J1(props) {
         padding="0px 0px 0px 0px"
         {...getOverrideProps(overrides, "jobfair1")}
       ></Jobfair1>
+      <Flag1
+        width="15px"
+        height="15px"
+        display="block"
+        gap="unset"
+        alignItems="unset"
+        justifyContent="unset"
+        position="absolute"
+        top="29.51%"
+        bottom="58.2%"
+        left="40.79%"
+        right="49.34%"
+        padding="0px 0px 0px 0px"
+        {...getOverrideProps(overrides, "flag1")}
+      ></Flag1>
     </View>
   );
 }

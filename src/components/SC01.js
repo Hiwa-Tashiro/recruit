@@ -145,9 +145,9 @@ function SC01() {
             updated_at: updated_at,
           };
         }),
-        user: cookies.user,
+        user: cookies?.user,
         function_id: functionid,
-        recruit_year: cookies.recruit_year,
+        recruit_year: cookies?.recruit_year,
       };
 
 
@@ -269,7 +269,7 @@ function SC01() {
           phase_num: phase,
           date: date,
           updated_at: updated_at,
-          user: cookies.user,
+          user: cookies?.user,
           function_id: functionid
 
 
@@ -385,8 +385,8 @@ function SC01() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           function_id: functionid,
-          user: cookies.user,
-          recruit_year: cookies.recruit_year,
+          user: cookies?.user,
+          recruit_year: cookies?.recruit_year,
         }),
       });
 
@@ -424,7 +424,7 @@ function SC01() {
           buttonIndex: buttonIndex,
           updated_at: updated_at,
           function_id: functionid,
-          user: cookies.user,
+          user: cookies?.user,
         }),
       });
 
@@ -477,8 +477,8 @@ function SC01() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           function_id: functionid,
-          user: cookies.user,
-          recruit_year: cookies.recruit_year,
+          user: cookies?.user,
+          recruit_year: cookies?.recruit_year,
         }),
       });
 
@@ -520,7 +520,7 @@ function SC01() {
 
   // Nendo
   const currentYear = new Date().getFullYear();
-  const baseYear = cookies.recruit_year || currentYear;
+  const baseYear = cookies?.recruit_year || currentYear;
   const range = 3; // 範囲（-3～+3）
   const [selectedYear, setSelectedYear] = useState(baseYear);
   const years = Array.from({ length: range * 2 + 1 }, (_, i) => baseYear - range + i);
@@ -558,8 +558,8 @@ function SC01() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             function_id: functionid,
-            user: cookies.user,
-            recruit_year: cookies.recruit_year
+            user: cookies?.user,
+            recruit_year: cookies?.recruit_year
           }),
         });
 
@@ -607,12 +607,12 @@ function SC01() {
             const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/registStudents";
             await fetch(url, {
               method: "POST",
-              headers: { Authorization: cookies.token },
+              headers: { Authorization: cookies?.token },
               body: JSON.stringify({
                 tabledata: result.data,
-                recruit_year: cookies.recruit_year,
+                recruit_year: cookies?.recruit_year,
                 filename: datafile?.name,
-                user: cookies.user,
+                user: cookies?.user,
                 functionid: functionid,
               })
             })

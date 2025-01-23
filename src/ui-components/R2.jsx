@@ -8,6 +8,7 @@
 import * as React from "react";
 import { getOverrideProps } from "./utils";
 import { Icon, Text, View } from "@aws-amplify/ui-react";
+import Flag1 from "./Flag1";
 export default function R2(props) {
   const { overrides, ...rest } = props;
   return (
@@ -166,6 +167,21 @@ export default function R2(props) {
           transform="rotate(89.89deg)"
           {...getOverrideProps(overrides, "Polygon 11")}
         ></Icon>
+        <Flag1
+          width="15px"
+          height="15px"
+          display="block"
+          gap="unset"
+          alignItems="unset"
+          justifyContent="unset"
+          position="absolute"
+          top="73.47%"
+          bottom="-4.08%"
+          left="8.82%"
+          right="47.06%"
+          padding="0px 0px 0px 0px"
+          {...getOverrideProps(overrides, "flag1")}
+        ></Flag1>
       </View>
     </View>
   );
