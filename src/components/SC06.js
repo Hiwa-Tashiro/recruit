@@ -109,7 +109,7 @@ function SC06() {
                                 student_id: status?.student_id,
                                 phase_num: status?.phase_num,
                                 interview: interview,
-                                student : student,
+                                student: student,
                                 user: cookies.user,
                                 function_id: function_id
                             })
@@ -150,7 +150,7 @@ function SC06() {
                             student_id: status?.student_id,
                             phase_num: status?.phase_num,
                             interview: interview,
-                            student : student,
+                            student: student,
                             user: cookies.user,
                             function_id: function_id
                         })
@@ -175,84 +175,95 @@ function SC06() {
 
     return (
         <div>
-            <div>
-                <Link to='/SC04' state={{ student_id: status?.student_id }}>
-                    <div>戻る</div>
-                </Link>
-            </div>
-            <h1 style={{ textAlign: "center" }}>
-                {status?.phase_num == 3 && (<label>一次面接</label>)}
-                {status?.phase_num == 4 && (<label>座談会</label>)}
-                {status?.phase_num == 5 && (<label>役員面接</label>)}
-            </h1>
-
-            <div>
-                {editingcalender ? (
-                    <input
-                        type="datetime-local"
-                        defaultValue={interview?.date}
-                        onChange={(e) => updateInterview("date", e.target.value)}
-                        onBlur={() => setEditingcalender(null)}
-                        autoFocus
-                    />
-                ) : (
-                    <div onClick={() => setEditingcalender(true)}>
-                        {formatJapaneseDate(interview?.date)}
-                    </div>
-                )
-                }
-            </div>
-            <div>出欠：
-                <select value={interview?.attend} onChange={(e) => updateInterview("attend", e.target.value)}>
-                    <option value="">未選択</option>
-                    {attend?.map((option) => {
-                        return (
-                            <option key={option.attend_num} value={option.attend_num}>
-                                {option.attend_name}
-                            </option>
-                        );
-                    })}
-                </select>
-            </div>
-            <div>
-                結果：
-                <select value={interview?.result} onChange={(e) => updateInterview("result", e.target.value)}>
-                    <option value="">未選択</option>
-                    {result?.map((option) => {
-                        return (
-                            <option key={option.result_num} value={option.result_num}>
-                                {option.result_name}
-                            </option>
-                        );
-                    })}
-                </select>
-            </div>
-            <div>
-                <table>
-                    {interview?.staff.map((row, index) => (
-                        <tr key={index}>
-                            <th>担当</th>
-                            <td><input type='text' defaultValue={row} onBlur={(e) => updateStaff(index, e.target.value)} /></td>
-                        </tr>
-                    ))}
-                </table>
-                <button onClick={addRow}>
-                    +
-                </button>
-            </div>
-            <div>
-                <input type='textarea' defaultValue={interview?.note} onBlur={(e) => updateInterview("note", e.target.value)} />
-            </div>
-            <div >
-                <div>
-                    <button onClick={confirmInterview}>
-                        <div>登録</div>
-                    </button>
+            <div className={SC06_css.header}>
+                <div className={SC06_css.backbutton}>
+                    <Link to='/SC04' state={{ student_id: status?.student_id }}>
+                        <button className={SC06_css.button}>戻る</button>
+                    </Link>
                 </div>
+                <h1 style={{ textAlign: "center" }}>
+                    {status?.phase_num == 3 && (<label>一次面接</label>)}
+                    {status?.phase_num == 4 && (<label>座談会</label>)}
+                    {status?.phase_num == 5 && (<label>役員面接</label>)}
+                </h1>
+            </div>
+            <div className={SC06_css.content}>
+                <div className={SC06_css.content_top}>
+                    <div>
+                        <div>日時：
+                            {editingcalender ? (
+                                <input
+                                    type="datetime-local"
+                                    defaultValue={interview?.date}
+                                    onChange={(e) => updateInterview("date", e.target.value)}
+                                    onBlur={() => setEditingcalender(null)}
+                                    autoFocus
+                                />
+                            ) : (
+                                <span className={SC06_css.date} onClick={() => setEditingcalender(true)}>
+                                    {formatJapaneseDate(interview?.date)}
+                                </span>
+                            )
+                            }
+                        </div>
+                        <br />
+                        <div>出欠：
+                            <select value={interview?.attend} onChange={(e) => updateInterview("attend", e.target.value)}>
+                                <option value="">未選択</option>
+                                {attend?.map((option) => {
+                                    return (
+                                        <option key={option.attend_num} value={option.attend_num}>
+                                            {option.attend_name}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                        </div>
+                        <div>
+                            結果：
+                            <select value={interview?.result} onChange={(e) => updateInterview("result", e.target.value)}>
+                                <option value="">未選択</option>
+                                {result?.map((option) => {
+                                    return (
+                                        <option key={option.result_num} value={option.result_num}>
+                                            {option.result_name}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <table className={SC06_css.table}>
+                            {interview?.staff.map((row, index) => (
+                                <tr key={index}>
+                                    <th>担当：</th>
+                                    <td><input type='text' defaultValue={row} onBlur={(e) => updateStaff(index, e.target.value)} /></td>
+                                </tr>
+                            ))}
+                        </table>
+                        <button onClick={addRow} style={{width:"100%"}}>
+                            +
+                        </button>
+                    </div>
+                </div>
+                <br />
                 <div>
-                    <button onClick={deleteInterview}>
-                        <div>削除</div>
-                    </button>
+                    備考：
+                    <input type='textarea' className={SC06_css.note} defaultValue={interview?.note} onBlur={(e) => updateInterview("note", e.target.value)} />
+                </div>
+                <br />
+                <div className={SC06_css.content_low}>
+                    <div>
+                        <button className={`${SC06_css.button} ${SC06_css.confirm}`} onClick={confirmInterview}>
+                            <div>登録</div>
+                        </button>
+                    </div>
+                    <div>
+                        <button className={SC06_css.button} onClick={deleteInterview}>
+                            <div>削除</div>
+                        </button>
+                    </div>
                 </div>
             </div>
 

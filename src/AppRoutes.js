@@ -2,6 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Authenticator } from '@aws-amplify/ui-react';
 import { fetchAuthSession } from 'aws-amplify/auth';
+import I18n from './i18n';
 import '@aws-amplify/ui-react/styles.css';
 
 import { useCookies } from "react-cookie";
