@@ -781,7 +781,7 @@ function SC01() {
                           color: student.recruit_is_decline === 1 ? "gray" : "inherit",
                         }}
                       >
-                        <Link to='/SC04' state={{ student_id: student?.student_id }}>
+                        <Link to='/SC05' state={{ student_id: student?.student_id }}>
                           {student.name}
                         </Link>
                       </td>
