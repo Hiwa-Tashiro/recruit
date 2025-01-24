@@ -33,7 +33,14 @@ function SC04() {
   const [formIsReadyToSend, setFormIsReadyToSend] = useState(false); // フォームが送信準備完了か
   const [isCustomPopupVisible, setIsCustomPopupVisible] = useState(false);
   const [customPopupContent, setCustomPopupContent] = useState(""); // Content for the custom popup
-  
+  const handleBackNavigation = () => {
+    console.log(student_dataset)
+    if (student_dataset.lengths > 0) {
+      navigate('/SC05', {state:{ student_id: status?.student_id }});
+    } else {
+      navigate('/');
+    }
+  };
   const handleComponentJobfair3Click = () => {
     setCustomPopupContent("こちらが新しいポップアップの内容です。"); // Set custom content
     setIsCustomPopupVisible(true); // Show the custom popup
@@ -93,11 +100,11 @@ function SC04() {
   };
   
   // データ送信処理を関数に分離
-  const sendFormData = () => {
+  const sendFormData = async() => {
     console.log("Current formData:", formData);
   
     try {
-      fetch(
+      const response = await fetch(
         "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/insertFormData",
         {
           method: "POST",
@@ -111,17 +118,28 @@ function SC04() {
             recruit_year: cookies.recruit_year,
             function_id: function_id,
             updated_at: student_dataset.updated_at,
-            
           }),
         }
-      )
-        .then((res) => res.json())
-        .then((json) => console.log(json));
-        navigate('/SC05', {state:{ student_id: status?.student_id}}); 
-
+      );
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const result = await response.json();
+      console.log(result);
+  
+      // Check the `hanbetu` value in the response
+      if (result.hanbetu == 1) {
+        navigate('/'); // Navigate to the home page
+      } else if (result.hanbetu == 2) {
+        navigate('/SC05', { state: { student_id: status?.student_id } }); // Navigate to SC05
+      } else {
+        alert("Unexpected 'hanbetu' value in the response.");
+      }
     } catch (error) {
-      console.error("Error sending data to Lambda:", error);
-      alert("Failed to send data to Lambda: " + error.message);
+      console.error("Error submitting data:", error);
+      alert("Failed to submit data: " + error.message);
     }
   };
   
@@ -222,6 +240,7 @@ function SC04() {
           student_id: status?.student_id,
           phase_num: student_dataset.phase_num,
           user: cookies.user,
+          function_id: function_id,
           updated_at: student_dataset.updated_at,
         }),
       });
@@ -269,6 +288,10 @@ function SC04() {
 
   // Submit attendance option
   const handleAttendanceSubmit = async () => {
+    if (selectedOption === null) {
+      setErrorMessage("出席情報を入力してください。");
+      return;
+    }
     try {
       const response = await fetch(
         " https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/SC02",
@@ -281,6 +304,7 @@ function SC04() {
             student_id: status?.student_id, // Replace with the actual student_id
             jobfair_is_attend: selectedOption,
             user: cookies.user, // Replace with the actual user
+            function_id: function_id,
             updated_at: student_dataset.updated_at,
           }),
         }
@@ -293,7 +317,7 @@ function SC04() {
       console.log(result);
             setSelectedOption(selectedOption);// 保存後も値を保持
             closeAttendancePopup();
-
+            navigate("/SC05", {state:{ student_id: status?.student_id }});
     } catch (error) {
       console.error("Error updating attendance:", error);
       alert("登録に失敗しました。");
@@ -314,6 +338,7 @@ function SC04() {
             student_id: status?.student_id,
             jobfair_is_attend: null,
             user: cookies.user,
+            function_id: function_id,
             updated_at: student_dataset.updated_at,
           }),
         }
@@ -325,10 +350,9 @@ function SC04() {
 
       const result = await response.json();
       console.log(result);
-
       setSelectedOption(null); // Reset selection in the UI
       closeAttendancePopup();
-      
+      navigate("/SC05", {state:{ student_id: status?.student_id }});
     } catch (error) {
       console.error("Error resetting attendance:", error);
       alert("取り消しに失敗しました。");
@@ -521,14 +545,13 @@ function SC04() {
     <div className={SC04_css.form_container}>
       <h1 className={`${SC04_css.h1} ${SC04_css.title}`}>登録者情報</h1>
       <div className={SC04_css.return_container}>
-      <button onClick={() => navigate("/SC05", {state:{ student_id: status?.student_id}})}
-        className={`${SC04_css.modoru} ${SC04_css.main_button}`}>
+      <button onClick={handleBackNavigation} className={`${SC04_css.modoru} ${SC04_css.main_button}`}>
           戻る</button></div>
       <div className={SC04_css.parent_container}>
       <div className={SC04_css.bordered_container}>
       <div className={SC04_css.line_overlay}></div> 
         <div className={SC04_css.components_wrapper}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", gap: "space-between" }}>
             {(() => {
               if (student_dataset.student_id && student_dataset.jobfair_id) {
                 if (student_dataset.phase_num === 0) {
@@ -640,15 +663,15 @@ function SC04() {
             <div className={SC04_css.popup_buttons}>
               <button
                 onClick={handleAttendanceSubmit}
-                className={SC04_css.popup_confirm_button}
+                className={SC04_css.popup_register_button}
               >
                 登録
               </button>
               <button
                 onClick={closeAttendancePopup}
-                className={SC04_css.cancel_button}
+                className={SC04_css.popup_close_button}
               >
-                キャンセル
+                閉じる
               </button>
               <button
                 onClick={handleResetAttendance}
