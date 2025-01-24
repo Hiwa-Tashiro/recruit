@@ -1,21 +1,26 @@
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+.screen_container {
+  width: 100vw;
+  height: calc(100vw * 9 / 16);
+  max-height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 
 .siscoBear img {
   width: 9vw; 
   max-width: 170px;
   height: auto;
   position: absolute;
-  top: -32px;
+  top: -5vh;
   left: 50%;
   transform: translateX(-50%);
 }
 
 
+/* フェーズ */
 .Phase {
   display: flex;
   flex-wrap: wrap;
@@ -26,13 +31,12 @@ body {
   top: 18vh;
   left: 0;
 }
-
 .phase_button {
   width: 9vw;
   max-width: 160px;
   height: 11vh;
-  font-size: 0.9rem;
-  font-weight: normal; /* 通常は太文字ではない */
+  font-size: 1.2rem;
+  font-weight: normal;
   border-radius: 12px;
   transition: transform 0.2s ease, background-color 0.2s ease;
   background: #ffffff;
@@ -45,26 +49,22 @@ body {
   justify-content: center;
   align-items: center;
 }
-
 .phase_button.disabled {
   background-color: #E9E9E9;
   color: #000000;
   cursor: not-allowed;
   font-weight: bold;
 }
-
 .phase_button.selected {
   font-weight: bold;
 }
-
-
-
 .phase_button:hover:not(.disabled) {
   transform: scale(1.1);
   background-color: #cce5ff;
 }
 
 
+/* 説明会日程ボタン */
 .Inforsessionschedule {
   position: fixed;
   top: 2vh;
@@ -74,7 +74,6 @@ body {
   border-radius: 5px;
   order: -1;
 }
-
 .Inforsessionschedule button {
   background-color: #CFF1F6;
   border-radius: 8px;
@@ -85,22 +84,21 @@ body {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
-
 .Inforsessionschedule button:hover {
   background-color: #b0c4de;
   transform: scale(1.1);
 }
-
 .Inforsessionschedule button:active {
   background-color: #4682b4;
   transform: scale(0.95);
 }
 
 
+/* 年度切り替え */
 .Nendo {
-  position: fixed;
-  right: 24vh;
-  top: 9vh;
+  position: absolute;
+  right: 6vh;
+  top: 8vh;
   width: 11vh;
   max-width: 140px;
   height: 4vh;
@@ -108,47 +106,17 @@ body {
   border-radius: 4px;
   border: 1px solid #000000;
 }
-
 .Nendo select {
   width: 100%;
   height: 100%;
-  font-size: 1.2rem; 
+  font-size: 1rem; 
   border: none;
   outline: none;
   background-color: rgb(255, 255, 255);
 }
 
-@media (max-width: 768px) {
-  .Inforsessionschedule button {
-    padding: 10px 40px;
-    font-size: 1.5rem; 
-  }
-  .Nendo {
-    right: 10%; 
-    width: 20vw; 
-  }
 
-  .Nendo select {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .Inforsessionschedule button {
-    padding: 8px 30px;
-    font-size: 1.2rem;
-  }
-
-  .Nendo {
-    right: 15%;
-    width: 30vw;
-  }
-
-  .Nendo select {
-    font-size: 0.9rem;
-  }
-}
-
+/* 検索 */
 .Search {
   display: flex;
   justify-content: center;
@@ -159,7 +127,6 @@ body {
   left: 0;
   z-index: 5; /* Searchバーの優先度を高める */
 }
-
 .Search input[type="search"] {
   width: 50vw;
   height: 5vh;
@@ -171,7 +138,6 @@ body {
   box-sizing: border-box;
   transition: all 0.3s ease;
 }
-
 input[type="search"]:focus {
   outline: none;
   border-color: #007bff;
@@ -179,54 +145,38 @@ input[type="search"]:focus {
 }
 
 
-@media (max-width: 768px) {
-  .Search input[type="search"] {
-    width: 70vw;
-    font-size: 1rem;
-  }
-}
 
-@media (max-width: 480px) {
-  .Search input[type="search"] {
-    width: 90vw;
-    font-size: 0.9rem;
-  }
-}
-
-
+/* 学生登録ボタン */
 .Studentregister {
-  position: fixed;
-  top: 9vh;
-  right: 40vh;
+  position: absolute;
+  top: 15vh;
+  right: 5vh;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   border-radius: 8px;
 }
-
 .Studentregister button {
   background-color: #CFF1F6;
   border-radius: 8px;
   border: 1px solid #000000;
   height: 6vh;
   width: 15vh;
-  font-size: 1.5vw;
+  font-size: 1.2rem;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
-
 .Studentregister button:hover {
   background-color: #b0c4de;
   transform: scale(1.05);
 }
-
 .Studentregister button:active {
   background-color: #4682b4;
   transform: scale(0.95);
 }
 
 
-
+/* アップロード */
 .Upload {
   position: fixed;
   top: 2vh;
@@ -234,18 +184,15 @@ input[type="search"]:focus {
   border-radius: 10px;
   z-index: 10;
 }
-
 .Upload input[type="file"] {
   font-size: 1.2vw;
   padding: 10px;
   width: 100%;
 }
-
-
 .Upload button {
   position: fixed;
-  top: 7vh;
-  right: 7vh;
+  top: 8vh;
+  right: 26vh;
   font-size: 1.2vw;
   padding: 3px 5px;
   background-color: #dedede;
@@ -253,35 +200,12 @@ input[type="search"]:focus {
   border-radius: 5px;
   cursor: pointer;
 }
-
 .Upload button:hover {
   background-color: #0056b3;
 }
 
-@media (max-width: 768px) {
-  .Studentregister button,
-  .Upload button {
-    font-size: 4vw;
-    padding: 2vw 3vw;
-  }
 
-  .Upload input[type="file"] {
-    font-size: 4vw;
-  }
-}
-
-@media (max-width: 480px) {
-  .Studentregister button,
-  .Upload button {
-    font-size: 5vw;
-    padding: 2.5vw 4vw;
-  }
-
-  .Upload input[type="file"] {
-    font-size: 5vw;
-  }
-}
-
+/* 説明会日時プルダウン */
 .Infor2 {
   position: fixed;
   top: 29vh;
@@ -291,7 +215,6 @@ input[type="search"]:focus {
   border-radius: 8px;
   z-index: 10;
 }
-
 .Infor2 select {
   width: 100%;
   font-size: 1vw;
@@ -301,27 +224,24 @@ input[type="search"]:focus {
   background-color: #fff;
   box-sizing: border-box;
 }
-
 .Infor2 select:focus {
   border-color: #007bff;
   outline: none;
   box-shadow: 0 0 4px #007bff;
 }
-
 .Infor2 option {
   font-size: 1vw;
   padding: 0.2vw;
 }
 
 
-
+/* 一括登録ボタン */
 .Bulkregister {
   flex: 1 1 auto;
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
-
 .Bulkregister button {
   position: fixed;
   top: 27vh;
@@ -334,19 +254,424 @@ input[type="search"]:focus {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
-
 .Bulkregister button:hover {
   background-color: #b0c4de;
   transform: scale(1.05);
 }
-
 .Bulkregister button:disabled {
   background-color: #E9E9E9;
   color: #A0A0A0;
   cursor: not-allowed;
 }
 
-@media (max-width: 768px) {
+
+/* チェックボックス */
+.checkbox {
+  width: 20px;
+  height: 20px;
+  transform: scale(1.5);
+  margin: 5px;
+  cursor: pointer;
+}
+
+
+/* ポップアップ */
+.popup_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+.popup_content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  z-index: 1010;
+}
+.popup_content h2 {
+  margin-top: 0;
+}
+.popup_content button {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.popup_content button:hover {
+  background-color: #0056b3;
+}
+.error_message_container {
+  position: fixed; 
+  top: 50%; 
+  left: 50%;
+  transform: translate(-50%, -50%); 
+  background-color: white; 
+  padding: 20px; 
+  border: 1px solid #ccc; 
+  border-radius: 8px; 
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center; 
+  z-index: 1000; 
+}
+.error_message_text {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.close_error_button {
+  background-color: #7bbbff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.close_error_button:hover {
+  background-color: #0056b3;
+}
+.popup_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.popup_content {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 50%;
+  text-align: center;
+}
+.popup_buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.close_button,
+.register_button {
+  background-color: #007bff;
+  color: #000000;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.close_button {
+  background-color: #dc3545;
+}
+.register_button {
+  background-color: #C7E0FF; 
+}
+.close_button:hover,
+.register_button:hover {
+  opacity: 0.8;
+}
+.studenttbl {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px; 
+  table-layout: fixed;
+}
+.studenttbl th,
+.studenttbl td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+  width: 50%;
+}
+.studenttbl th {
+  background-color: #f5f5f5;
+}
+
+
+/* 学生状況 */
+.Studentsituation_label {
+  font-weight: bold;
+  margin-top: 8px;
+  display: block;
+}
+.Studentsituation {
+  display: flex;
+  justify-content: center; /* 中央寄せ */
+  gap: 2px; /* ボタン同士の幅を指定 */
+  position: relative;
+  top: 0vh;
+  left: 0vh;
+}
+.Studentsituation button {
+  background-color: #dadada;
+  border: 1px solid #000;
+  color: #000;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 9px;
+  height: 40px;
+  width: 70px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.Studentsituation button.active {
+  background-color: #87b8e8;
+  color: #fff;
+}
+.Studentsituation button:last-child {
+  font-size: 9px;
+}
+.Studentsituation1 {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  position: relative;
+  top: 0vh;
+  left: 0vh;
+}
+.Studentsituation1 button {
+  background-color: #dadada;
+  border: 1px solid #000;
+  color: #000;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 9px;
+  height: 40px;
+  width: 70px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.Studentsituation1 button.active {
+  background-color: #87b8e8;
+  color: #fff;
+}
+.Studentsituation2 {
+  display: flex;
+  justify-content: center; /* 中央寄せ */
+  gap: 2px; /* ボタン同士の幅を指定 */
+  position: relative;
+  top: 0vh;
+  left: 0vh;
+}
+.Studentsituation2 button {
+  background-color: #dadada;
+  border: 1px solid #000;
+  color: #000;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 9px;
+  height: 40px;
+  width: 70px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.Studentsituation2 button.active {
+  background-color: #87b8e8;
+  color: #fff;
+}
+
+
+/* ページネーション */
+.Pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5vw;
+  position: fixed;
+  bottom: 10%;
+  left: 50%; 
+  transform: translateX(-50%);
+  top: 98vh;
+}
+.page_button {
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: black;
+  font-size: 1.8vw;
+  width: 2vw;
+  height: 2vw;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.page_button:disabled {
+  color: #ddd;
+  cursor: not-allowed;
+}
+.page_button.active {
+  background-color: #6ed5e0;
+  color: white;
+  border: 1px solid #6ed5e0;
+}
+.page_button:hover:not(:disabled) {
+  background-color: #f2f2f2;
+}
+.dots {
+  font-size: 18px;
+  color: #aaa;
+}
+.page_button1 {
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: black;
+  font-size: 1.8vw;
+  width: 2vw;
+  height: 2vw;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+
+/* 件数 */
+.Number {
+  position: fixed;
+  top: 31vh;
+  right: 6vh;
+  font-size: 1.5vw;
+  color: #000;
+  text-align: center; 
+}
+
+
+/* テーブル */
+.table_container {
+  position: fixed;
+  top: 37vh;
+  left: 0;
+  margin: 0 auto;
+  width: 100%;
+  border: 1px solid rgb(125, 170, 255);
+  background-color: #fff;
+  max-height: 58vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-align: center;
+}
+.student_table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table_title {
+  text-align: center;
+  font-weight: bold;
+  background-color: #C6EBFF;
+}
+.table_header {
+  padding: 2px;
+  text-align: center;
+  border: 1px solid #ddd;
+  word-wrap: break-word;
+  background: #CBE4FF;
+  color: #090f4e;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.table_header_phase {
+  background: #fffccb;
+  color: #090f4e;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+td {
+  padding: 0px;
+  text-align: center;
+  border: 1px solid #ddd;
+  word-wrap: break-word;
+  line-height: 1;
+}
+
+td:nth-child(3),
+td:nth-child(4),
+td:nth-child(5),
+td:nth-child(6),
+td:nth-child(7),
+td:nth-child(8),
+td:nth-child(9),
+td:nth-child(10) {
+  font-size: 17px;
+}
+.disabled {
+  color: gray;
+  cursor: not-allowed;
+}
+.calendar_placeholder {
+  color: inherit;
+  cursor: pointer;
+}
+.student_table tbody tr:nth-child(odd) {
+  background-color: #EEF9FF;
+}
+.name {
+  font-weight: bold;
+}
+.disabled_name {
+  color: gray; 
+}
+.decline_row {
+  color: #868686;
+}
+.decline_row td,
+.decline_row th {
+  background-color: #d0d0d0;
+  color: #868686;
+}
+
+/* @media (max-width: 768px) {
+  .Search input[type="search"] {
+    width: 70vw;
+    font-size: 1rem;
+  }
+  
+  .Inforsessionschedule button {
+    padding: 10px 40px;
+    font-size: 1.5rem; 
+  }
+  .Nendo {
+    right: 10%; 
+    width: 20vw; 
+  }
+
+  .Nendo select {
+    font-size: 1rem;
+  }
+  
+  .Studentregister button,
+  .Upload button {
+    font-size: 4vw;
+    padding: 2vw 3vw;
+  }
+
+  .Upload input[type="file"] {
+    font-size: 4vw;
+  }
+  
   .Infor2 {
     top: 25%;
     left: 5%;
@@ -362,355 +687,7 @@ input[type="search"]:focus {
     font-size: 3vw; 
     padding: 1.5vw 4vw;
   }
-}
-
-@media (max-width: 480px) {
-  .Infor2 {
-    top: 30%;
-    left: 5%;
-    width: 80%;
-  }
-
-  .Bulkregister {
-    top: 30%;
-    right: 5%;
-  }
-
-  .Bulkregister button {
-    font-size: 4vw;
-    padding: 2vw 5vw;
-  }
-}
-
-.popup_overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-}
-
-.popup_content {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  width: 400px;
-  max-width: 90%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  z-index: 1010;
-}
-
-.popup_content h2 {
-  margin-top: 0;
-}
-
-.popup_content button {
-  margin: 10px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.popup_content button:hover {
-  background-color: #0056b3;
-}
-
-.checkbox {
-  width: 20px;
-  height: 20px;
-  transform: scale(1.5);
-  margin: 5px;
-  cursor: pointer;
-}
-
-
-.error_message_container {
-  position: fixed; 
-  top: 50%; 
-  left: 50%;
-  transform: translate(-50%, -50%); 
-  background-color: white; 
-  padding: 20px; 
-  border: 1px solid #ccc; 
-  border-radius: 8px; 
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center; 
-  z-index: 1000; 
-}
-
-.error_message_text {
-  color: rgb(0, 0, 0);
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.close_error_button {
-  background-color: #7bbbff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.close_error_button:hover {
-  background-color: #0056b3;
-}
-
-
-.popup_overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.popup_content {
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 50%;
-  text-align: center;
-}
-
-.popup_buttons {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.close_button,
-.register_button {
-  background-color: #007bff;
-  color: #000000;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.close_button {
-  background-color: #dc3545;
-}
-
-.register_button {
-  background-color: #C7E0FF; 
-}
-
-.close_button:hover,
-.register_button:hover {
-  opacity: 0.8;
-}
-
-.studenttbl {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px; 
-  table-layout: fixed;
-}
-
-.studenttbl th,
-.studenttbl td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: left;
-  width: 50%;
-}
-
-.studenttbl th {
-  background-color: #f5f5f5;
-}
-
-.Studentsituation_label {
-  font-weight: bold;
-  margin-top: 8px;
-  display: block;
-}
-
-.Studentsituation {
-  display: flex;
-  justify-content: center; /* 中央寄せ */
-  gap: 2px; /* ボタン同士の幅を指定 */
-  position: relative;
-  top: 0vh;
-  left: 0vh;
-}
-
-.Studentsituation button {
-  background-color: #dadada;
-  border: 1px solid #000;
-  color: #000;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 9px;
-  height: 40px;
-  width: 70px;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.Studentsituation button.active {
-  background-color: #87b8e8;
-  color: #fff;
-}
-
-
-.Studentsituation button:last-child {
-  font-size: 9px;
-}
-
-
-.Studentsituation1 {
-  display: flex;
-  justify-content: center; /* 中央寄せ */
-  gap: 2px; /* ボタン同士の幅を指定 */
-  position: relative;
-  top: 0vh;
-  left: 0vh;
-}
-
-.Studentsituation1 button {
-  background-color: #dadada;
-  border: 1px solid #000;
-  color: #000;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 9px;
-  height: 40px;
-  width: 70px;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.Studentsituation1 button.active {
-  background-color: #87b8e8;
-  color: #fff;
-}
-
-
-
-.Studentsituation2 {
-  display: flex;
-  justify-content: center; /* 中央寄せ */
-  gap: 2px; /* ボタン同士の幅を指定 */
-  position: relative;
-  top: 0vh;
-  left: 0vh;
-}
-
-.Studentsituation2 button {
-  background-color: #dadada;
-  border: 1px solid #000;
-  color: #000;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 9px;
-  height: 40px;
-  width: 70px;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.Studentsituation2 button.active {
-  background-color: #87b8e8;
-  color: #fff;
-}
-
-
-
-.Pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5vw;
-  position: fixed;
-  bottom: 10%;
-  left: 50%; 
-  transform: translateX(-50%);
-  top: 98vh;
-}
-
-.page_button {
-  border-radius: 50%;
-  border: 1px solid #ccc;
-  background-color: white;
-  color: black;
-  font-size: 1.8vw;
-  width: 2vw;
-  height: 2vw;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.page_button:disabled {
-  color: #ddd;
-  cursor: not-allowed;
-}
-
-.page_button.active {
-  background-color: #6ed5e0;
-  color: white;
-  border: 1px solid #6ed5e0;
-}
-
-.page_button:hover:not(:disabled) {
-  background-color: #f2f2f2;
-}
-
-.dots {
-  font-size: 18px;
-  color: #aaa;
-}
-
-
-.page_button1 {
-  border-radius: 50%;
-  border: 1px solid #ccc;
-  background-color: white;
-  color: black;
-  font-size: 1.8vw;
-  width: 2vw;
-  height: 2vw;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-
-.Number {
-  position: fixed;
-  top: 31vh;
-  right: 6vh;
-  font-size: 1.5vw;
-  color: #000;
-  text-align: center; 
-}
-
-
-@media (max-width: 768px) {
+  
   .Number {
     top: 30%;
     right: 5%;
@@ -733,8 +710,52 @@ input[type="search"]:focus {
     font-size: 2.5vw;
   }
 }
-
 @media (max-width: 480px) {
+  .Search input[type="search"] {
+    width: 90vw;
+    font-size: 0.9rem;
+  }
+  
+  .Inforsessionschedule button {
+    padding: 8px 30px;
+    font-size: 1.2rem;
+  }
+
+  .Nendo {
+    right: 15%;
+    width: 30vw;
+  }
+
+  .Nendo select {
+    font-size: 0.9rem;
+  }
+  
+  .Studentregister button,
+  .Upload button {
+    font-size: 5vw;
+    padding: 2.5vw 4vw;
+  }
+
+  .Upload input[type="file"] {
+    font-size: 5vw;
+  }
+
+  .Infor2 {
+    top: 30%;
+    left: 5%;
+    width: 80%;
+  }
+
+  .Bulkregister {
+    top: 30%;
+    right: 5%;
+  }
+
+  .Bulkregister button {
+    font-size: 4vw;
+    padding: 2vw 5vw;
+  }
+  
   .Number {
     top: 35%;
     right: 5%;
@@ -756,92 +777,4 @@ input[type="search"]:focus {
   .dots {
     font-size: 3.5vw;
   }
-}
-
-
-.table_container {
-  position: fixed;
-  top: 37vh;
-  left: 0;
-  margin: 0 auto;
-  width: 100%;
-  border: 1px solid rgb(125, 170, 255);
-  background-color: #fff;
-  max-height: 58vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.student_table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table_title {
-  text-align: center;
-  font-weight: bold;
-  background-color: #C6EBFF;
-}
-
-.table_header {
-  padding: 2px;
-  text-align: center;
-  border: 1px solid #ddd;
-  word-wrap: break-word;
-  background: #CBE4FF;
-  color: #090f4e;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
-
-.table_header_phase {
-  background: #fffccb;
-}
-
-.checkbox_column {
-  width: 30px;
-  background: #CBE4FF;
-}
-
-.long_text_column {
-  width: 230px;
-  background: #CBE4FF;
-}
-
-
-.disabled {
-  color: gray;
-  cursor: not-allowed;
-}
-
-.calendar_placeholder {
-  color: inherit;
-  cursor: pointer;
-}
-
-.student_table tbody tr:nth-child(odd) {
-  background-color: #EEF9FF;
-}
-
-
-.decline_row {
-  color: #868686;
-}
-
-.decline_row td,
-.decline_row th {
-  background-color: #d0d0d0;
-  color: #868686;
-}
-
-
-
-.name {
-  font-weight: bold;
-}
-
-.disabled_name {
-  color: gray; 
-}
-
+} */

@@ -345,7 +345,7 @@ button.cancel_button:hover {
     margin-right: 8px; /* Add some spacing between the radio button and the label text */
   }
 
-  button.popup_confirm_button {
+  button.popup_register_button {
     background-color: #9FECFF; 
     color: rgb(0, 0, 0);
     padding: 10px 20px;
@@ -354,6 +354,32 @@ button.cancel_button:hover {
     cursor: pointer;
     border: 1px solid #000000;
   }
+
+  button.popup_close_button {
+    background-color: #c0c0c0; 
+    color: rgb(0, 0, 0);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #000000;
+  }
+
+  button.popup_cancel_button {
+    background-color: rgb(255, 55, 55); 
+    color: rgb(0, 0, 0);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #000000;
+  }
+
+  .popup_register_button,
+  .popup_close_button,
+  .popup_cancel_button {
+  margin-right: 5px;
+}
 
   .warning_message {
     color: red;

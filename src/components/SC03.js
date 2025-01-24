@@ -60,6 +60,7 @@ function SC03() {
         spot: item["spot"],
         jobfair_is_cancel: item["jobfair_is_cancel"],
         is_update: false,
+        student_count: item["student_count"],
         updated_at: item['updated_at']
       }),
       firstnum = firstnum + 1
@@ -174,6 +175,10 @@ function SC03() {
   
   //ポップアップ
   const openPopup = (index, row) => {
+    if(rows[index]["student_count"] && rows[index]["student_count"] > 0){
+      alert("説明会を予約している学生がいます。")
+      return
+    }
     setPopup({
       ispopup: true,
       index: index,
@@ -251,7 +256,10 @@ function SC03() {
   };
 
   const selectCheckbox = (index, key, value, checked) => {
-    console.log(rows[index]);
+    if(rows[index]["student_count"] && rows[index]["student_count"] > 0){
+      alert("説明会を予約している学生がいます。")
+      return
+    }
     if (checked) {
       value = 1;
     }
