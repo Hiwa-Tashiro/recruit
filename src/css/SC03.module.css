@@ -1,4 +1,4 @@
-.header{
+.header {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
@@ -8,56 +8,65 @@
     position: sticky;
 }
 
-.jobfair{
+.jobfair {
     display: flex;
 }
 
 .jobfairtable {
     width: 100%;
+    border-collapse: collapse;
     border: 1px solid rgb(125, 170, 255);
     text-align: center;
 }
 
+.jobfairtable th{
+    background-color: #E4E5FF;
+}
 
-.updatecontent{
+.updatecontent {
     width: 187px;
     display: flex;
     justify-content: center;
 }
 
-.updatebutton{
-    padding-top: 3px;
-    padding-bottom: 3px;
+.updatebutton {
     background-color: #CFF1F6;
-    width: 147px;
-    font-family: Inter;
-    font-size: 32px;
-    display: flex;
-    justify-content: center;
+    padding: 12px 50px;
+    font-size: 20px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    color: #333;
+    cursor: pointer;
 }
 
-.backbutton{
-    padding-top: 3px;
-    padding-bottom: 3px;
+.backbutton {
+    padding: 12px 50px;
+    font-size: 20px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    color: #333;
+    cursor: pointer;
+}
+
+
+.addbutton {
+    width: 100%;
+    cursor: pointer;
+}
+
+.calender{
+    cursor: pointer;
+}
+
+.cancelrow {
     background-color: lightgray;
-    width: 147px;
-    font-family: Inter;
-    font-size: 32px;
-    display: flex;
-    justify-content: center;
 }
 
-
-.addbutton{
-    color: #000;
-}
-
-.cancelrow{
-    background-color: lightgray;
-}
-
-.deletebutton{
-    border: 1px solid;
+.deletebutton {
+    border: 1px solid #000000;
+    border-radius: 4px;
+    color: #333;
+    cursor: pointer;
 }
 
 .popup {
@@ -71,43 +80,47 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
-  }
-  
-  .popup_content {
+}
+
+.popup_content {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(180, 74, 74, 0.2);
     text-align: center;
-  }
+}
 
-  button.confirm_button {
-    background-color: #4caf50; /* 緑 */
+button.confirm_button {
+    background-color: #4caf50;
+    /* 緑 */
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-  }
-  
-  button.cancel_button {
-    background-color: #f44336; /* 赤 */
+}
+
+button.cancel_button {
+    background-color: #f44336;
+    /* 赤 */
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-  }
-  
-  button.confirm_button:hover {
-    background-color: #45a049; /* 緑（ホバー時） */
-  }
-  
-  button.cancel_button:hover {
-    background-color: #d32f2f; /* 赤（ホバー時） */
-  }
+}
 
-  .required {
+button.confirm_button:hover {
+    background-color: #45a049;
+    /* 緑（ホバー時） */
+}
+
+button.cancel_button:hover {
+    background-color: #d32f2f;
+    /* 赤（ホバー時） */
+}
+
+.required {
     color: red;
     font-weight: bold;
-  }
+}

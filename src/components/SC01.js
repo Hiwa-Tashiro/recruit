@@ -40,6 +40,25 @@ function SC01() {
   const handleClick2 = () => { navigate("/SC04"); };
 
 
+  //フェーズ
+  const handlePhaseChange = (phase) => {
+    setSelectedPhase(phase);
+    setCurrentPage(1);
+    setSelectedIds([]);
+    applyFilters(searchQuery, formData.date, phase);
+    const totalCount = phaseData[phase]?.[`phase${phase}_count`] || 0;
+    setTotalPhaseCount(totalCount);
+  };
+
+  //ページネーション
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
+  };//前のページに戻る
+  const handleNextPage = () => {
+    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
+  };//次のページへ進む
+
+
   //チェックボックス
   const handleCheckboxChange = (studentId) => {
     setSelectedIds((prevSelectedIds) => {
@@ -231,9 +250,6 @@ function SC01() {
           updated_at: updated_at,
           user: cookies?.user,
           function_id: functionid
-
-
-
         })
       });
 
@@ -278,38 +294,6 @@ function SC01() {
 
   // 学生状況
   const [selectedButtons, setSelectedButtons] = useState({});
-  const fetchData = async () => {
-    try {
-      const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/selectStudent";
-
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          function_id: functionid,
-          user: cookies?.user,
-          recruit_year: cookies?.recruit_year,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const json = await response.json();
-      console.log("Fetched Data:", json);
-
-
-      setData(json["tabledata"] || []);
-      setFilteredData(json["tabledata"] || []);
-      setPhaseData(json["phases"] || {});
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-  useEffect(() => {
-    fetchData();
-  }, [functionid]);
   const handleButtonClick = async (studentId, phase, group, buttonIndex, updated_at) => {
     const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/rec2-status";
 
@@ -468,7 +452,7 @@ function SC01() {
   }
 
 
-  
+
   //データフェッチ
   useEffect(() => {
     const fetchData = async () => {
@@ -501,7 +485,7 @@ function SC01() {
             Studentsituation: student.jobfair_is_attend,
             Studentsituation1: student.resume_is_submit || 0,
             Studentsituation2: student.result,
-          }
+          };
         });
         setSelectedButtons(initialButtons);
 
@@ -509,47 +493,64 @@ function SC01() {
         const savedFormData = cookies.formData || { date: "" };
         const savedPhase = cookies.selectedPhase ? Number(cookies.selectedPhase) : 0;
 
-        if (savedSearchQuery || savedFormData.date || savedPhase > 0) {
-          applyFilters(savedSearchQuery, savedFormData.date, savedPhase);
-        } else {
-          setFilteredData(json["tabledata"]);
+        console.log("Cookies:", { savedSearchQuery, savedFormData, savedPhase });
+
+        let filterData = [...json["tabledata"]];
+
+        if (savedPhase > 0) {
+          filterData = filterData.filter((student) => student.phase_num >= savedPhase);
+          setSelectedPhase(savedPhase);
         }
 
+        if (savedFormData.date) {
+          filterData = filterData.filter((student) => student.jobfair_id === savedFormData.date);
+          setFormData(savedFormData);
+        }
+
+        if (savedSearchQuery) {
+          filterData = filterData.filter((student) =>
+            student.name.includes(savedSearchQuery) ||
+            student.university.includes(savedSearchQuery) ||
+            student.email?.includes(savedSearchQuery) ||
+            student.know_opportunity.includes(savedSearchQuery) ||
+            student.furigana?.includes(savedSearchQuery)
+          );
+          setSearchQuery(savedSearchQuery);
+        }
+
+        setFilteredData(filterData);
+
+        console.log("Filtered Data:", filterData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-    
 
     fetchData();
   }, [functionid]);
 
 
-  //フェーズ
-  const handlePhaseChange = (phase) => {
-    setSelectedPhase(phase);
-    setCurrentPage(1);
-    setSelectedIds([]);
-    applyFilters(searchQuery, formData.date, phase);
-    const totalCount = phaseData[phase]?.[`phase${phase}_count`] || 0;
-    setTotalPhaseCount(totalCount);
-  };
-
-  //ページネーション
-  const handlePreviousPage = () => {
-    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
-  };//前のページに戻る
-  const handleNextPage = () => {
-    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
-  };//次のページへ進む
-
-  
   useEffect(() => {
-    setCookie("searchQuery", searchQuery);
-    setCookie("selectedPhase", selectedPhase);
-    setCookie("formData", formData);
-    setCookie("currentPage", currentPage);
-  }, [searchQuery, selectedPhase, formData, currentPage, setCookie]);
+    setCookie("searchQuery", searchQuery, { path: "/" });
+    setCookie("formData", formData, { path: "/" });
+    setCookie("selectedPhase", selectedPhase, { path: "/" });
+    setCookie("currentPage", currentPage, { path: "/" });
+  }, [searchQuery, formData, selectedPhase, currentPage, setCookie]);
+
+  useEffect(() => {
+    const clearCookiesOnReload = () => {
+      setCookie("searchQuery", "", { path: "/", maxAge: 0 });
+      setCookie("formData", JSON.stringify({ date: "" }), { path: "/", maxAge: 0 });
+      setCookie("selectedPhase", "0", { path: "/", maxAge: 0 });
+      setCookie("currentPage", "1", { path: "/", maxAge: 0 });
+    };
+
+    window.addEventListener("beforeunload", clearCookiesOnReload);
+
+    return () => {
+      window.removeEventListener("beforeunload", clearCookiesOnReload);
+    };
+  }, [setCookie]);
 
 
   const handleInputChange = (event) => {
@@ -558,16 +559,15 @@ function SC01() {
     applyFilters(query, formData.date, selectedPhase);
   };
 
-
   const handleDateSelect = (e) => {
     const selectedJobfairId = e.target.value;
     setFormData({ date: selectedJobfairId });
     applyFilters(searchQuery, selectedJobfairId, selectedPhase);
   };
 
-
   const applyFilters = (query, selectedJobfairId, selectedPhaseNum) => {
     let filtered = students;
+
     if (selectedPhaseNum > 0) {
       filtered = filtered.filter((student) => student.phase_num >= selectedPhaseNum);
     }

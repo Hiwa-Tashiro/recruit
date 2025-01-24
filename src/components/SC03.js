@@ -272,7 +272,7 @@ function SC03() {
   return (
     <div>
       <div className={SC03_css.header}>
-        <div classspot="Return">
+        <div className={SC03_css.return}>
           <button onClick={handleClick} className={SC03_css.backbutton}>
             <div className={SC03_css.buttoncontent}>戻る</div>
             </button>
@@ -314,6 +314,7 @@ function SC03() {
                     />
                   ) : (
                     <div
+                    className={SC03_css.calender}
                     onClick={() => setEditingcalender(row.num)}
                     >{formatJapaneseDate(row.date)}</div>
                   )

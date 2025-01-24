@@ -3,6 +3,7 @@ import { I18n } from 'aws-amplify/utils';
 const dict = {
   ja: {
         'Sign in': 'サインイン',
+        'Sign In': 'サインイン',
         'Sign up': 'サインアップ',
         'Sign out': 'サインアウト',
         'Sign in to your account': 'アカウントにサインイン',
