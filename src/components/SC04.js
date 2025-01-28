@@ -783,11 +783,13 @@ function SC04() {
       const dateObj = new Date(option.date);
 
       // 月、日、時、分を整形
+      const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
+      const dayOfWeek = daysOfWeek[dateObj.getDay()];
       const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // 2桁表示
       const day = String(dateObj.getDate()).padStart(2, "0");       // 2桁表示
       const hours = String(dateObj.getHours()).padStart(2, "0");   // 2桁表示
       const minutes = String(dateObj.getMinutes()).padStart(2, "0"); // 2桁表示
-      const formattedDate = `${month}月${day}日${hours}時${minutes}分`;
+      const formattedDate = `${month}月${day}日(${dayOfWeek})${hours}時${minutes}分`;
 
       return (
         <option value={option.jobfair_id}>

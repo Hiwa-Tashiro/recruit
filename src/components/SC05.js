@@ -247,11 +247,13 @@ const filepath = `file:///${formData.file_path}`
     const formattedJobfairDate = selectedJobfair
         ? (() => {
             const dateObj = new Date(selectedJobfair.date);
+            const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
+            const dayOfWeek = daysOfWeek[dateObj.getDay()];
             const month = String(dateObj.getMonth() + 1).padStart(2, "0");
             const day = String(dateObj.getDate()).padStart(2, "0");
             const hours = String(dateObj.getHours()).padStart(2, "0");
             const minutes = String(dateObj.getMinutes()).padStart(2, "0");
-            return `${month}月${day}日 ${hours}時${minutes}分`;
+            return `${month}月${day}日(${dayOfWeek}) ${hours}時${minutes}分`;
         })()
         : "未設定";
 
@@ -280,6 +282,15 @@ const filepath = `file:///${formData.file_path}`
             setAge(null);
         }
     }, [formData.birthday]);
+      // 生年月日を「YYYY年MM月DD日」の形式にフォーマットする関数
+  const formatBirthday = (birthday) => {
+    if (!birthday) return "";
+    const date = new Date(birthday);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // 月は0始まりなので+1
+    const day = date.getDate();
+    return `${year}年${month}月${day}日`;
+  };
 
     //電話番号の入力制限
     const handleTelChange = (e) => {
@@ -517,8 +528,13 @@ const filepath = `file:///${formData.file_path}`
                     </tr>
                     <tr>
                         <th style={{ border: '1px solid black', padding: '8px' }}>生年月日</th>
-                        <td style={{ border: '1px solid black', padding: '8px' }}>  {formData.birthday || ''}{formData.birthday && (
-                            <span>（満{calculateAge(formData.birthday)}歳）</span>)}</td>
+                        <td style={{ border: "1px solid black", padding: "8px" }}>
+                            {formData.birthday
+                            ? `${formatBirthday(formData.birthday)}`: ""}
+                            {formData.birthday && (
+                                <span>（満{calculateAge(formData.birthday)}歳）</span>
+                                )}
+                                </td>
                         <th style={{ border: '1px solid black', padding: '8px' }}>説明会日時</th>
                         <td style={{ border: '1px solid black', padding: '8px' }}>
                             {formattedJobfairDate}

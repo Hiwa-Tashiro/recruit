@@ -3,14 +3,20 @@
   height: calc(100vw * 9 / 16);
   max-height: 100vh;
   margin: 0 auto;
+}
+
+.header {
   display: flex;
-  justify-content: center;
+  width: 95%;
+  justify-content: space-between;
+  margin-left: auto;
+  margin-right: auto;
   align-items: center;
 }
 
 
 .siscoBear img {
-  width: 8vw; 
+  width: 8vw;
   max-width: 170px;
   height: auto;
   position: absolute;
@@ -31,6 +37,7 @@
   top: 18vh;
   left: 0;
 }
+
 .phase_button {
   width: 10vw;
   max-width: 160px;
@@ -48,15 +55,18 @@
   justify-content: center;
   align-items: center;
 }
+
 .phase_button.disabled {
   background-color: #E9E9E9;
   color: #000000;
   cursor: not-allowed;
   font-weight: bold;
 }
+
 .phase_button.selected {
   font-weight: bold;
 }
+
 .phase_button:hover:not(.disabled) {
   transform: scale(1.1);
   background-color: #cce5ff;
@@ -65,14 +75,11 @@
 
 /* 説明会日程ボタン */
 .Inforsessionschedule {
-  position: fixed;
-  top: 2vh;
-  left: 5vh;
   display: inline-block;
-  margin-bottom: 20px;
   border-radius: 5px;
   z-index: 5;
 }
+
 .Inforsessionschedule button {
   background-color: #CFF1F6;
   border-radius: 8px;
@@ -83,10 +90,12 @@
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
+
 .Inforsessionschedule button:hover {
   background-color: #b0c4de;
   transform: scale(1.1);
 }
+
 .Inforsessionschedule button:active {
   background-color: #4682b4;
   transform: scale(0.95);
@@ -98,15 +107,14 @@
   position: absolute;
   right: 6vh;
   top: 7vh;
-  width: 13vh;
-  max-width: 140px;
   border-radius: 4px;
   border: 1px solid #000000;
+  z-index: 11;
 }
+
 .Nendo select {
-  width: 100%;
   height: 100%;
-  font-size: 0.8rem; 
+  font-size: 1rem;
   border: none;
   outline: none;
   background-color: rgb(255, 255, 255);
@@ -118,12 +126,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  position: fixed;
-  top: 2vh;
-  left: 0;
-  z-index: 5; /* Searchバーの優先度を高める */
+  z-index: 5;
+  /* Searchバーの優先度を高める */
 }
+
 .Search input[type="search"] {
   width: 50vw;
   height: 5vh;
@@ -135,6 +141,7 @@
   box-sizing: border-box;
   transition: all 0.3s ease;
 }
+
 input[type="search"]:focus {
   outline: none;
   border-color: #007bff;
@@ -153,6 +160,7 @@ input[type="search"]:focus {
   align-items: center;
   border-radius: 5px;
 }
+
 .Studentregister button {
   background-color: #CFF1F6;
   border-radius: 5px;
@@ -162,38 +170,42 @@ input[type="search"]:focus {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
+
 .Studentregister button:hover {
   background-color: #b0c4de;
   transform: scale(1.05);
 }
+
 .Studentregister button:active {
   background-color: #4682b4;
   transform: scale(0.95);
 }
 
 
-/* アップロード */
 .Upload {
-  position: fixed;
-  top: 2vh;
-  right: 3vh;
   z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1vh;
 }
-.Upload input[type="file"] {
-  font-size: 1vw;
-  width: 100%;
-}
+
 .Upload button {
-  position: fixed;
-  top: 7vh;
-  right: 17vw;
+  width: auto;
   font-size: 1vw;
   background-color: #dedede;
   color: rgb(0, 0, 0);
   border: 1px solid #767676;
-  border-radius: 5px;
+  border-radius: 3px;
   cursor: pointer;
+  padding: 4px 12px;
 }
+
+.Upload input[type="file"] {
+  font-size: 1vw;
+  width: 100%;
+}
+
 .Upload button:hover {
   background-color: #0056b3;
 }
@@ -209,6 +221,7 @@ input[type="search"]:focus {
   border-radius: 8px;
   z-index: 10;
 }
+
 .Infor2 select {
   width: 100%;
   font-size: 1vw;
@@ -218,11 +231,13 @@ input[type="search"]:focus {
   background-color: #fff;
   box-sizing: border-box;
 }
+
 .Infor2 select:focus {
   border-color: #007bff;
   outline: none;
   box-shadow: 0 0 4px #007bff;
 }
+
 .Infor2 option {
   font-size: 1vw;
   padding: 0.2vw;
@@ -236,6 +251,7 @@ input[type="search"]:focus {
   justify-content: flex-end;
   align-items: center;
 }
+
 .Bulkregister button {
   position: fixed;
   top: 23vh;
@@ -248,10 +264,12 @@ input[type="search"]:focus {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
+
 .Bulkregister button:hover {
   background-color: #b0c4de;
   transform: scale(1.05);
 }
+
 .Bulkregister button:disabled {
   background-color: #E9E9E9;
   color: #A0A0A0;
@@ -282,6 +300,7 @@ input[type="search"]:focus {
   align-items: center;
   z-index: 10;
 }
+
 .popup_content {
   background-color: #fff;
   padding: 20px;
@@ -292,9 +311,11 @@ input[type="search"]:focus {
   text-align: center;
   z-index: 1010;
 }
+
 .popup_content h2 {
   margin-top: 0;
 }
+
 .popup_content button {
   margin: 10px;
   padding: 10px 20px;
@@ -304,27 +325,31 @@ input[type="search"]:focus {
   border-radius: 5px;
   cursor: pointer;
 }
+
 .popup_content button:hover {
   background-color: #0056b3;
 }
+
 .error_message_container {
-  position: fixed; 
-  top: 50%; 
+  position: fixed;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); 
-  background-color: white; 
-  padding: 20px; 
-  border: 1px solid #ccc; 
-  border-radius: 8px; 
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center; 
-  z-index: 1000; 
+  text-align: center;
+  z-index: 1000;
 }
+
 .error_message_text {
   color: rgb(0, 0, 0);
   font-weight: bold;
   margin-bottom: 10px;
 }
+
 .close_error_button {
   background-color: #7bbbff;
   color: white;
@@ -334,9 +359,11 @@ input[type="search"]:focus {
   cursor: pointer;
   font-size: 14px;
 }
+
 .close_error_button:hover {
   background-color: #0056b3;
 }
+
 .popup_overlay {
   position: fixed;
   top: 0;
@@ -349,6 +376,7 @@ input[type="search"]:focus {
   align-items: center;
   z-index: 1000;
 }
+
 .popup_content {
   background-color: #fff;
   border-radius: 8px;
@@ -357,12 +385,14 @@ input[type="search"]:focus {
   width: 50%;
   text-align: center;
 }
+
 .popup_buttons {
   margin-top: 20px;
   display: flex;
   justify-content: center;
   gap: 10px;
 }
+
 .close_button,
 .register_button {
   background-color: #007bff;
@@ -373,22 +403,27 @@ input[type="search"]:focus {
   cursor: pointer;
   font-size: 14px;
 }
+
 .close_button {
   background-color: #dc3545;
 }
+
 .register_button {
-  background-color: #C7E0FF; 
+  background-color: #C7E0FF;
 }
+
 .close_button:hover,
 .register_button:hover {
   opacity: 0.8;
 }
+
 .studenttbl {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px; 
+  margin-top: 20px;
   table-layout: fixed;
 }
+
 .studenttbl th,
 .studenttbl td {
   border: 1px solid #ccc;
@@ -396,6 +431,7 @@ input[type="search"]:focus {
   text-align: left;
   width: 50%;
 }
+
 .studenttbl th {
   background-color: #f5f5f5;
 }
@@ -407,14 +443,18 @@ input[type="search"]:focus {
   margin-top: 8px;
   display: block;
 }
+
 .Studentsituation {
   display: flex;
-  justify-content: center; /* 中央寄せ */
-  gap: 2px; /* ボタン同士の幅を指定 */
+  justify-content: center;
+  /* 中央寄せ */
+  gap: 2px;
+  /* ボタン同士の幅を指定 */
   position: relative;
   top: 0vh;
   left: 0vh;
 }
+
 .Studentsituation button {
   background-color: #dadada;
   border: 1px solid #000;
@@ -437,9 +477,11 @@ input[type="search"]:focus {
   background-color: #87b8e8;
   color: #fff;
 }
+
 .Studentsituation button:last-child {
-  font-size: 9px;
+  font-size: 13px;
 }
+
 .Studentsituation1 {
   display: flex;
   justify-content: center;
@@ -448,6 +490,7 @@ input[type="search"]:focus {
   top: 0vh;
   left: 0vh;
 }
+
 .Studentsituation1 button {
   background-color: #dadada;
   border: 1px solid #000;
@@ -470,14 +513,18 @@ input[type="search"]:focus {
   background-color: #87b8e8;
   color: #fff;
 }
+
 .Studentsituation2 {
   display: flex;
-  justify-content: center; /* 中央寄せ */
-  gap: 2px; /* ボタン同士の幅を指定 */
+  justify-content: center;
+  /* 中央寄せ */
+  gap: 2px;
+  /* ボタン同士の幅を指定 */
   position: relative;
   top: 0vh;
   left: 0vh;
 }
+
 .Studentsituation2 button {
   background-color: #dadada;
   border: 1px solid #000;
@@ -495,6 +542,7 @@ input[type="search"]:focus {
   align-items: center;
   justify-content: center;
 }
+
 .Studentsituation2 button.active {
   background-color: #87b8e8;
   color: #fff;
@@ -509,10 +557,11 @@ input[type="search"]:focus {
   gap: 1.5vw;
   position: fixed;
   bottom: 10%;
-  left: 50%; 
+  left: 50%;
   transform: translateX(-50%);
   top: 97.5vh;
 }
+
 .page_button {
   border-radius: 50%;
   border: 1px solid #ccc;
@@ -525,22 +574,27 @@ input[type="search"]:focus {
   cursor: pointer;
   transition: all 0.3s ease;
 }
+
 .page_button:disabled {
   color: #ddd;
   cursor: not-allowed;
 }
+
 .page_button.active {
   background-color: #6ed5e0;
   color: white;
   border: 1px solid #6ed5e0;
 }
+
 .page_button:hover:not(:disabled) {
   background-color: #f2f2f2;
 }
+
 .dots {
   font-size: 18px;
   color: #aaa;
 }
+
 .page_button1 {
   border-radius: 50%;
   border: 1px solid #ccc;
@@ -562,7 +616,7 @@ input[type="search"]:focus {
   right: 6vh;
   font-size: 1.5vw;
   color: #000;
-  text-align: center; 
+  text-align: center;
 }
 
 
@@ -580,15 +634,18 @@ input[type="search"]:focus {
   overflow-x: hidden;
   text-align: center;
 }
+
 .student_table {
   width: 100%;
   border-collapse: collapse;
 }
+
 .table_title {
   text-align: center;
   font-weight: bold;
   background-color: #C6EBFF;
 }
+
 .table_header {
   padding: 2px;
   text-align: center;
@@ -600,6 +657,7 @@ input[type="search"]:focus {
   top: 0;
   z-index: 2;
 }
+
 .table_header_phase {
   background: #fffccb;
   color: #090f4e;
@@ -607,6 +665,7 @@ input[type="search"]:focus {
   top: 0;
   z-index: 2;
 }
+
 .td {
   padding: 0px;
   text-align: center;
@@ -614,6 +673,12 @@ input[type="search"]:focus {
   word-wrap: break-word;
   line-height: 1;
 }
+
+.td:nth-child(1) {
+  width: 40px;
+}
+
+
 
 
 .td:nth-child(3),
@@ -624,28 +689,35 @@ input[type="search"]:focus {
 .td:nth-child(8),
 .td:nth-child(9),
 td:nth-child(10) {
-  font-size: 17px;
+  font-size: 15px;
 }
+
 .disabled {
   color: gray;
   cursor: not-allowed;
 }
+
 .calendar_placeholder {
   color: inherit;
   cursor: pointer;
 }
+
 .student_table tbody tr:nth-child(odd) {
   background-color: #EEF9FF;
 }
+
 .name {
   font-weight: bold;
 }
+
 .disabled_name {
-  color: gray; 
+  color: gray;
 }
+
 .decline_row {
   color: #868686;
 }
+
 .decline_row td,
 .decline_row th {
   background-color: #d0d0d0;
