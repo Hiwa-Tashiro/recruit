@@ -21,7 +21,7 @@ function SC01() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 100;
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginatedData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
@@ -210,7 +210,7 @@ function SC01() {
     const date = new Date(datetime);
     const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
 
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // 月を2桁に
+    const month = String(date.getMonth() + 1).padStart(2); // 月を2桁に
     const day = String(date.getDate()).padStart(2, "0"); // 日を2桁に
     const dayOfWeek = daysOfWeek[date.getDay()];
 
@@ -250,6 +250,9 @@ function SC01() {
           updated_at: updated_at,
           user: cookies?.user,
           function_id: functionid
+
+
+
         })
       });
 
@@ -586,6 +589,7 @@ function SC01() {
     }
 
     setFilteredData(filtered);
+    setCurrentPage(1);
   };
 
 
@@ -678,33 +682,32 @@ function SC01() {
               </select>
             </div>
 
+            <div className={SC01_css.header}>
+              {/* 説明会日程 */}
+              <div className={SC01_css.Inforsessionschedule}>
+                <button onClick={handleClick}>
+                  説明会日程
+                </button>
+              </div>
 
-            {/* アップロード */}
-            <div className={SC01_css.Upload}>
-              <form onSubmit={selectFile}>
-                <input type="file" accept="text/csv" ref={inputfile} />
-                <button type="submit">アップロード</button>
-              </form>
-            </div>
+              {/* 検索 */}
+              <div className={SC01_css.Search}>
+                <input
+                  type="search"
+                  id="search"
+                  placeholder="氏名/フリガナ/大学名/メール/当社を知ったきっかけ"
+                  value={searchQuery}
+                  onChange={handleInputChange}
+                />
+              </div>
 
-
-            {/* 検索 */}
-            <div className={SC01_css.Search}>
-              <input
-                type="search"
-                id="search"
-                placeholder="氏名/フリガナ/大学名/メール/当社を知ったきっかけ"
-                value={searchQuery}
-                onChange={handleInputChange}
-              />
-            </div>
-
-
-            {/* 説明会日程 */}
-            <div className={SC01_css.Inforsessionschedule}>
-              <button onClick={handleClick}>
-                説明会日程
-              </button>
+              {/* アップロード */}
+              <div className={SC01_css.Upload}>
+                <form onSubmit={selectFile}>
+                  <div><input type="file" accept="text/csv" ref={inputfile} /></div>
+                  <div><button type="submit">アップロード</button></div>
+                </form>
+              </div>
             </div>
 
 
@@ -1138,7 +1141,7 @@ function SC01() {
                                       )
                                     }
                                   >
-                                    cancel
+                                    キャンセル
                                   </button>
                                 </div>
                               </div>
