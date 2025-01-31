@@ -5,6 +5,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import SiscoBear from '../ui-components/siscobear.png';
 import { useCookies } from "react-cookie";
 import Papa from 'papaparse';
+import { ConsoleLogger } from 'aws-amplify/utils';
 
 function SC01() {
   const [data, setData] = useState([]);
@@ -21,16 +22,21 @@ function SC01() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
 
-  const itemsPerPage = 100;
+  const itemsPerPage = 10;
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = filteredData.slice(
+
+  let paginatedData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
   useEffect(() => {
-    setCookie("user", 'arisa');
-  }, [])
+    paginatedData = filteredData.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    );
+  },[filteredData])
+
   const functionid = 'SC01';
 
 
@@ -149,6 +155,8 @@ function SC01() {
       const result = await response.json();
       console.log("登録成功:", result);
       setIsPopupOpen(false);
+
+      window.location.reload();
     } catch (error) {
       console.error("登録エラー:", error);
       alert("登録中にエラーが発生しました。");
@@ -506,7 +514,8 @@ function SC01() {
         }
 
         if (savedFormData.date) {
-          filterData = filterData.filter((student) => student.jobfair_id === savedFormData.date);
+          filterData = filterData.filter((student) => student.jobfair_id == savedFormData.date);
+          console.log(savedFormData.date)
           setFormData(savedFormData);
         }
 
@@ -589,7 +598,6 @@ function SC01() {
     }
 
     setFilteredData(filtered);
-    setCurrentPage(1);
   };
 
 
