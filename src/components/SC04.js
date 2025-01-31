@@ -34,8 +34,7 @@ function SC04() {
   const [isCustomPopupVisible, setIsCustomPopupVisible] = useState(false);
   const [customPopupContent, setCustomPopupContent] = useState(""); // Content for the custom popup
   const handleBackNavigation = () => {
-    console.log(student_dataset)
-    if (student_dataset.lengths > 0) {
+    if (Object.keys(student_dataset).length > 0) {
       navigate('/SC05', {state:{ student_id: status?.student_id }});
     } else {
       navigate('/');
