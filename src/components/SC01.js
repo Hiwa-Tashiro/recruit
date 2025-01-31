@@ -22,20 +22,13 @@ function SC01() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 100;
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-  let paginatedData = filteredData.slice(
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-
-  useEffect(() => {
-    paginatedData = filteredData.slice(
-      (currentPage - 1) * itemsPerPage,
-      currentPage * itemsPerPage
-    );
-  },[filteredData])
 
   const functionid = 'SC01';
 
