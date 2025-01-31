@@ -666,17 +666,18 @@ function SC01() {
                 id="date"
                 name="date"
                 className={SC01_css.short_input}
-                value={formatDate.date}
+                value={formatDate.date ? formatDate.date : cookies.formData?.date}
                 onChange={handleDateSelect}
               >
                 <option value="">説明会日時</option>
                 {jobfairOptions?.map((option) => {
                   const dateObj = new Date(option.date);
-                  const formattedDate = `${(dateObj.getMonth() + 1).toString().padStart(2)}月${dateObj.getDate().toString().padStart(2, '0')}日 ${dateObj.getHours().toString().padStart(2, '0')}時${dateObj.getMinutes().toString().padStart(2, '0')}分`;
-
+                  const formattedDate = `${(dateObj.getMonth()+1).toString().padStart(1)}月${dateObj.getDate().toString().padStart(2, '0')}日`;
+                  const formattedTime = `${dateObj.getHours().toString().padStart(1, '0')}時${dateObj.getMinutes().toString().padStart(2, '0')}分`;
                   return (
                     <option key={option.jobfair_id} value={option.jobfair_id}>
-                      {formattedDate}
+                      <div>{formattedDate}</div>
+                      <div>{formattedTime}</div>
                     </option>
                   );
                 })}
