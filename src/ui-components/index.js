@@ -126,7 +126,6 @@ export { default as Return } from "./Return";
 export { default as Roundtablediscussion } from "./Roundtablediscussion";
 export { default as Roundtablediscussionselect } from "./Roundtablediscussionselect";
 export { default as Sccbear2 } from "./Sccbear2";
-export { default as Sccbear3 } from "./Sccbear3";
 export { default as Scroll } from "./Scroll";
 export { default as Sei } from "./Sei";
 export { default as Seiyaku } from "./Seiyaku";

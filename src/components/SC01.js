@@ -251,9 +251,6 @@ function SC01() {
           updated_at: updated_at,
           user: cookies?.user,
           function_id: functionid
-
-
-
         })
       });
 
@@ -381,6 +378,8 @@ function SC01() {
       setStudents(json["tabledata"] || []);
       setPhaseData(json["phases"] || {});
 
+      console.log(selectedButtons[3221])
+
       applyFilters(searchQuery, formData.date, selectedPhase);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -432,9 +431,9 @@ function SC01() {
             })
               .then((res) => res.json()) // JSON形式に変換
               .then((data) => {
-                console.log(data);
                 if (data?.errorMesseage) {
-                  alert(data?.errorMesseage);
+                  alert(data?.errorMesseage + '\n' +
+                    'エラー発生箇所は' + data?.array_count + '行目です。');
                 }
                 else {
                   alert("アップロードに成功しました");
@@ -590,6 +589,7 @@ function SC01() {
       );
     }
 
+    setCurrentPage(1);
     setFilteredData(filtered);
   };
 
@@ -672,7 +672,7 @@ function SC01() {
                 <option value="">説明会日時</option>
                 {jobfairOptions?.map((option) => {
                   const dateObj = new Date(option.date);
-                  const formattedDate = `${(dateObj.getMonth()+1).toString().padStart(1)}月${dateObj.getDate().toString().padStart(2, '0')}日`;
+                  const formattedDate = `${(dateObj.getMonth() + 1).toString().padStart(1)}月${dateObj.getDate().toString().padStart(2, '0')}日`;
                   const formattedTime = `${dateObj.getHours().toString().padStart(1, '0')}時${dateObj.getMinutes().toString().padStart(2, '0')}分`;
                   return (
                     <option key={option.jobfair_id} value={option.jobfair_id}>
@@ -775,7 +775,7 @@ function SC01() {
                           className={SC01_css.checkbox}
                           checked={selectedIds.includes(student.student_id)}
                           onChange={() => handleCheckboxChange(student.student_id)}
-                          disabled={student.recruit_is_decline === 1}
+                          disabled={student.recruit_is_decline === 1 || selectedButtons[student.student_id]?.Studentsituation2 === 1}
                         />
                       </td>
 
@@ -803,10 +803,8 @@ function SC01() {
                       <td className={SC01_css.td}>
                         {activeCalendar?.student_id === student.student_id &&
                           activeCalendar?.field === "interview_date" ? (
-                          selectedButtons[student.student_id]?.Studentsituation1 === 1 &&
-                            student.phase_num >= 2 &&
-                            student.recruit_is_decline !== 1 &&
-                            !(student.phase_num >= 3 && student.result === 1) ? ( // result=1 の場合は操作不可
+                          (student.phase_num == 2 || (student.phase_num == 3 && student.result !== 1)) &&
+                            student.recruit_is_decline !== 1 ? (
                             <input
                               type="datetime-local"
                               value={student.interview_date || ""}
@@ -838,50 +836,23 @@ function SC01() {
                               autoFocus
                             />
                           ) : (
-                            <div
-                              className={`${SC01_css.calendar_disabled} ${student.recruit_is_decline === 1 ? SC01_css.disabled : ""
-                                }`}
-                              style={{
-                                color: "gray",
-                                cursor: "not-allowed",
-                              }}
-                            ></div>
+                            <div className={`${SC01_css.calendar_disabled}`}></div>
                           )
                         ) : (
                           <div
                             onClick={() => {
                               if (
-                                selectedButtons[student.student_id]?.Studentsituation1 === 1 &&
-                                student.phase_num >= 2 &&
-                                student.recruit_is_decline !== 1 &&
-                                !(student.phase_num >= 3 && student.result === 1) // result=1 の場合は操作不可
+                                (student.phase_num == 2 || (student.phase_num == 3 && student.result !== 1)) &&
+                                student.recruit_is_decline !== 1
                               ) {
                                 toggleCalendar(student.student_id, "interview_date");
                               }
                             }}
-                            className={`${SC01_css.calendar_placeholder} ${selectedButtons[student.student_id]?.Studentsituation1 !== 1 ||
-                              student.phase_num < 3 ||
-                              student.recruit_is_decline === 1 ||
-                              (student.phase_num >= 3 && student.result === 1)
-                              ? SC01_css.disabled
-                              : ""
+                            className={`${SC01_css.calendar_placeholder} ${(student.phase_num == 2 || (student.phase_num == 3 && student.result !== 1)) &&
+                                student.recruit_is_decline !== 1
+                                ? SC01_css.abled
+                                : SC01_css.disabled
                               }`}
-                            style={{
-                              color:
-                                selectedButtons[student.student_id]?.Studentsituation1 !== 1 ||
-                                  student.phase_num < 1 ||
-                                  student.recruit_is_decline === 1 ||
-                                  (student.phase_num >= 3 && student.result === 1)
-                                  ? "gray"
-                                  : "inherit",
-                              cursor:
-                                selectedButtons[student.student_id]?.Studentsituation1 !== 1 ||
-                                  student.phase_num < 1 ||
-                                  student.recruit_is_decline === 1 ||
-                                  (student.phase_num >= 3 && student.result === 1)
-                                  ? "not-allowed"
-                                  : "pointer",
-                            }}
                           >
                             {student.interview_date
                               ? formatJapaneseDate(student.interview_date)
@@ -894,90 +865,62 @@ function SC01() {
                         )}
                       </td>
 
-
-
                       <td className={SC01_css.td}>
                         {activeCalendar?.student_id === student.student_id &&
                           activeCalendar?.field === "roundtable_date" ? (
-                          selectedButtons[student.student_id]?.Studentsituation2 === 0 &&
-                            student.phase_num >= 3 &&
-                            student.recruit_is_decline !== 1 &&
-                            student.result !== 1 ? (
-                            <input
-                              type="datetime-local"
-                              value={student.roundtable_date || ""}
-                              onChange={(e) =>
-                                handleDateChange(
-                                  student.student_id,
-                                  "roundtable_date",
-                                  e.target.value
-                                )
-                              }
-                              onBlur={(e) => {
-                                const newDate = e.target.value;
-
-                                if (newDate) {
-                                  setActiveCalendar(null);
-                                  setCalendar(
+                          student.recruit_is_decline !== 1
+                            && ((student.phase_num == 3 && student.result === 0) || (student.phase_num == 4 && student.result !== 1))
+                            ? (
+                              <input
+                                type="datetime-local"
+                                value={student.roundtable_date || ""}
+                                onChange={(e) =>
+                                  handleDateChange(
                                     student.student_id,
-                                    4,
-                                    newDate,
-                                    student.roundtable_updated_at
-                                  );
-                                } else {
-                                  setActiveCalendar(null);
-                                  console.warn(
-                                    "日程が入力されていません。データベースに保存されませんでした。"
-                                  );
+                                    "roundtable_date",
+                                    e.target.value
+                                  )
                                 }
-                              }}
-                              autoFocus
-                            />
-                          ) : (
-                            <div
-                              className={`${SC01_css.calendar_disabled} ${student.recruit_is_decline === 1 ? SC01_css.disabled : ""
-                                }`}
-                              style={{
-                                color: "gray",
-                                cursor: "not-allowed",
-                              }}
-                            ></div>
-                          )
+                                onBlur={(e) => {
+                                  const newDate = e.target.value;
+
+                                  if (newDate) {
+                                    setActiveCalendar(null);
+                                    setCalendar(
+                                      student.student_id,
+                                      4,
+                                      newDate,
+                                      student.roundtable_updated_at
+                                    );
+                                  } else {
+                                    setActiveCalendar(null);
+                                    console.warn(
+                                      "日程が入力されていません。データベースに保存されませんでした。"
+                                    );
+                                  }
+                                }}
+                                autoFocus
+                              />
+                            ) : (
+                              <div
+                                className={`${SC01_css.calendar_disabled} ${SC01_css.disabled}`}
+                              ></div>
+                            )
                         ) : (
                           <div
                             onClick={() => {
                               if (
-                                selectedButtons[student.student_id]?.Studentsituation2 === 0 &&
-                                student.phase_num >= 3 &&
-                                student.recruit_is_decline !== 1 &&
-                                student.result !== 1
+                                student.recruit_is_decline !== 1
+                                && ((student.phase_num == 3 && student.result === 0) || (student.phase_num == 4 && student.result !== 1))
                               ) {
                                 toggleCalendar(student.student_id, "roundtable_date");
                               }
                             }}
-                            className={`${SC01_css.calendar_placeholder} ${selectedButtons[student.student_id]?.Studentsituation2 !== 0 ||
-                              student.phase_num < 3 ||
-                              student.recruit_is_decline === 1 ||
-                              student.result === 1
-                              ? SC01_css.disabled
-                              : ""
+                            className={`${SC01_css.calendar_placeholder} ${student.recruit_is_decline !== 1
+                              && ((student.phase_num == 3 && student.result === 0) || (student.phase_num == 4 && student.result !== 1))
+                              ? SC01_css.abled
+                              : SC01_css.disabled
                               }`}
-                            style={{
-                              color:
-                                selectedButtons[student.student_id]?.Studentsituation2 !== 0 ||
-                                  student.phase_num < 3 ||
-                                  student.recruit_is_decline === 1 ||
-                                  student.result === 1
-                                  ? "gray"
-                                  : "inherit",
-                              cursor:
-                                selectedButtons[student.student_id]?.Studentsituation2 !== 0 ||
-                                  student.phase_num < 3 ||
-                                  student.recruit_is_decline === 1 ||
-                                  student.result === 1
-                                  ? "not-allowed"
-                                  : "pointer",
-                            }}
                           >
                             {student.roundtable_date
                               ? formatJapaneseDate(student.roundtable_date)
@@ -990,90 +933,63 @@ function SC01() {
                         )}
                       </td>
 
-
-
                       <td className={SC01_css.td}>
                         {activeCalendar?.student_id === student.student_id &&
                           activeCalendar?.field === "final_date" ? (
-                          selectedButtons[student.student_id]?.Studentsituation2 === 0 &&
-                            student.phase_num >= 4 &&
-                            student.recruit_is_decline !== 1 &&
-                            student.result !== 1 ? (
-                            <input
-                              type="datetime-local"
-                              value={student.final_date || ""}
-                              onChange={(e) =>
-                                handleDateChange(
-                                  student.student_id,
-                                  "final_date",
-                                  e.target.value
-                                )
-                              }
-                              onBlur={(e) => {
-                                const newDate = e.target.value;
-
-                                if (newDate) {
-                                  setActiveCalendar(null);
-                                  setCalendar(
+                          student.recruit_is_decline !== 1
+                            && ((student.phase_num == 4 && student.result === 0) || (student.phase_num == 5 && student.result !== 1))
+                            ? (
+                              <input
+                                type="datetime-local"
+                                value={student.final_date || ""}
+                                onChange={(e) =>
+                                  handleDateChange(
                                     student.student_id,
-                                    5,
-                                    newDate,
-                                    student.final_updated_at
-                                  );
-                                } else {
-                                  setActiveCalendar(null);
-                                  console.warn(
-                                    "日程が入力されていません。データベースに保存されませんでした。"
-                                  );
+                                    "final_date",
+                                    e.target.value
+                                  )
                                 }
-                              }}
-                              autoFocus
-                            />
-                          ) : (
-                            <div
-                              className={`${SC01_css.calendar_disabled} ${student.recruit_is_decline === 1 ? SC01_css.disabled : ""
-                                }`}
-                              style={{
-                                color: "gray",
-                                cursor: "not-allowed",
-                              }}
-                            ></div>
-                          )
+                                onBlur={(e) => {
+                                  const newDate = e.target.value;
+
+                                  if (newDate) {
+                                    setActiveCalendar(null);
+                                    setCalendar(
+                                      student.student_id,
+                                      5,
+                                      newDate,
+                                      student.final_updated_at
+                                    );
+                                  } else {
+                                    setActiveCalendar(null);
+                                    console.warn(
+                                      "日程が入力されていません。データベースに保存されませんでした。"
+                                    );
+                                  }
+                                }}
+                                autoFocus
+                              />
+                            ) : (
+                              <div
+                                className={`${SC01_css.calendar_disabled} ${SC01_css.disabled}`}
+                              ></div>
+                            )
                         ) : (
                           <div
                             onClick={() => {
                               if (
-                                selectedButtons[student.student_id]?.Studentsituation2 === 0 &&
-                                student.phase_num >= 4 &&
-                                student.recruit_is_decline !== 1 &&
-                                student.result !== 1
+                                student.recruit_is_decline !== 1
+                                && ((student.phase_num == 4 && student.result === 0) || (student.phase_num == 5 && student.result !== 1))
                               ) {
                                 toggleCalendar(student.student_id, "final_date");
                               }
                             }}
-                            className={`${SC01_css.calendar_placeholder} ${selectedButtons[student.student_id]?.Studentsituation2 !== 0 ||
-                              student.phase_num < 4 ||
-                              student.recruit_is_decline === 1 ||
-                              student.result === 1
-                              ? SC01_css.disabled
-                              : ""
+                            className={`${SC01_css.calendar_placeholder} ${
+                              student.recruit_is_decline !== 1
+                              && ((student.phase_num == 4 && student.result === 0) || (student.phase_num == 5 && student.result !== 1))
+                              ? SC01_css.abled
+                              : SC01_css.disabled
                               }`}
-                            style={{
-                              color:
-                                selectedButtons[student.student_id]?.Studentsituation2 !== 0 ||
-                                  student.phase_num < 4 ||
-                                  student.recruit_is_decline === 1 ||
-                                  student.result === 1
-                                  ? "gray"
-                                  : "inherit",
-                              cursor:
-                                selectedButtons[student.student_id]?.Studentsituation2 !== 0 ||
-                                  student.phase_num < 4 ||
-                                  student.recruit_is_decline === 1 ||
-                                  student.result === 1
-                                  ? "not-allowed"
-                                  : "pointer",
-                            }}
                           >
                             {student.final_date
                               ? formatJapaneseDate(student.final_date)
@@ -1086,12 +1002,9 @@ function SC01() {
                         )}
                       </td>
 
-
-
-
                       <td className={SC01_css.td}>{student.know_opportunity}</td>
                       <td className={SC01_css.td}>
-                        {student.recruit_is_decline !== 1 && (
+                        {(
                           <>
                             {student.phase_num === 0 || (student.phase_num === 1 && (student.jobfair_is_attend !== 0 || student.jobfair_is_attend === null)) ? (
                               <div>
@@ -1110,6 +1023,7 @@ function SC01() {
                                         student.updated_at
                                       )
                                     }
+                                    disabled={student.recruit_is_decline === 1}
                                   >
                                     出席
                                   </button>
@@ -1126,6 +1040,7 @@ function SC01() {
                                         student.updated_at
                                       )
                                     }
+                                    disabled={student.recruit_is_decline === 1}
                                   >
                                     欠席
                                   </button>
@@ -1142,6 +1057,7 @@ function SC01() {
                                         student.updated_at
                                       )
                                     }
+                                    disabled={student.recruit_is_decline === 1}
                                   >
                                     キャンセル
                                   </button>
@@ -1164,6 +1080,7 @@ function SC01() {
                                         student.updated_at
                                       )
                                     }
+                                    disabled={student.recruit_is_decline === 1}
                                   >
                                     提出
                                   </button>
@@ -1182,6 +1099,7 @@ function SC01() {
                                         student.updated_at
                                       )
                                     }
+                                    disabled={student.recruit_is_decline === 1}
                                   >
                                     未提出
                                   </button>
@@ -1204,6 +1122,7 @@ function SC01() {
                                         student.updated_at
                                       )
                                     }
+                                    disabled={student.recruit_is_decline === 1}
                                   >
                                     合格
                                   </button>
@@ -1220,6 +1139,7 @@ function SC01() {
                                         student.updated_at
                                       )
                                     }
+                                    disabled={student.recruit_is_decline === 1}
                                   >
                                     不合格
                                   </button>
@@ -1236,6 +1156,7 @@ function SC01() {
                                         student.updated_at
                                       )
                                     }
+                                    disabled={student.recruit_is_decline === 1}
                                   >
                                     未定
                                   </button>
@@ -1258,6 +1179,7 @@ function SC01() {
                                         student.updated_at
                                       )
                                     }
+                                    disabled={student.recruit_is_decline === 1}
                                   >
                                     合格
                                   </button>
@@ -1274,6 +1196,7 @@ function SC01() {
                                         student.updated_at
                                       )
                                     }
+                                    disabled={student.recruit_is_decline === 1}
                                   >
                                     不合格
                                   </button>
@@ -1290,6 +1213,7 @@ function SC01() {
                                         student.updated_at
                                       )
                                     }
+                                    disabled={student.recruit_is_decline === 1}
                                   >
                                     未定
                                   </button>
@@ -1312,6 +1236,7 @@ function SC01() {
                                         student.updated_at
                                       )
                                     }
+                                    disabled={student.recruit_is_decline === 1}
                                   >
                                     合格
                                   </button>
@@ -1328,6 +1253,7 @@ function SC01() {
                                         student.updated_at
                                       )
                                     }
+                                    disabled={student.recruit_is_decline === 1}
                                   >
                                     不合格
                                   </button>
@@ -1344,6 +1270,7 @@ function SC01() {
                                         student.updated_at
                                       )
                                     }
+                                    disabled={student.recruit_is_decline === 1}
                                   >
                                     未定
                                   </button>

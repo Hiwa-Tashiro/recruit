@@ -31,10 +31,6 @@
   margin-right: auto;
 }
 
-/* .table{
-  border: none;
-} */
-
 .date {
   cursor: pointer;
 }
@@ -55,4 +51,20 @@
 
 .confirm{
   background-color: #cff1f6;
+}
+
+.Sccbear3{
+  z-index: -1;
+  height: 100px;
+  right: 20vw;
+  position: fixed;
+  translate: 0 -100px;
+}
+
+.Sccbear4{
+  z-index: -1;
+  height: 100px;
+  right: 22vw;
+  position: fixed;
+  translate: 0 -95px;
 }

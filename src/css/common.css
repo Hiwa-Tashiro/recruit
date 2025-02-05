@@ -1,0 +1,26 @@
+button {
+    cursor: pointer;
+    border: 1px solid #000000;
+    transition: background-color 0.3s
+}
+
+button:hover {
+    background-color: lightgray;
+    border: 1px solid #000000;
+}
+
+.hover {
+    cursor: pointer;
+}
+
+.submit:hover{
+    background-color: #b0c4de;
+}
+
+select{
+    cursor: pointer;
+}
+
+option{
+    cursor: pointer;
+}

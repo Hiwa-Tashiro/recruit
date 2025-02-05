@@ -68,7 +68,6 @@
 }
 
 .phase_button:hover:not(.disabled) {
-  transform: scale(1.1);
   background-color: #cce5ff;
 }
 
@@ -88,17 +87,15 @@
   padding: 1px 20px;
   font-size: 24px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background-color 0.3s
 }
 
 .Inforsessionschedule button:hover {
   background-color: #b0c4de;
-  transform: scale(1.1);
 }
 
 .Inforsessionschedule button:active {
   background-color: #4682b4;
-  transform: scale(0.95);
 }
 
 
@@ -168,17 +165,14 @@ input[type="search"]:focus {
   padding: 1px 10px;
   font-size: 20px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .Studentregister button:hover {
   background-color: #b0c4de;
-  transform: scale(1.05);
 }
 
 .Studentregister button:active {
   background-color: #4682b4;
-  transform: scale(0.95);
 }
 
 
@@ -193,7 +187,6 @@ input[type="search"]:focus {
 .Upload button {
   width: auto;
   font-size: 1vw;
-  background-color: #dedede;
   color: rgb(0, 0, 0);
   border: 1px solid #767676;
   border-radius: 3px;
@@ -204,12 +197,8 @@ input[type="search"]:focus {
 .Upload input[type="file"] {
   font-size: 1vw;
   width: 100%;
+  cursor: pointer;
 }
-
-.Upload button:hover {
-  background-color: #0056b3;
-}
-
 
 /* 説明会日時プルダウン */
 .Infor2 {
@@ -262,12 +251,10 @@ input[type="search"]:focus {
   padding: 1px 10px;
   font-size: 20px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .Bulkregister button:hover {
   background-color: #b0c4de;
-  transform: scale(1.05);
 }
 
 .Bulkregister button:disabled {
@@ -456,7 +443,6 @@ input[type="search"]:focus {
 }
 
 .Studentsituation button {
-  background-color: #dadada;
   border: 1px solid #000;
   color: #000;
   padding: 10px 20px;
@@ -492,7 +478,6 @@ input[type="search"]:focus {
 }
 
 .Studentsituation1 button {
-  background-color: #dadada;
   border: 1px solid #000;
   color: #000;
   padding: 10px 20px;
@@ -526,7 +511,6 @@ input[type="search"]:focus {
 }
 
 .Studentsituation2 button {
-  background-color: #dadada;
   border: 1px solid #000;
   color: #000;
   padding: 10px 20px;
@@ -692,16 +676,6 @@ td:nth-child(10) {
   font-size: 15px;
 }
 
-.disabled {
-  color: gray;
-  cursor: not-allowed;
-}
-
-.calendar_placeholder {
-  color: inherit;
-  cursor: pointer;
-}
-
 .student_table tbody tr:nth-child(odd) {
   background-color: #EEF9FF;
 }
@@ -722,4 +696,15 @@ td:nth-child(10) {
 .decline_row th {
   background-color: #d0d0d0;
   color: #868686;
+}
+
+
+.disabled {
+  color: gray;
+  cursor: not-allowed;
+}
+
+.abled {
+  color: inherit;
+  cursor: pointer;
 }

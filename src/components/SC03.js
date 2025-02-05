@@ -279,7 +279,7 @@ function SC03() {
         </div>
         <h1>会社説明会</h1>
         <div classspot="Return" className={SC03_css.updatecontent}>
-          <button onClick={updateJobfair} className={SC03_css.updatebutton}>
+          <button onClick={updateJobfair} className={`${SC03_css.updatebutton} submit`}>
             <div className={SC03_css.buttoncontent}>登録</div>
           </button>
         </div>
