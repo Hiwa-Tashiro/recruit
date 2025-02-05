@@ -582,7 +582,7 @@ const filepath = `file:///${formData.file_path}`
                     <div>
                         <button
                             type="button"
-                            className={`${SC05_css.button} ${SC05_css.register_button} ${SC05_css.main_button}`}
+                            className={`${SC05_css.button} ${SC05_css.register_button} ${SC05_css.main_button} submit`}
                             onClick={handleEditClick} // クリック時にページ遷移をトリガー
                         >編集</button>
                     </div>

@@ -554,16 +554,16 @@ function SC04() {
             {(() => {
               if (student_dataset.student_id && student_dataset.jobfair_id) {
                 if (student_dataset.phase_num === 0) {
-                  return <div onClick={openAttendancePopup}><J3 /></div>; // jobfair_is_attendが1または2の場合
+                  return <div className="hover" onClick={openAttendancePopup}><J3 /></div>; // jobfair_is_attendが1または2の場合
                 } else if (student_dataset.phase_num === 1) {
-                  return <div onClick={openAttendancePopup}><J4 /></div>; // phase_numが1かつjobfair_is_attendが0の場合
+                  return <div className="hover" onClick={openAttendancePopup}><J4 /></div>; // phase_numが1かつjobfair_is_attendが0の場合
                 } else if (student_dataset.phase_num >= 2) {
                   return <J5 />; // 
                 } 
               }
               else if (student_dataset.student_id && !student_dataset.jobfair_id) {
                 return<div>
-                <div onClick={handleJ2Click}>
+                <div className="hover" onClick={handleJ2Click}>
                   <J2 />
                 </div>
                 {j2WarningMessage && (
@@ -576,9 +576,9 @@ function SC04() {
             {(() => {
               if (student_dataset.student_id && student_dataset.jobfair_id) {
                 if (student_dataset.jobfair_is_attend === 0 && student_dataset.phase_num == 1 && student_dataset.resume_is_submit === 0) {
-                  return <div className={SC04_css.fixed_height}><div onClick={handleRirekisho}><R2 /></div></div>;
+                  return <div className={`${SC04_css.fixed_height} hover`}><div onClick={handleRirekisho}><R2 /></div></div>;
                 } else if (student_dataset.phase_num === 2 && student_dataset.resume_is_submit === 1) {
-                  return <div className={SC04_css.fixed_height}><div onClick={handleRirekisho}><R4 /></div></div>;
+                  return <div className={`${SC04_css.fixed_height} hover`}><div onClick={handleRirekisho}><R4 /></div></div>;
                 } else if (student_dataset.phase_num >= 3) {
                   return <R5 />; // 
                 } else {
@@ -955,7 +955,7 @@ function SC04() {
 
         <div className={SC04_css.parent_container1}>
           <button type="button"  onClick={handleLogFormData}   
-          className={`${SC04_css.button} ${SC04_css.register_button} ${SC04_css.main_button}`}// ボタンのスタイルを指定
+          className={`${SC04_css.button} ${SC04_css.register_button} ${SC04_css.main_button} submit`}// ボタンのスタイルを指定
           >登録</button>
           {isPopupVisible && (
   <div className={SC04_css.popup}>

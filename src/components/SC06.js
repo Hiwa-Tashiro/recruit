@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCookies } from "react-cookie";
 import { BrowserRouter as Router, Routes, Route, useNavigate, data, useLocation } from "react-router-dom";
+import Sccbear3 from '../ui-components/Sccbear3.png'
+import Sccbear4 from '../ui-components/Sccbear4.png'
 
 function SC06() {
     const [interview, setInterview] = useState();
@@ -234,6 +236,8 @@ function SC06() {
                         </div>
                     </div>
                     <div>
+                        {status?.phase_num == 3 && (<img className={SC06_css.Sccbear3} src={Sccbear3}/>)}
+                        {status?.phase_num == 4 && (<img className={SC06_css.Sccbear4} src={Sccbear4}/>)}
                         <table className={SC06_css.table}>
                             {interview?.staff.map((row, index) => (
                                 <tr key={index}>
@@ -255,7 +259,7 @@ function SC06() {
                 <br />
                 <div className={SC06_css.content_low}>
                     <div>
-                        <button className={`${SC06_css.button} ${SC06_css.confirm}`} onClick={confirmInterview}>
+                        <button className={`${SC06_css.button} ${SC06_css.confirm} submit`} onClick={confirmInterview}>
                             <div>登録</div>
                         </button>
                     </div>
