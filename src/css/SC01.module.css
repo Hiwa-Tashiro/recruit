@@ -579,19 +579,6 @@ input[type="search"]:focus {
   color: #aaa;
 }
 
-.page_button1 {
-  border-radius: 50%;
-  border: 1px solid #ccc;
-  background-color: white;
-  color: black;
-  font-size: 1.3vw;
-  width: 2vw;
-  height: 2vw;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
 
 /* 件数 */
 .Number {
