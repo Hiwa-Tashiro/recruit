@@ -254,7 +254,7 @@ function SC06() {
                 <br />
                 <div>
                     備考：
-                    <input type='textarea' className={SC06_css.note} defaultValue={interview?.note} onBlur={(e) => updateInterview("note", e.target.value)} />
+                    <textarea className={SC06_css.note} defaultValue={interview?.note} onBlur={(e) => updateInterview("note", e.target.value)} />
                 </div>
                 <br />
                 <div className={SC06_css.content_low}>

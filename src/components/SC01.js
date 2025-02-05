@@ -21,16 +21,20 @@ function SC01() {
   const [totalPhaseCount, setTotalPhaseCount] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [paginatedData, setPaginatedData] = useState([]);
 
   const itemsPerPage = 100;
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  useEffect(() => {
+    setPaginatedData([...filteredData.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    )])
+  }, [filteredData,currentPage])
 
-  const functionid = 'SC01';
+
+  const function_id = 'SC01';
 
 
   //画面遷移
@@ -44,7 +48,7 @@ function SC01() {
     setSelectedPhase(phase);
     setCurrentPage(1);
     setSelectedIds([]);
-    applyFilters(searchQuery, formData.date, phase);
+    applyFilters(searchQuery, formData.date, phase, students);
     const totalCount = phaseData[phase]?.[`phase${phase}_count`] || 0;
     setTotalPhaseCount(totalCount);
   };
@@ -133,7 +137,7 @@ function SC01() {
           };
         }),
         user: cookies?.user,
-        function_id: functionid,
+        function_id: function_id,
         recruit_year: cookies?.recruit_year,
       };
       const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/bulkRegister";
@@ -250,7 +254,7 @@ function SC01() {
           date: date,
           updated_at: updated_at,
           user: cookies?.user,
-          function_id: functionid
+          function_id: function_id
         })
       });
 
@@ -295,7 +299,7 @@ function SC01() {
 
   // 学生状況
   const [selectedButtons, setSelectedButtons] = useState({});
-  const handleButtonClick = async (studentId, phase, group, buttonIndex, updated_at) => {
+  const handleButtonClick = async (student_id, phase, group, buttonIndex, updated_at) => {
     const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/rec2-status";
 
     try {
@@ -305,12 +309,12 @@ function SC01() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          student_id: studentId,
+          student_id: student_id,
           phase_num: phase,
           group: group,
           buttonIndex: buttonIndex,
           updated_at: updated_at,
-          function_id: functionid,
+          function_id: function_id,
           user: cookies?.user,
         }),
       });
@@ -318,10 +322,10 @@ function SC01() {
       if (!response.ok) {
         const errorData = await response.json();
         if (errorData.error === "Record has been updated by another process.") {
-          await refetchData();
+          alert(errorData.error)
           return;
         } else {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP error! status: ${errorData.error}`);
         }
       } else {
         const result = await response.json();
@@ -330,22 +334,27 @@ function SC01() {
         setSelectedButtons((prevState) => {
           const newState = {
             ...prevState,
-            [studentId]: {
-              ...prevState[studentId],
+            [student_id]: {
+              ...prevState[student_id],
               [group]: buttonIndex,
             },
           };
 
           if (group === "Studentsituation2" && buttonIndex === 1) {
-            newState[studentId].isDeclined = true; // 不合格フラグ
+            newState[student_id].isDeclined = true; // 不合格フラグ
           } else if (group === "Studentsituation2") {
-            newState[studentId].isDeclined = false;
+            newState[student_id].isDeclined = false;
           }
 
           return newState;
         });
 
-        await refetchData();
+        const key = Object.keys(students).find(key => students[key].student_id == student_id)
+        const updatedata = [...students]
+        updatedata[key] = result.student_data
+        setStudents(updatedata || [])
+
+        applyFilters(searchQuery, formData.date, selectedPhase, updatedata)
       }
     } catch (error) {
       console.error("Error sending button index to Lambda:", error);
@@ -362,7 +371,7 @@ function SC01() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          function_id: functionid,
+          function_id: function_id,
           user: cookies?.user,
           recruit_year: cookies?.recruit_year,
         }),
@@ -373,14 +382,9 @@ function SC01() {
       }
 
       const json = await response.json();
-      console.log("Refetched Data:", json);
-
       setStudents(json["tabledata"] || []);
       setPhaseData(json["phases"] || {});
-
-      console.log(selectedButtons[3221])
-
-      applyFilters(searchQuery, formData.date, selectedPhase);
+      applyFilters(searchQuery, formData.date, selectedPhase, json["tabledata"]);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -426,7 +430,7 @@ function SC01() {
                 recruit_year: cookies?.recruit_year,
                 filename: datafile?.name,
                 user: cookies?.user,
-                functionid: functionid,
+                function_id: function_id,
               })
             })
               .then((res) => res.json()) // JSON形式に変換
@@ -462,13 +466,18 @@ function SC01() {
       try {
         const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/selectStudent";
 
+        let recruit_year = cookies?.recruit_year
+        if (!recruit_year) {
+          recruit_year = new Date().getFullYear()
+        }
+
         const response = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            function_id: functionid,
+            function_id: function_id,
             user: cookies?.user,
-            recruit_year: cookies?.recruit_year,
+            recruit_year: recruit_year,
           }),
         });
 
@@ -531,7 +540,7 @@ function SC01() {
     };
 
     fetchData();
-  }, [functionid]);
+  }, []);
 
 
   useEffect(() => {
@@ -560,17 +569,17 @@ function SC01() {
   const handleInputChange = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
-    applyFilters(query, formData.date, selectedPhase);
+    applyFilters(query, formData.date, selectedPhase, students);
   };
 
   const handleDateSelect = (e) => {
     const selectedJobfairId = e.target.value;
     setFormData({ date: selectedJobfairId });
-    applyFilters(searchQuery, selectedJobfairId, selectedPhase);
+    applyFilters(searchQuery, selectedJobfairId, selectedPhase, students);
   };
 
-  const applyFilters = (query, selectedJobfairId, selectedPhaseNum) => {
-    let filtered = students;
+  const applyFilters = (query, selectedJobfairId, selectedPhaseNum , student_data) => {
+    let filtered = [...student_data];
 
     if (selectedPhaseNum > 0) {
       filtered = filtered.filter((student) => student.phase_num >= selectedPhaseNum);
@@ -754,7 +763,7 @@ function SC01() {
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedData.map((student) => (
+                  {paginatedData?.map((student) => (
                     <tr
                       key={student.student_id}
                       className={`${student.recruit_is_decline === 1 || selectedButtons[student.student_id]?.Studentsituation2 === 1
@@ -849,9 +858,9 @@ function SC01() {
                               }
                             }}
                             className={`${SC01_css.calendar_placeholder} ${(student.phase_num == 2 || (student.phase_num == 3 && student.result !== 1)) &&
-                                student.recruit_is_decline !== 1
-                                ? SC01_css.abled
-                                : SC01_css.disabled
+                              student.recruit_is_decline !== 1
+                              ? SC01_css.abled
+                              : SC01_css.disabled
                               }`}
                           >
                             {student.interview_date
@@ -984,11 +993,10 @@ function SC01() {
                                 toggleCalendar(student.student_id, "final_date");
                               }
                             }}
-                            className={`${SC01_css.calendar_placeholder} ${
-                              student.recruit_is_decline !== 1
-                              && ((student.phase_num == 4 && student.result === 0) || (student.phase_num == 5 && student.result !== 1))
-                              ? SC01_css.abled
-                              : SC01_css.disabled
+                            className={`${SC01_css.calendar_placeholder} ${student.recruit_is_decline !== 1
+                                && ((student.phase_num == 4 && student.result === 0) || (student.phase_num == 5 && student.result !== 1))
+                                ? SC01_css.abled
+                                : SC01_css.disabled
                               }`}
                           >
                             {student.final_date
@@ -1309,12 +1317,10 @@ function SC01() {
                 </button>
               ))}
 
-              {totalPages > 5 && <span className={SC01_css.dots}>...</span>}
-
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className={SC01_css.page_button1}
+                className={SC01_css.page_button}
               >
                 &gt;
               </button>
