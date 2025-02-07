@@ -851,7 +851,7 @@ function SC01() {
                               onBlur={(e) => {
                                 const newDate = e.target.value;
 
-                                if (newDate) {
+                                if (newDate || student.interview_updated_at) {
                                   setActiveCalendar(null);
                                   setCalendar(
                                     student.student_id,
@@ -917,7 +917,7 @@ function SC01() {
                                 onBlur={(e) => {
                                   const newDate = e.target.value;
 
-                                  if (newDate) {
+                                  if (newDate || student.roundtable_updated_at) {
                                     setActiveCalendar(null);
                                     setCalendar(
                                       student.student_id,
@@ -985,7 +985,7 @@ function SC01() {
                                 onBlur={(e) => {
                                   const newDate = e.target.value;
 
-                                  if (newDate) {
+                                  if (newDate || student.final_updated_at) {
                                     setActiveCalendar(null);
                                     setCalendar(
                                       student.student_id,
