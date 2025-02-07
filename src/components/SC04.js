@@ -107,9 +107,7 @@ function SC04() {
         "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/insertFormData",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { Authorization: cookies?.token },
           body: JSON.stringify({
             formdata: formData,
             student_id: status?.student_id,
@@ -165,9 +163,7 @@ function SC04() {
     try {
       const response = await fetch("https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/delete_student", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { Authorization: cookies?.token },
         body: JSON.stringify({
           student_id: status?.student_id,
           user: cookies.user,
@@ -201,9 +197,7 @@ function SC04() {
       try {
         const response = await fetch("https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/jobfair_select", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { Authorization: cookies?.token },
           body: JSON.stringify({
             recruit_year: cookies.recruit_year,
             student_id: status?.student_id,
@@ -232,9 +226,7 @@ function SC04() {
     try {
       const response = await fetch("https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/rirekishoteishutu", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { Authorization: cookies?.token },
         body: JSON.stringify({
           student_id: status?.student_id,
           phase_num: student_dataset.phase_num,
@@ -296,9 +288,7 @@ function SC04() {
         " https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/SC02",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { Authorization: cookies?.token },
           body: JSON.stringify({
             student_id: status?.student_id, // Replace with the actual student_id
             jobfair_is_attend: selectedOption,
@@ -330,9 +320,7 @@ function SC04() {
         "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/SC02",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { Authorization: cookies?.token },
           body: JSON.stringify({
             student_id: status?.student_id,
             jobfair_is_attend: null,
