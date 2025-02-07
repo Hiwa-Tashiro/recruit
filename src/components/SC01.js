@@ -143,7 +143,7 @@ function SC01() {
       const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/bulkRegister";
       const response = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { Authorization: cookies?.token },
         body: JSON.stringify(requestData),
       });
       if (!response.ok) {
@@ -247,7 +247,7 @@ function SC01() {
     try {
       const response = await fetch("https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/setCalendar", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { Authorization: cookies?.token },
         body: JSON.stringify({
           student_id: studentId,
           phase_num: phase,
@@ -327,9 +327,7 @@ function SC01() {
     try {
       const response = await fetch(url, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { Authorization: cookies?.token },
         body: JSON.stringify({
           student_id: student_id,
           phase_num: phase,
@@ -384,36 +382,6 @@ function SC01() {
       console.error("Error sending button index to Lambda:", error);
     }
   };
-
-
-  //再フェッチ
-  const refetchData = async () => {
-    try {
-      const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/selectStudent";
-
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          function_id: function_id,
-          user: cookies?.user,
-          recruit_year: cookies?.recruit_year,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const json = await response.json();
-      setStudents(json["tabledata"] || []);
-      setPhaseData(json["phases"] || {});
-      applyFilters(searchQuery, formData.date, selectedPhase, json["tabledata"]);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
 
   //年度切り替え
   const currentYear = new Date().getFullYear();
@@ -497,7 +465,7 @@ function SC01() {
 
         const response = await fetch(url, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { Authorization: cookies?.token },
           body: JSON.stringify({
             function_id: function_id,
             user: cookies?.user,
@@ -564,7 +532,7 @@ function SC01() {
     };
 
     fetchData();
-  }, []);
+  }, [cookies?.token]);
 
 
   useEffect(() => {

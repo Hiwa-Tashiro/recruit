@@ -96,9 +96,7 @@ function SC05() {
                 "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/insertFormData",
                 {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+                    headers: { Authorization: cookies?.token },
                     body: JSON.stringify({
                         formdata: formData,
                         student_id: status?.student_id,
@@ -142,9 +140,7 @@ function SC05() {
         try {
             const response = await fetch("https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/delete_student", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { Authorization: cookies?.token },
                 body: JSON.stringify({
                     student_id: status?.student_id,
                     user: cookies.user,
@@ -178,9 +174,7 @@ function SC05() {
             try {
                 const response = await fetch("https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/jobfair_select", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+                    headers: { Authorization: cookies?.token },
                     body: JSON.stringify({
                         recruit_year: cookies.recruit_year,
                         student_id: status?.student_id,

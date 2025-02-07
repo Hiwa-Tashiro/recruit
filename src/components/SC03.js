@@ -25,10 +25,7 @@ function SC03() {
       await fetch(url,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: cookies.token
-          },
+          headers: { Authorization: cookies?.token },
           body: JSON.stringify(
             {
               recruit_year: cookies.recruit_year
