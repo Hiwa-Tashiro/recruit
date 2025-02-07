@@ -219,7 +219,7 @@ function SC01() {
     const day = String(date.getDate()).padStart(2, "0"); // 日を2桁に
     const dayOfWeek = daysOfWeek[date.getDay()];
 
-    return `${month}月${day}日 (${dayOfWeek})`;
+    return `${month}月${day}日(${dayOfWeek})`;
   };
   const formatJapaneseTime = (datetime) => {
     if (!datetime) return "";
@@ -252,6 +252,7 @@ function SC01() {
           student_id: studentId,
           phase_num: phase,
           date: date,
+          recruit_year: cookies?.recruit_year,
           updated_at: updated_at,
           user: cookies?.user,
           function_id: function_id
@@ -259,15 +260,36 @@ function SC01() {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(`HTTP error! status: ${response.error}`);
       }
 
       const json = await response.json();
+
+      const key = Object.keys(students).find(key => students[key].student_id == studentId)
+      const updatedata = [...students]
+      updatedata[key] = json.student_data
+      setStudents(updatedata || [])
+      setPhaseData(json.phases || {});
+
+      applyFilters(searchQuery, formData.date, selectedPhase, updatedata)
+
+      setSelectedButtons((prevState) => {
+        const newState = {
+          ...prevState,
+          [studentId]: {
+            ...prevState[studentId],
+            ["Studentsituation2"]: json.student_data?.result,
+          },
+        };
+
+        return newState;
+      });
+
       console.log("Success:", json);
 
-
     } catch (error) {
-      console.error("Error in setCalendar:", error);
+      console.error(error);
     }
   };
   const handleDateChange = (studentId, field, value) => {
@@ -311,6 +333,7 @@ function SC01() {
         body: JSON.stringify({
           student_id: student_id,
           phase_num: phase,
+          recruit_year: cookies?.recruit_year,
           group: group,
           buttonIndex: buttonIndex,
           updated_at: updated_at,
@@ -353,6 +376,7 @@ function SC01() {
         const updatedata = [...students]
         updatedata[key] = result.student_data
         setStudents(updatedata || [])
+        setPhaseData(result.phases || {});
 
         applyFilters(searchQuery, formData.date, selectedPhase, updatedata)
       }
