@@ -18,39 +18,45 @@ import SC06 from "./components/SC06";
 
 const AppRoutes = () => {
     const [cookies, setCookie] = useCookies();
-    const [userId, setUserId] = useState(cookies?.userId);
+    const [user, setUser] = useState();
+    const [authUser, setAuthUser] = useState(null);
 
     useEffect(() => {
-        if (userId) {
+        if (user) {
             const test = async () => {
                 const session = await fetchAuthSession();
-                const token = await session?.tokens?.idToken?.toString();
-                setCookie("userId", session?.userSub);
+                const token = session?.tokens?.idToken?.toString();
+                const username = session?.tokens?.signInDetails?.loginId;
                 setCookie("token", token);
-                setCookie("user", session?.tokens?.signInDetails?.loginId);
+                setCookie("user", username);
                 if (!cookies.recruit_year) {
                     setCookie("recruit_year", new Date().getFullYear());
                 }
             }
             test();
+            setAuthUser(true);
         }
-    }, [userId])
+    }, [user])
 
     return (
         <Authenticator>
             {({ user }) => {
-                setUserId(user.userId);
-                return (
-                    <BrowserRouter>
-                        <Routes>
-                            <Route path="/" element={<SC01 />} />
-                            <Route path="/SC03" element={<SC03 />} />
-                            <Route path="/SC04" element={<SC04 />} />
-                            <Route path="/SC05" element={<SC05 />} />
-                            <Route path="/SC06" element={<SC06 />} />
-                        </Routes>
-                    </BrowserRouter>
-                )
+                if(!authUser){
+                    setUser(user);
+                }
+                else{
+                    return (
+                        <BrowserRouter>
+                            <Routes>
+                                <Route path="/" element={<SC01 />} />
+                                <Route path="/SC03" element={<SC03 />} />
+                                <Route path="/SC04" element={<SC04 />} />
+                                <Route path="/SC05" element={<SC05 />} />
+                                <Route path="/SC06" element={<SC06 />} />
+                            </Routes>
+                        </BrowserRouter>
+                    )
+                }
             }}
         </Authenticator>
     )
