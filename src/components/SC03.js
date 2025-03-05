@@ -68,7 +68,7 @@ function SC03() {
 
   //更新ボタン
   const updateJobfair = async () => {
-    if(errorMesseages.length > 0){
+    if (errorMesseages.length > 0) {
       alert("編集が必要な項目があります。");
       return
     }
@@ -122,6 +122,8 @@ function SC03() {
         .catch((error) => console.log(error)); // エラー発生時に出力
     }
     await fetchlambda();
+
+    alert("更新が完了しました。");
   };
 
   //行追加
@@ -132,9 +134,9 @@ function SC03() {
   };
 
   //日付のフォーマッタ
-  const formatDate = (date) =>{
+  const formatDate = (date) => {
     let formatdate = null;
-    if(date){
+    if (date) {
       const date1 = new Date(date)
       formatdate = String(new Date(date1.getFullYear(), date1.getMonth(), date1.getDate()));
     }
@@ -146,21 +148,21 @@ function SC03() {
     const updatedRows = [...rows];
     updatedRows[index][key] = value;
     updatedRows[index]["is_update"] = true;
-    if(key == "date"){
+    if (key == "date") {
       let newErrorMesseages = [...errorMesseages]
-      if(errorMesseages.find((item) => item.num == updatedRows[index].num)?.status == 1){
+      if (errorMesseages.find((item) => item.num == updatedRows[index].num)?.status == 1) {
         newErrorMesseages = newErrorMesseages.filter((item) => item.num != updatedRows[index].num)
       }
       updatedRows.forEach((row) => {
-        if(row.date) {
-          if(updatedRows.filter((item) => item.num != row.num).find((item) => formatDate(item.date) == formatDate(row.date))){
+        if (row.date) {
+          if (updatedRows.filter((item) => item.num != row.num).find((item) => formatDate(item.date) == formatDate(row.date))) {
             let errorMesseage = {}
             errorMesseage.num = row['num'];
             errorMesseage.status = 2;
             errorMesseage.messeage = <span className={SC03_css.required}>同じ日付が存在します。</span>;
             newErrorMesseages = [...newErrorMesseages, errorMesseage]
           }
-          if(!updatedRows.filter((item) => item.num != row.num).find((item) => formatDate(item.date) == formatDate(row.date)) && errorMesseages.find((item) => item.num == row.num)){
+          if (!updatedRows.filter((item) => item.num != row.num).find((item) => formatDate(item.date) == formatDate(row.date)) && errorMesseages.find((item) => item.num == row.num)) {
             newErrorMesseages = newErrorMesseages.filter((item) => item.num != row.num)
           }
         }
@@ -169,10 +171,10 @@ function SC03() {
     }
     setRows(updatedRows);
   };
-  
+
   //ポップアップ
   const openPopup = (index, row) => {
-    if(rows[index]["student_count"] && rows[index]["student_count"] > 0){
+    if (rows[index]["student_count"] && rows[index]["student_count"] > 0) {
       alert("説明会を予約している学生がいます。")
       return
     }
@@ -223,8 +225,8 @@ function SC03() {
       if (popup.date) {
         let newErrorMesseages = [...errorMesseages].filter((item) => item.num != popup.num)
         daletedRows.forEach((row) => {
-          if(row.date) {
-            if(!daletedRows.filter((item) => item.num != row.num).find((item) => formatDate(item.date) == formatDate(row.date)) && errorMesseages.find((item) => item.num == row.num)){
+          if (row.date) {
+            if (!daletedRows.filter((item) => item.num != row.num).find((item) => formatDate(item.date) == formatDate(row.date)) && errorMesseages.find((item) => item.num == row.num)) {
               newErrorMesseages = newErrorMesseages.filter((item) => item.num != row.num)
             }
           }
@@ -253,7 +255,7 @@ function SC03() {
   };
 
   const selectCheckbox = (index, key, value, checked) => {
-    if(rows[index]["student_count"] && rows[index]["student_count"] > 0){
+    if (rows[index]["student_count"] && rows[index]["student_count"] > 0) {
       alert("説明会を予約している学生がいます。")
       return
     }
@@ -272,7 +274,7 @@ function SC03() {
         <div className={SC03_css.return}>
           <button onClick={handleClick} className={SC03_css.backbutton}>
             <div className={SC03_css.buttoncontent}>戻る</div>
-            </button>
+          </button>
         </div>
         <h1>会社説明会</h1>
         <div classspot="Return" className={SC03_css.updatecontent}>
@@ -304,6 +306,7 @@ function SC03() {
                   {editingcalender == row.num ? (
                     <input
                       type="datetime-local"
+                      step="900"
                       value={row.date}
                       onChange={(e) => updateRow(index, "date", e.target.value)}
                       onBlur={() => setEditingcalender(null)}
@@ -311,8 +314,8 @@ function SC03() {
                     />
                   ) : (
                     <div
-                    className={SC03_css.calender}
-                    onClick={() => setEditingcalender(row.num)}
+                      className={SC03_css.calender}
+                      onClick={() => setEditingcalender(row.num)}
                     >{formatJapaneseDate(row.date)}</div>
                   )
                   }

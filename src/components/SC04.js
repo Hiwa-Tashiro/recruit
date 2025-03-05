@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react";
 import SC04_css from "../css/SC04.module.css";
-import { Bar, Component42, Component43, Component44, Component45, Component46, Component47, Component48, Component49, Component50, Component52, Component54, Component56, Component58, Component62, Itizi3, Itizi4, Delete, Register, Return, Flag3, Job1, Jobfair1, Jobfair4, Jobfair3, Jobfair5, Resume1, Resume2, Resume4, Resume5, Itizi2, Itizi1, Itizi5, Zadan2, Zadan3, Zadan4, Zadan5, Zadan1, Yaku, Sei, J1,J3,J4,J5,R1,R2,R4,R5,I1,I2,I3,I4,I5,Z1,Z2,Z3,Z4,Z5,J2 } from '../ui-components';
+import { Bar, Component42, Component43, Component44, Component45, Component46, Component47, Component48, Component49, Component50, Component52, Component54, Component56, Component58, Component62, Itizi3, Itizi4, Delete, Register, Return, Flag3, Job1, Jobfair1, Jobfair4, Jobfair3, Jobfair5, Resume1, Resume2, Resume4, Resume5, Itizi2, Itizi1, Itizi5, Zadan2, Zadan3, Zadan4, Zadan5, Zadan1, Yaku, Sei, J1, J3, J4, J5, R1, R2, R4, R5, I1, I2, I3, I4, I5, Z1, Z2, Z3, Z4, Z5, J2 } from '../ui-components';
 import { BrowserRouter as Router, Routes, Route, useNavigate, data, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { Link } from 'react-router-dom';
-
+import s1 from './images/s1.svg';
+import s2 from './images/s2.svg';
+import s3 from './images/s3.svg';
+import s4 from './images/s4.svg';
+import s5 from './images/s5.svg';
+import n1 from './images/n1.svg';
+import n2 from './images/n2.svg';
+import n3 from './images/n3.svg';
 
 
 
@@ -35,7 +42,7 @@ function SC04() {
   const [customPopupContent, setCustomPopupContent] = useState(""); // Content for the custom popup
   const handleBackNavigation = () => {
     if (Object.keys(student_dataset).length > 0) {
-      navigate('/SC05', {state:{ student_id: status?.student_id }});
+      navigate('/SC05', { state: { student_id: status?.student_id } });
     } else {
       navigate('/');
     }
@@ -44,7 +51,7 @@ function SC04() {
     setCustomPopupContent("こちらが新しいポップアップの内容です。"); // Set custom content
     setIsCustomPopupVisible(true); // Show the custom popup
   };
-  
+
   const closeCustomPopup = () => {
     setIsCustomPopupVisible(false); // Close the custom popup
   };
@@ -63,14 +70,14 @@ function SC04() {
       if (!formData.email) newErrors.email = <span className={SC04_css.required}>メールは必須です。</span>;
       return newErrors;
     };
-  
+
     // バリデーションチェック
     const formErrors = validateForm();
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors); // エラーを表示
       return; // エラーがある場合は送信中止
     }
-  
+
     // 確認ダイアログ用の設定
     const fieldNames = {
       furigana: "フリガナ",
@@ -78,14 +85,14 @@ function SC04() {
       graduate_year: "卒業年度",
       subject: "学部学科",
     };
-  
+
     // 必須ではないが、確認が必要なフィールド
     const requiredFields = ["furigana", "sexual", "graduate_year", "subject"];
     const missingFields = requiredFields.filter((field) => {
       const value = formData[field];
       return value === undefined || value === null || value === "" || value === false;
     });
-  
+
     if (missingFields.length > 0) {
       const missingFieldsInJapanese = missingFields.map((field) => fieldNames[field]);
       const confirmMessage = `以下の項目が未入力です。送信を続けますか？\n\n${missingFieldsInJapanese.join(", ")}`;
@@ -93,15 +100,15 @@ function SC04() {
       setIsPopupVisible(true); // ポップアップを表示
       return; // 送信を中止
     }
-    
+
     // 問題がない場合は送信
     sendFormData();
   };
-  
+
   // データ送信処理を関数に分離
-  const sendFormData = async() => {
+  const sendFormData = async () => {
     console.log("Current formData:", formData);
-  
+
     try {
       const response = await fetch(
         "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/insertFormData",
@@ -118,14 +125,14 @@ function SC04() {
           }),
         }
       );
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
+
       const result = await response.json();
       console.log(result);
-  
+
       // Check the `hanbetu` value in the response
       if (result.hanbetu == 1) {
         navigate('/'); // Navigate to the home page
@@ -139,9 +146,9 @@ function SC04() {
       alert("Failed to submit data: " + error.message);
     }
   };
-  
 
-  
+
+
   // ポップアップの続行ボタン処理
   const confirmSend = () => {
     setIsPopupVisible(false); // ポップアップを非表示
@@ -206,9 +213,9 @@ function SC04() {
         const json = await response.json();
         console.log(json);
         await setJobfairOptions(json['jobfairlist']);
-        if(status?.student_id){
+        if (status?.student_id) {
           await setStudentDataset(json['student_dataset'][0]);
-          if(json['student_dataset'][0]['phase_num'] >= 3){
+          if (json['student_dataset'][0]['phase_num'] >= 3) {
             await setInterviewDataset(json['interview_dataset'][json['student_dataset'][0]['phase_num'] - 3]);
             console.log(json['interview_dataset'][json['student_dataset'][0]['phase_num'] - 3]);
           }
@@ -221,7 +228,7 @@ function SC04() {
     fetchJobfairDates();
   }, []);
 
-  //履歴書提出ボタンの処理
+  //履歴書ボタンの処理
   const handleRirekisho = async () => {
     try {
       const response = await fetch("https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/rirekishoteishutu", {
@@ -244,20 +251,52 @@ function SC04() {
       window.location.reload();
       console.log(result);
     } catch (error) {
+      console.error("Error naitei:", error);
+      alert("登録失敗");
+    }
+  };
+
+  //内定ボタンの処理
+  const handleNaitei = async () => {
+    try {
+      let command = 1;
+      if(student_dataset.phase_num == 6 ){
+        command = 2;
+      }
+      const response = await fetch("https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/naitei", {
+        method: "POST",
+        headers: { Authorization: cookies?.token },
+        body: JSON.stringify({
+          student_id: status?.student_id,
+          recruit_year: cookies?.recruit_year,
+          command: command,
+          user: cookies.user,
+          function_id: function_id,
+          updated_at: student_dataset.updated_at,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      window.location.reload();
+      console.log(result);
+    } catch (error) {
       console.error("Error rirekisho:", error);
       alert("登録失敗");
     }
   };
-  //
 
   //ポップアップの処理
   const [isAttendancePopupVisible, setIsAttendancePopupVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
   const [errorMessage, setErrorMessage] = useState("");
-    // 初期値を設定する
-    useEffect(() => {
-      setSelectedOption(student_dataset?.jobfair_is_attend); // 初期値を設定
-    }, [student_dataset]);
+  // 初期値を設定する
+  useEffect(() => {
+    setSelectedOption(student_dataset?.jobfair_is_attend); // 初期値を設定
+  }, [student_dataset]);
   // Show popup
   const openAttendancePopup = () => {
     setIsAttendancePopupVisible(true);
@@ -304,9 +343,9 @@ function SC04() {
 
       const result = await response.json();
       console.log(result);
-            setSelectedOption(selectedOption);// 保存後も値を保持
-            closeAttendancePopup();
-            navigate("/SC05", {state:{ student_id: status?.student_id }});
+      setSelectedOption(selectedOption);// 保存後も値を保持
+      closeAttendancePopup();
+      navigate("/SC05", { state: { student_id: status?.student_id } });
     } catch (error) {
       console.error("Error updating attendance:", error);
       alert("登録に失敗しました。");
@@ -339,7 +378,7 @@ function SC04() {
       console.log(result);
       setSelectedOption(null); // Reset selection in the UI
       closeAttendancePopup();
-      navigate("/SC05", {state:{ student_id: status?.student_id }});
+      navigate("/SC05", { state: { student_id: status?.student_id } });
     } catch (error) {
       console.error("Error resetting attendance:", error);
       alert("取り消しに失敗しました。");
@@ -349,8 +388,8 @@ function SC04() {
 
 
   const [formData, setFormData] = useState({
-    furigana: "", sexual: "", name: "", know_opportunity: "", birthday: "", jobfair_id: "", graduate_year: "2025年度", tel: "",
-    university: "", email_is_own: "", email: "", subject: "", file_path: "", post: "", note: "", address: "", recruit_is_decline: "", updated_at:"",
+    furigana: "", sexual: "", name: "", know_opportunity: "", birthday: "", jobfair_id: "", graduate_year: "", tel: "",
+    university: "", email_is_own: "", email: "", subject: "", file_path: "", post: "", note: "", address: "", recruit_is_decline: "", updated_at: "",
   });
   // 初期値を student_dataset からコピー
   useEffect(() => {
@@ -382,7 +421,7 @@ function SC04() {
       [name]: value,
     });
   };
-  
+
 
   // 満何歳かの計算
   const calculateAge = (birthdayDate) => {
@@ -414,48 +453,48 @@ function SC04() {
   const handleTelChange = (e) => {
     const { name, value } = e.target;
 
-  // 数字以外の文字を検出する正規表現
-  const isValidNumber  = /^[0-9+\-*/#]*$/;
+    // 数字以外の文字を検出する正規表現
+    const isValidNumber = /^[0-9+\-*/#]*$/;
 
-  // 電話番号が13桁以上であれば入力を制限
-  if (name === "tel" && value.length > 13) {
-    return;
-  }
+    // 電話番号が13桁以上であれば入力を制限
+    if (name === "tel" && value.length > 13) {
+      return;
+    }
 
-  // バリデーション: 数字以外が入力された場合の警告
-  if (!isValidNumber.test(value)) {
-    setErrors({
-      ...errors,
-      [name]: "正しい値を入力してください",
-    });
-    return; // 数字以外が入力された場合、フォームデータを更新しない
-  } else {
-    setErrors({
-      ...errors,
-      [name]: "", // エラーをクリア
-    });
-  }
-
-  setFormData({
-    ...formData,
-    [name]: value,
-  });
-
-  // 電話番号の長さチェック
-  if (name === "tel") {
-    if (value.length < 10) {
+    // バリデーション: 数字以外が入力された場合の警告
+    if (!isValidNumber.test(value)) {
       setErrors({
         ...errors,
-        [name]: "電話番号は10桁以上で入力してください。",
+        [name]: "正しい値を入力してください",
       });
+      return; // 数字以外が入力された場合、フォームデータを更新しない
     } else {
       setErrors({
         ...errors,
-        [name]: "",
+        [name]: "", // エラーをクリア
       });
     }
-  }
-};
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+    // 電話番号の長さチェック
+    if (name === "tel") {
+      if (value.length < 10) {
+        setErrors({
+          ...errors,
+          [name]: "電話番号は10桁以上で入力してください。",
+        });
+      } else {
+        setErrors({
+          ...errors,
+          [name]: "",
+        });
+      }
+    }
+  };
 
   // 郵便番号の処理
   const handlePostChange = (e) => {
@@ -530,150 +569,180 @@ function SC04() {
   return (
 
     <div className={SC04_css.form_container}>
-      <h1 className={`${SC04_css.h1} ${SC04_css.title}`}>登録者情報</h1>
+      <h1 className={SC04_css.header}>登録者情報</h1>
       <div className={SC04_css.return_container}>
-      <button onClick={handleBackNavigation} className={`${SC04_css.modoru} ${SC04_css.main_button}`}>
-          戻る</button></div>
+        <button onClick={handleBackNavigation} className={`${SC04_css.modoru} ${SC04_css.main_button}`}>
+          戻る
+        </button>
+      </div>
       <div className={SC04_css.parent_container}>
-      <div className={SC04_css.bordered_container}>
-      <div className={SC04_css.line_overlay}></div> 
-        <div className={SC04_css.components_wrapper}>
-          <div style={{ display: "flex", gap: "space-between" }}>
-            {(() => {
-              if (student_dataset.student_id && student_dataset.jobfair_id) {
-                if (student_dataset.phase_num === 0) {
-                  return <div className="hover" onClick={openAttendancePopup}><J3 /></div>; // jobfair_is_attendが1または2の場合
-                } else if (student_dataset.phase_num === 1) {
-                  return <div className="hover" onClick={openAttendancePopup}><J4 /></div>; // phase_numが1かつjobfair_is_attendが0の場合
-                } else if (student_dataset.phase_num >= 2) {
-                  return <J5 />; // 
-                } 
-              }
-              else if (student_dataset.student_id && !student_dataset.jobfair_id) {
-                return<div>
-                <div className="hover" onClick={handleJ2Click}>
-                  <J2 />
-                </div>
-                {j2WarningMessage && (
-                  <p className={SC04_css.warning_message}>{j2WarningMessage}</p>
+        <div className={SC04_css.bordered_container}>
+          <div className={SC04_css.line_overlay}></div>
+          <div className={SC04_css.components_wrapper}>
+            <div style={{ display: "flex", gap: "space-between" }}>
+              {(() => {
+                if (student_dataset.student_id && student_dataset.jobfair_id) {
+                  if (student_dataset.phase_num === 0) {
+                    return <div className="hover" onClick={openAttendancePopup}><J3 /></div>; // jobfair_is_attendが1または2の場合
+                  } else if (student_dataset.phase_num === 1) {
+                    return <div className="hover" onClick={openAttendancePopup}><J4 /></div>; // phase_numが1かつjobfair_is_attendが0の場合
+                  } else if (student_dataset.phase_num >= 2) {
+                    return <J5 />; // 
+                  }
+                }
+                else if (student_dataset.student_id && !student_dataset.jobfair_id) {
+                  return <div>
+                    <div className="hover" onClick={handleJ2Click}>
+                      <J2 />
+                    </div>
+                    {j2WarningMessage && (
+                      <p className={SC04_css.warning_message}>{j2WarningMessage}</p>
+                    )}
+                  </div>;
+                }
+                return <J1 />; // student_id または jobfair_id が存在しない場合
+              })()}
+              {(() => {
+                if (student_dataset.student_id && student_dataset.jobfair_id) {
+                  if (student_dataset.jobfair_is_attend === 0 && student_dataset.phase_num == 1 && student_dataset.resume_is_submit === 0) {
+                    return <div className={`${SC04_css.fixed_height} hover`}><div onClick={handleRirekisho}><R2 /></div></div>;
+                  } else if (student_dataset.phase_num === 2 && student_dataset.resume_is_submit === 1) {
+                    return <div className={`${SC04_css.fixed_height} hover`}><div onClick={handleRirekisho}><R4 /></div></div>;
+                  } else if (student_dataset.phase_num >= 3) {
+                    return <R5 />; // 
+                  } else {
+                    return <R1 />; // 上記以外の場合
+                  }
+                }
+                return <R1 />; // student_id または jobfair_id が存在しない場合
+              })()}
+              {(() => {
+                if (student_dataset.student_id && student_dataset.jobfair_id) {
+                  if (student_dataset.phase_num >= 4) {
+                    return <I5 />;
+                  } else if (student_dataset.phase_num === 3 && (interview_dataset.result === 1 || interview_dataset.result === 2 || interview_dataset.result === null)) {
+                    return <div><Link to='/SC06' state={{ student_id: status?.student_id, phase_num: 3 }}><I3 /></Link></div>;
+                  } else if (student_dataset.phase_num === 3 && interview_dataset.result === 0) {
+                    return <div><Link to='/SC06' state={{ student_id: status?.student_id, phase_num: 3 }}><I4 /></Link></div>;// 
+                  } else if (student_dataset.phase_num === 2 && student_dataset.resume_is_submit === 1) {
+                    return <div><Link to='/SC06' state={{ student_id: status?.student_id, phase_num: 3 }}><I2 /></Link></div>; // 上記以外の場合
+                  } else {
+                    return <I1 />; // 上記以外の場合
+                  }
+                }
+                return <I1 />; // student_id または jobfair_id が存在しない場合
+              })()}
+              {(() => {
+                if (student_dataset.student_id && student_dataset.jobfair_id) {
+                  if (student_dataset.phase_num >= 5) {
+                    return <Z5 />;
+                  } else if (student_dataset.phase_num === 4 && (interview_dataset.result === 1 || interview_dataset.result === 2 || interview_dataset.result === null)) {
+                    return <div><Link to='/SC06' state={{ student_id: status?.student_id, phase_num: 4 }}><Z3 /></Link></div>;
+                  } else if (student_dataset.phase_num === 4 && interview_dataset.result === 0) {
+                    return <div><Link to='/SC06' state={{ student_id: status?.student_id, phase_num: 4 }}><Z4 /></Link></div>; // 
+                  } else if (student_dataset.phase_num === 3 && interview_dataset.result === 0) {
+                    return <div><Link to='/SC06' state={{ student_id: status?.student_id, phase_num: 4 }}><Z2 /></Link></div>;// 上記以外の場合
+                  } else {
+                    return <Z1 />; // 上記以外の場合
+                  }
+                }
+                return <Z1 />; // student_id または jobfair_id が存在しない場合
+              })()}
+              {(() => {
+                if (student_dataset.student_id && student_dataset.jobfair_id) {
+                  if (student_dataset.phase_num >= 6) {
+                    return <div><img src={s5}/></div>;
+                  } else if (student_dataset.phase_num === 5 && (interview_dataset.result === 1 || interview_dataset.result === 2 || interview_dataset.result === null)) {
+                    return <div><Link to='/SC06' state={{ student_id: status?.student_id, phase_num: 5 }}><img src={s3}/></Link></div>;
+                  } else if (student_dataset.phase_num === 5 && interview_dataset.result === 0) {
+                    return <div><Link to='/SC06' state={{ student_id: status?.student_id, phase_num: 5 }}><img src={s4}/></Link></div>; // 
+                  } else if (student_dataset.phase_num === 4 && interview_dataset.result === 0) {
+                    return <div><Link to='/SC06' state={{ student_id: status?.student_id, phase_num: 5 }}><img src={s2}/></Link></div>;// 上記以外の場合
+                  } else {
+                    return <div><img src={s1}/></div>; // 上記以外の場合
+                  }
+                }
+                return <div><img src={s1}/></div>; // student_id または jobfair_id が存在しない場合
+              })()}
+              {(() => {
+                if (student_dataset.student_id && student_dataset.jobfair_id) {
+                  if (student_dataset.phase_num === 6) {
+                    return <div className={`${SC04_css.fixed_height} hover`} onClick={handleNaitei}><img src={n3}/></div>;
+                  } else if (student_dataset.phase_num === 5 && interview_dataset.result === 0) {
+                    return <div className={`${SC04_css.fixed_height} hover`} onClick={handleNaitei}><img src={n2}/></div>; // 
+                  } else {
+                    return <div><img src={n1}/></div>; // 上記以外の場合
+                  }
+                }
+                return <div><img src={n1}/></div>; // student_id または jobfair_id が存在しない場合
+              })()}
+              <div className={SC04_css.container}>
+                {isAttendancePopupVisible && (
+                  <div className={SC04_css.popup}>
+                    <div className={SC04_css.popup_content}>
+                      <h2>出席状況</h2>
+                      <div>
+                        <label>
+                          <input
+                            type="radio"
+                            name="jobfair_is_attend"
+                            value="0"
+                            checked={selectedOption == 0}
+                            onChange={(e) => setSelectedOption(e.target.value)}
+                          />
+                          出席
+                        </label>
+                        <label>
+                          <input
+                            type="radio"
+                            name="jobfair_is_attend"
+                            value="1"
+                            checked={selectedOption == 1}
+                            onChange={(e) => setSelectedOption(e.target.value)}
+                          />
+                          欠席
+                        </label>
+                        <label>
+                          <input
+                            type="radio"
+                            name="jobfair_is_attend"
+                            value="2"
+                            checked={selectedOption == 2}
+                            onChange={(e) => setSelectedOption(e.target.value)}
+                          />
+                          キャンセル
+                        </label>
+                      </div>
+                      {errorMessage && (
+                        <p className={SC04_css.error_message}>{errorMessage}</p>
+                      )}
+                      <div className={SC04_css.popup_buttons}>
+                        <button
+                          onClick={handleAttendanceSubmit}
+                          className={SC04_css.popup_register_button}
+                        >
+                          登録
+                        </button>
+                        <button
+                          onClick={closeAttendancePopup}
+                          className={SC04_css.popup_close_button}
+                        >
+                          閉じる
+                        </button>
+                        <button
+                          onClick={handleResetAttendance}
+                          className={SC04_css.popup_cancel_button}
+                        >
+                          取り消し
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 )}
-              </div>;
-              }
-              return <J1 />; // student_id または jobfair_id が存在しない場合
-            })()}
-            {(() => {
-              if (student_dataset.student_id && student_dataset.jobfair_id) {
-                if (student_dataset.jobfair_is_attend === 0 && student_dataset.phase_num == 1 && student_dataset.resume_is_submit === 0) {
-                  return <div className={`${SC04_css.fixed_height} hover`}><div onClick={handleRirekisho}><R2 /></div></div>;
-                } else if (student_dataset.phase_num === 2 && student_dataset.resume_is_submit === 1) {
-                  return <div className={`${SC04_css.fixed_height} hover`}><div onClick={handleRirekisho}><R4 /></div></div>;
-                } else if (student_dataset.phase_num >= 3) {
-                  return <R5 />; // 
-                } else {
-                  return <R1 />; // 上記以外の場合
-                }
-              }
-              return <R1 />; // student_id または jobfair_id が存在しない場合
-            })()}
-            {(() => {
-              if (student_dataset.student_id && student_dataset.jobfair_id) {
-                if (student_dataset.phase_num >= 4) {
-                  return <I5 />;
-                } else if (student_dataset.phase_num === 3 && (interview_dataset.result === 1 || interview_dataset.result === 2 || interview_dataset.result === null)) {
-                  return <div><Link to='/SC06' state={{student_id: status?.student_id,phase_num:3}}><I3 /></Link></div>;
-                } else if (student_dataset.phase_num === 3 && interview_dataset.result === 0) {
-                  return <div><Link to='/SC06' state={{student_id: status?.student_id,phase_num:3}}><I4 /></Link></div>;// 
-                } else if (student_dataset.phase_num === 2 && student_dataset.resume_is_submit === 1) {
-                  return <div><Link to='/SC06' state={{student_id: status?.student_id,phase_num:3}}><I2 /></Link></div>; // 上記以外の場合
-                } else {
-                  return <I1 />; // 上記以外の場合
-                }
-              }
-              return <I1 />; // student_id または jobfair_id が存在しない場合
-            })()}
-            {(() => {
-              if (student_dataset.student_id && student_dataset.jobfair_id) {
-                if (student_dataset.phase_num >= 5) {
-                  return <Z5 />;
-                } else if (student_dataset.phase_num === 4 && (interview_dataset.result === 1 || interview_dataset.result === 2 || interview_dataset.result === null)) {
-                  return <div><Link to='/SC06' state={{student_id: status?.student_id,phase_num:4}}><Z3 /></Link></div>;
-                } else if (student_dataset.phase_num === 4 && interview_dataset.result === 0) {
-                  return <div><Link to='/SC06' state={{student_id: status?.student_id,phase_num:4}}><Z4 /></Link></div>; // 
-                } else if (student_dataset.phase_num === 3 && interview_dataset.result === 0) {
-                  return <div><Link to='/SC06' state={{student_id: status?.student_id,phase_num:4}}><Z2 /></Link></div>;// 上記以外の場合
-                } else {
-                  return <Z1 />; // 上記以外の場合
-                }
-              }
-              return <Z1 />; // student_id または jobfair_id が存在しない場合
-            })()}
-    <div className={SC04_css.container}>
-      {isAttendancePopupVisible && (
-        <div className={SC04_css.popup}>
-          <div className={SC04_css.popup_content}>
-            <h2>出席状況</h2>
-            <div>
-              <label>
-                <input
-                  type="radio"
-                  name="jobfair_is_attend"
-                  value="0"
-                  checked={selectedOption == 0}
-                  onChange={(e) => setSelectedOption(e.target.value)}
-                />
-                出席
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="jobfair_is_attend"
-                  value="1"
-                  checked={selectedOption == 1}
-                  onChange={(e) => setSelectedOption(e.target.value)}
-                />
-                欠席
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="jobfair_is_attend"
-                  value="2"
-                  checked={selectedOption == 2}
-                  onChange={(e) => setSelectedOption(e.target.value)}
-                />
-                キャンセル
-              </label>
-            </div>
-            {errorMessage && (
-              <p className={SC04_css.error_message}>{errorMessage}</p>
-            )}
-            <div className={SC04_css.popup_buttons}>
-              <button
-                onClick={handleAttendanceSubmit}
-                className={SC04_css.popup_register_button}
-              >
-                登録
-              </button>
-              <button
-                onClick={closeAttendancePopup}
-                className={SC04_css.popup_close_button}
-              >
-                閉じる
-              </button>
-              <button
-                onClick={handleResetAttendance}
-                className={SC04_css.popup_cancel_button}
-              >
-                取り消し
-              </button>
+              </div>
             </div>
           </div>
         </div>
-      )}
-    </div>
-          <Yaku /><Sei /></div>
-          </div>
-          </div>
       </div>
 
 
@@ -723,7 +792,7 @@ function SC04() {
           {errors.name && <p className={SC04_css.error_message}>{errors.name}</p>}
         </div>
         <div className={SC04_css.grid_item}>
-          <label htmlFor="know_opportunity">会社を知ったきっかけ<span className={SC04_css.required}>(*)</span></label>
+          <label htmlFor="know_opportunity">当社を知ったきっかけ<span className={SC04_css.required}>(*)</span></label>
           <input
             type="text"
             id="know_opportunity"
@@ -756,7 +825,7 @@ function SC04() {
         </div>
 
         <div className={SC04_css.grid_item}>
-          <label htmlFor="jobfair_id">説明会日時</label>
+          <label htmlFor="jobfair_id">説明会</label>
           <select
             id="jobfair_id"
             name="jobfair_id"
@@ -765,33 +834,33 @@ function SC04() {
             className={SC04_css.short_input}
             disabled={student_dataset.phase_num >= 2} // phase_numが2以上の場合に無効化
           >
-    <option value="">選択してください</option>
-    {jobfairOptions?.map((option) => {
-      const dateObj = new Date(option.date);
+            <option value="">選択してください</option>
+            {jobfairOptions?.map((option) => {
+              const dateObj = new Date(option.date);
 
-      // 月、日、時、分を整形
-      const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
-      const dayOfWeek = daysOfWeek[dateObj.getDay()];
-      const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // 2桁表示
-      const day = String(dateObj.getDate()).padStart(2, "0");       // 2桁表示
-      const hours = String(dateObj.getHours()).padStart(2, "0");   // 2桁表示
-      const minutes = String(dateObj.getMinutes()).padStart(2, "0"); // 2桁表示
-      const formattedDate = `${month}月${day}日(${dayOfWeek})${hours}時${minutes}分`;
+              // 月、日、時、分を整形
+              const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
+              const dayOfWeek = daysOfWeek[dateObj.getDay()];
+              const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // 2桁表示
+              const day = String(dateObj.getDate()).padStart(2, "0");       // 2桁表示
+              const hours = String(dateObj.getHours()).padStart(2, "0");   // 2桁表示
+              const minutes = String(dateObj.getMinutes()).padStart(2, "0"); // 2桁表示
+              const formattedDate = `${month}月${day}日(${dayOfWeek})${hours}時${minutes}分`;
 
-      return (
-        <option value={option.jobfair_id}>
-          {formattedDate}
-        </option>
-      );
-    })}
-  </select>
-</div>
+              return (
+                <option value={option.jobfair_id}>
+                  {formattedDate}
+                </option>
+              );
+            })}
+          </select>
+        </div>
         <div className={SC04_css.grid_item}>
           <label htmlFor="graduate_year">卒業年度(*)</label>
           <select
             id="graduate_year"
             name="graduate_year"
-            value={formData.graduate_year || ""}
+            value={formData?.graduate_year || cookies.recruit_year}
             onChange={handleInputChange}
             className={SC04_css.short_input}
           >
@@ -813,7 +882,7 @@ function SC04() {
             placeholder="例: 080-1234-5678"
             onChange={handleTelChange}
             className={SC04_css.short_input}
-            
+
           />
           {errors.tel && <p className={SC04_css.error_message}>{errors.tel}</p>}
         </div>
@@ -931,45 +1000,45 @@ function SC04() {
         </div>
 
         <div className={SC04_css.grid_item_agree}>
-        <input
+          <input
             type="checkbox"
             id="recruit_is_decline"
             name="recruit_is_decline"
-            checked={formData.recruit_is_decline==1}
+            checked={formData.recruit_is_decline == 1}
             onClick={handleCheckboxChange}
           />
           <label htmlFor="recruit_is_decline">辞退</label>
         </div>
 
         <div className={SC04_css.parent_container1}>
-          <button type="button"  onClick={handleLogFormData}   
-          className={`${SC04_css.button} ${SC04_css.register_button} ${SC04_css.main_button} submit`}// ボタンのスタイルを指定
+          <button type="button" onClick={handleLogFormData}
+            className={`${SC04_css.button} ${SC04_css.register_button} ${SC04_css.main_button} submit`}// ボタンのスタイルを指定
           >登録</button>
           {isPopupVisible && (
-  <div className={SC04_css.popup}>
-    <div className={SC04_css.popup_content}>
-      <p>{popupMessage}</p>
-      <button className={`${SC04_css.confirm_button} ${SC04_css.main_button}`} onClick={confirmSend}>送信を続ける</button>
-      <button className={`${SC04_css.cancel_button} ${SC04_css.main_button}`} onClick={closePopup}>キャンセル</button>
-    </div>
-  </div>
-)}</div>
-<div className={SC04_css.parent_container2}>
+            <div className={SC04_css.popup}>
+              <div className={SC04_css.popup_content}>
+                <p>{popupMessage}</p>
+                <button className={`${SC04_css.confirm_button} ${SC04_css.main_button}`} onClick={confirmSend}>送信を続ける</button>
+                <button className={`${SC04_css.cancel_button} ${SC04_css.main_button}`} onClick={closePopup}>キャンセル</button>
+              </div>
+            </div>
+          )}</div>
+        <div className={SC04_css.parent_container2}>
           <button onClick={handleDelete}
-          disabled={!status?.student_id} // Disable the button if `student_id` is null or undefined
-          style={!status?.student_id ? { cursor: "not-allowed", opacity: 0.5 } : {}}
-          className={`${SC04_css.button} ${SC04_css.delete_button}`}>
+            disabled={!status?.student_id} // Disable the button if `student_id` is null or undefined
+            style={!status?.student_id ? { cursor: "not-allowed", opacity: 0.5 } : {}}
+            className={`${SC04_css.button} ${SC04_css.delete_button}`}>
             削除
           </button>
           {isDeletePopupVisible && (
-        <div className={SC04_css.popup}>
-          <div className={SC04_css.popup_content}>
-            <p>{deleteConfirmMessage}</p>
-            <button className={`${SC04_css.confirm_button} ${SC04_css.main_button}`} onClick={confirmDelete}>はい</button>
-            <button className={`${SC04_css.cancel_button} ${SC04_css.main_button}`} onClick={closeDeletePopup}>いいえ</button>
-          </div>
-        </div>
-      )}
+            <div className={SC04_css.popup}>
+              <div className={SC04_css.popup_content}>
+                <p>{deleteConfirmMessage}</p>
+                <button className={`${SC04_css.confirm_button} ${SC04_css.main_button}`} onClick={confirmDelete}>はい</button>
+                <button className={`${SC04_css.cancel_button} ${SC04_css.main_button}`} onClick={closeDeletePopup}>いいえ</button>
+              </div>
+            </div>
+          )}
         </div>
       </form>
     </div>

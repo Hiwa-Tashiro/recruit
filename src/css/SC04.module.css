@@ -5,20 +5,6 @@ body {
 
 }
 
-.title {
-  font-size: 50px;
-  /* 文字サイズを指定 */
-  font-weight: bold;
-  /* 太字 */
-  color: #333;
-  /* 色を変更 (任意) */
-  text-align: center;
-  /* 中央揃え (任意) */
-  margin-bottom: 20px;
-  /* 下部余白を設定 */
-}
-
-
 .parent_container {
   display: flex;
   justify-content: right;
@@ -44,14 +30,16 @@ body {
   /* 下部余白を追加 */
 }
 
+.return_container {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+}
+
 .button_container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
-  /* Adjust spacing between buttons */
-  margin-top: 20px;
-  /* Add space above the buttons */
 }
 
 .components_wrapper {
@@ -81,24 +69,10 @@ body {
 
 
 .form_container {
-  max-width: 1500px;
-  /* 最大横幅を制限 */
-  margin: 30px auto;
-  /* 自動で中央揃え */
-  padding: 20px;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  /* 縦方向に並べる */
   align-items: center;
-  /* 中央揃え */
-}
-
-.h1 {
-  text-align: center;
-  margin-bottom: 20px;
 }
 
 .grid_container {
@@ -332,7 +306,7 @@ button.cancel_button:hover {
 }
 
 .line_overlay {
-  width: 85%;
+  width: 83%;
   height: 2px;
   background-color: #aadffe;
   z-index: 0;
@@ -356,28 +330,20 @@ button.cancel_button:hover {
   /* 必要に応じて最大幅を設定 */
 }
 
-
+.header{
+  height: 10vh;
+  justify-content: center;
+  align-items: end;
+  display: flex;
+}
 
 .modoru {
-  position: absolute;
-  top: 5%;
-  left: 5%;
-  padding: 10px 20px;
-  font-size: 25px;
-  color: #cb0000;
+  padding: 12px 50px;
+  font-size: 20px;
   border: 1px solid #000000;
   border-radius: 4px;
   color: #333;
   cursor: pointer;
-  transition: all 0.3s ease;
-  width: 10%;
-  /* 幅をパーセント指定 */
-  height: 10%;
-  /* 高さをパーセント指定 */
-}
-
-.modoru_button {
-  background-color: #eeeeee;
 }
 
 .button {

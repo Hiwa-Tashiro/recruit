@@ -179,7 +179,7 @@ export default function Sei(props) {
           right="0%"
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
-          children="誓約書受領"
+          children="内定"
           {...getOverrideProps(overrides, "\u8A93\u7D04\u66F8\u53D7\u9818")}
         ></Text>
       </View>
