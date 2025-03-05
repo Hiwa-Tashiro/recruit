@@ -219,7 +219,7 @@ function SC01() {
     const day = String(date.getDate()).padStart(2, "0"); // 日を2桁に
     const dayOfWeek = daysOfWeek[date.getDay()];
 
-    return `${month}月${day}日(${dayOfWeek})`;
+    return `${month}月${day}日（${dayOfWeek}）`;
   };
   const formatJapaneseTime = (datetime) => {
     if (!datetime) return "";
@@ -483,6 +483,9 @@ function SC01() {
             })
               .then((res) => res.json()) // JSON形式に変換
               .then((data) => {
+                if(!data.eventdata){
+                  throw new Error
+                }
                 if (data.errorMesseage) {
                   alert(data?.errorMesseage);
                 }
@@ -831,7 +834,7 @@ function SC01() {
                   {paginatedData?.map((student) => (
                     <tr
                       key={student.student_id}
-                      className={`${student.recruit_is_decline === 1 || selectedButtons[student.student_id]?.Studentsituation2 === 1
+                      className={`${SC01_css.table_row} ${student.recruit_is_decline === 1 || selectedButtons[student.student_id]?.Studentsituation2 === 1
                         ? SC01_css.decline_row
                         : ""
                         } ${student.recruit_is_decline === 1 || selectedButtons[student.student_id]?.Studentsituation2 === 1
@@ -1082,7 +1085,10 @@ function SC01() {
                       <td className={SC01_css.td}>
                         {(
                           <>
-                            {student.phase_num === 0 || (student.phase_num === 1 && (student.jobfair_is_attend !== 0 || student.jobfair_is_attend === null)) ? (
+                            {
+                            student.recruit_is_decline === 1 ? (
+                              <div className={SC01_css.Studentsituation_label}>辞退</div>
+                            ) : student.phase_num === 0 || (student.phase_num === 1 && (student.jobfair_is_attend !== 0 || student.jobfair_is_attend === null)) ? (
                               <div>
                                 <div className={SC01_css.Studentsituation_label}>説明会</div>
                                 <div className={SC01_css.Studentsituation}>
