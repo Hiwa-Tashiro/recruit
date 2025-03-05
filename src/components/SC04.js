@@ -386,15 +386,20 @@ function SC04() {
   };
 
 
-
   const [formData, setFormData] = useState({
-    furigana: "", sexual: "", name: "", know_opportunity: "", birthday: "", jobfair_id: "", graduate_year: "", tel: "",
+    furigana: "", sexual: "", name: "", know_opportunity: "", birthday: "", jobfair_id: "", graduate_year: cookies.recruit_year, tel: "",
     university: "", email_is_own: "", email: "", subject: "", file_path: "", post: "", note: "", address: "", recruit_is_decline: "", updated_at: "",
   });
   // 初期値を student_dataset からコピー
   useEffect(() => {
     if (student_dataset) {
       setFormData({ ...formData, ...student_dataset });
+    }
+    else{
+      setFormData({
+        furigana: "", sexual: "", name: "", know_opportunity: "", birthday: "", jobfair_id: "", graduate_year: cookies.recruit_year, tel: "",
+        university: "", email_is_own: "", email: "", subject: "", file_path: "", post: "", note: "", address: "", recruit_is_decline: "", updated_at: "",
+      })
     }
   }, [student_dataset]);
 
@@ -860,7 +865,7 @@ function SC04() {
           <select
             id="graduate_year"
             name="graduate_year"
-            value={formData?.graduate_year || cookies.recruit_year}
+            value={formData?.graduate_year}
             onChange={handleInputChange}
             className={SC04_css.short_input}
           >
