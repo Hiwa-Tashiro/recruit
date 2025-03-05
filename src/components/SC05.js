@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
 import SC05_css from "../css/SC05.module.css";
-import { Bar, Component42, Component43, Component44, Component45, Component46, Component47, Component48, Component49, Component50, Component52, Component54, Component56, Component58, Component62, Itizi3, Itizi4, Delete, Register, Return, Flag3, Job1, Jobfair1, Jobfair4, Jobfair3, Jobfair5, Resume1, Resume2, Resume4, Resume5, Itizi2, Itizi1, Itizi5, Zadan2, Zadan3, Zadan4, Zadan5, Zadan1, Yaku, Sei, J1,J2, J3, J4, J5, R1, R2, R4, R5, I1, I2, I3, I4, I5, Z1, Z2, Z3, Z4, Z5 } from '../ui-components';
+import { Bar, Component42, Component43, Component44, Component45, Component46, Component47, Component48, Component49, Component50, Component52, Component54, Component56, Component58, Component62, Itizi3, Itizi4, Delete, Register, Return, Flag3, Job1, Jobfair1, Jobfair4, Jobfair3, Jobfair5, Resume1, Resume2, Resume4, Resume5, Itizi2, Itizi1, Itizi5, Zadan2, Zadan3, Zadan4, Zadan5, Zadan1, Yaku, Sei, J1, J2, J3, J4, J5, R1, R2, R4, R5, I1, I2, I3, I4, I5, Z1, Z2, Z3, Z4, Z5 } from '../ui-components';
 import { BrowserRouter as Router, Routes, Route, useNavigate, data, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { Link } from 'react-router-dom';
+import s1 from './images/s1.svg';
+import s2 from './images/s2.svg';
+import s3 from './images/s3.svg';
+import s4 from './images/s4.svg';
+import s5 from './images/s5.svg';
+import n1 from './images/n1.svg';
+import n2 from './images/n2.svg';
+import n3 from './images/n3.svg';
 
 
 
@@ -39,7 +47,7 @@ function SC05() {
         setIsPopupVisible(false); // ポップアップを閉じる
     };
     const handleEditClick = () => {
-        navigate('/SC04', {state:{ student_id: status?.student_id }});
+        navigate('/SC04', { state: { student_id: status?.student_id } });
     };
     //登録ボタンの処理
     const handleLogFormData = () => {
@@ -209,8 +217,8 @@ function SC05() {
         }
     }, [student_dataset]);
 
-//ファイルパス変数
-const filepath = `file:///${formData.file_path}`
+    //ファイルパス変数
+    const filepath = `file:///${formData.file_path}`
 
     const [errors, setErrors] = useState({});
 
@@ -276,15 +284,15 @@ const filepath = `file:///${formData.file_path}`
             setAge(null);
         }
     }, [formData.birthday]);
-      // 生年月日を「YYYY年MM月DD日」の形式にフォーマットする関数
-  const formatBirthday = (birthday) => {
-    if (!birthday) return "";
-    const date = new Date(birthday);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1; // 月は0始まりなので+1
-    const day = date.getDate();
-    return `${year}年${month}月${day}日`;
-  };
+    // 生年月日を「YYYY年MM月DD日」の形式にフォーマットする関数
+    const formatBirthday = (birthday) => {
+        if (!birthday) return "";
+        const date = new Date(birthday);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // 月は0始まりなので+1
+        const day = date.getDate();
+        return `${year}年${month}月${day}日`;
+    };
 
     //電話番号の入力制限
     const handleTelChange = (e) => {
@@ -405,38 +413,38 @@ const filepath = `file:///${formData.file_path}`
 
     return (
 
-
-
         <div className={SC05_css.form_container}>
-            <h1 className={`${SC05_css.h1} ${SC05_css.title}`}>学生情報</h1>
+            <h1 className={SC05_css.header}>学生情報</h1>
             <div className={SC05_css.return_container}>
                 <button onClick={() => navigate('/')}
                     className={`${SC05_css.modoru} ${SC05_css.main_button}`}>
-                    戻る</button></div>
+                    戻る
+                </button>
+            </div>
             <div className={SC05_css.parent_container}>
                 <div className={SC05_css.bordered_container}>
                     <div className={SC05_css.line_overlay}></div>
                     <div className={SC05_css.components_wrapper}>
                         <div style={{ display: "flex", justifyContent: "space-between" }}>
                             {(() => {
-            if (student_dataset.student_id && student_dataset.jobfair_id) {
-            if (student_dataset.phase_num === 0) {
-                return <div><J3 /></div>; // jobfair_is_attendが1または2の場合
-            } else if (student_dataset.phase_num === 1) {
-                return <div><J4 /></div>; // phase_numが1かつjobfair_is_attendが0の場合
-            } else if (student_dataset.phase_num >= 2) {
-                return <J5 />; // 
-            } 
-            }
-            else if (student_dataset.student_id && !student_dataset.jobfair_id) {
-            return<div>
-            <div>
-                <J2 />
-            </div>
-            </div>;
-            }
-            return <J1 />; // student_id または jobfair_id が存在しない場合
-        })()}
+                                if (student_dataset.student_id && student_dataset.jobfair_id) {
+                                    if (student_dataset.phase_num === 0) {
+                                        return <div><J3 /></div>; // jobfair_is_attendが1または2の場合
+                                    } else if (student_dataset.phase_num === 1) {
+                                        return <div><J4 /></div>; // phase_numが1かつjobfair_is_attendが0の場合
+                                    } else if (student_dataset.phase_num >= 2) {
+                                        return <J5 />; // 
+                                    }
+                                }
+                                else if (student_dataset.student_id && !student_dataset.jobfair_id) {
+                                    return <div>
+                                        <div>
+                                            <J2 />
+                                        </div>
+                                    </div>;
+                                }
+                                return <J1 />; // student_id または jobfair_id が存在しない場合
+                            })()}
                             {(() => {
                                 if (student_dataset.student_id && student_dataset.jobfair_id) {
                                     if (student_dataset.jobfair_is_attend === 0 && student_dataset.phase_num == 1 && student_dataset.resume_is_submit === 0) {
@@ -484,6 +492,35 @@ const filepath = `file:///${formData.file_path}`
                                 return <Z1 />; // student_id または jobfair_id が存在しない場合
 
                             })()}
+                            {(() => {
+                                if (student_dataset.student_id && student_dataset.jobfair_id) {
+                                    if (student_dataset.phase_num >= 6) {
+                                        return <div className={SC05_css.images}><img src={s5} /></div>;
+                                    } else if (student_dataset.phase_num === 5 && (interview_dataset.result === 1 || interview_dataset.result === 2 || interview_dataset.result === null)) {
+                                        return <div className={SC05_css.images}><img src={s3} /></div>;
+                                    } else if (student_dataset.phase_num === 5 && interview_dataset.result === 0) {
+                                        return <div className={SC05_css.images}><img src={s4} /></div>; // 
+                                    } else if (student_dataset.phase_num === 4 && interview_dataset.result === 0) {
+                                        return <div className={SC05_css.images}><img src={s2} /></div>;// 上記以外の場合
+                                    } else {
+                                        return <div className={SC05_css.images}><img src={s1} /></div>; // 上記以外の場合
+                                    }
+                                }
+                                return <div className={SC05_css.images}><img src={s1} /></div>; // student_id または jobfair_id が存在しない場合
+                            })()}
+                            {(() => {
+                                if (student_dataset.student_id && student_dataset.jobfair_id) {
+                                    if (student_dataset.phase_num === 6) {
+                                        return <div className={SC05_css.images}><img src={n3} /></div>;
+                                    } else if (student_dataset.phase_num === 5 && interview_dataset.result === 0) {
+                                        return <div className={SC05_css.images}><img src={n2} /></div>; // 
+                                    } else {
+                                        return <div className={SC05_css.images}><img src={n1} /></div>; // 上記以外の場合
+                                    }
+                                }
+                                return <div className={SC05_css.images}><img src={n1} /></div>; // student_id または jobfair_id が存在しない場合
+                            })()}
+
                             {/* ポップアップの定義 */}
                             {isPopupVisible && (
                                 <div className={SC05_css.popup}>
@@ -493,7 +530,7 @@ const filepath = `file:///${formData.file_path}`
                                     </div>
                                 </div>
                             )}
-                            <Yaku /><Sei /></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -502,7 +539,7 @@ const filepath = `file:///${formData.file_path}`
                 <tbody>
                     <tr>
                         <th style={{ border: '1px solid black', padding: '8px', width: '8%' }}>フリガナ</th>
-                        <td style={{ border: '1px solid black', padding: '8px' ,wordWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'normal' }}>{formData.furigana || ''}</td>
+                        <td style={{ border: '1px solid black', padding: '8px', wordWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'normal' }}>{formData.furigana || ''}</td>
                         <th style={{ border: '1px solid black', padding: '8px', width: '9%' }}>性別</th>
                         <td style={{ border: '1px solid black', padding: '8px' }}>
                             {String(formData.sexual) === '0'
@@ -517,18 +554,18 @@ const filepath = `file:///${formData.file_path}`
                     <tr>
                         <th style={{ border: '1px solid black', padding: '8px' }}>氏名</th>
                         <td style={{ border: '1px solid black', padding: '8px' }}>{formData.name || ''}</td>
-                        <th style={{ border: '1px solid black', padding: '8px' }}>会社を知ったきっかけ</th>
+                        <th style={{ border: '1px solid black', padding: '8px' }}>当社を知ったきっかけ</th>
                         <td style={{ border: '1px solid black', padding: '8px' }}>{formData.know_opportunity || ''}</td>
                     </tr>
                     <tr>
                         <th style={{ border: '1px solid black', padding: '8px' }}>生年月日</th>
                         <td style={{ border: "1px solid black", padding: "8px" }}>
                             {formData.birthday
-                            ? `${formatBirthday(formData.birthday)}`: ""}
+                                ? `${formatBirthday(formData.birthday)}` : ""}
                             {formData.birthday && (
                                 <span>（満{calculateAge(formData.birthday)}歳）</span>
-                                )}
-                                </td>
+                            )}
+                        </td>
                         <th style={{ border: '1px solid black', padding: '8px' }}>説明会日時</th>
                         <td style={{ border: '1px solid black', padding: '8px' }}>
                             {formattedJobfairDate}
@@ -560,11 +597,11 @@ const filepath = `file:///${formData.file_path}`
                         <th style={{ border: '1px solid black', padding: '15px' }}>郵便番号</th>
                         <td style={{ border: '1px solid black', padding: '8px' }}>{formData.post || ''}</td>
                         <th style={{ border: '1px solid black', padding: '8px' }}>備考</th>
-                        <td style={{ border: '1px solid black', padding: '8px' ,wordWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'normal'}}>{formData.note || ''}</td>
+                        <td style={{ border: '1px solid black', padding: '8px', wordWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'normal' }}>{formData.note || ''}</td>
                     </tr>
                     <tr>
                         <th style={{ border: '1px solid black', padding: '30px' }}>住所</th>
-                        <td style={{ border: '1px solid black', padding: '8px' ,wordWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'normal'}}>{formData.address || ''}</td>
+                        <td style={{ border: '1px solid black', padding: '8px', wordWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'normal' }}>{formData.address || ''}</td>
                         <th style={{ border: '1px solid black', padding: '8px' }}>辞退</th>
                         <td style={{ border: '1px solid black', padding: '8px' }}>{formData.recruit_is_decline ? '辞退済み' : ''}</td>
                     </tr>

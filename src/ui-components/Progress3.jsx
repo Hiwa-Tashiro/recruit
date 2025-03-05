@@ -222,7 +222,7 @@ export default function Progress3(props) {
         left="735px"
         padding="0px 0px 0px 0px"
         whiteSpace="pre-wrap"
-        children="誓約書受領"
+        children="内定"
         {...getOverrideProps(overrides, "\u8A93\u7D04\u66F8\u53D7\u9818")}
       ></Text>
       <Text
@@ -266,7 +266,7 @@ export default function Progress3(props) {
         left="-210px"
         padding="0px 0px 0px 0px"
         whiteSpace="pre-wrap"
-        children="履歴書提出"
+        children="履歴書"
         {...getOverrideProps(overrides, "\u5C65\u6B74\u66F8\u63D0\u51FA")}
       ></Text>
       <View

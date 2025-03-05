@@ -31,7 +31,7 @@ function SC01() {
       (currentPage - 1) * itemsPerPage,
       currentPage * itemsPerPage
     )])
-  }, [filteredData,currentPage])
+  }, [filteredData, currentPage])
 
 
   const function_id = 'SC01';
@@ -215,7 +215,7 @@ function SC01() {
     const date = new Date(datetime);
     const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
 
-    const month = String(date.getMonth() + 1).padStart(2); // 月を2桁に
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // 月を2桁に
     const day = String(date.getDate()).padStart(2, "0"); // 日を2桁に
     const dayOfWeek = daysOfWeek[date.getDay()];
 
@@ -383,6 +383,62 @@ function SC01() {
     }
   };
 
+  const handleNaitei = async (student_id, command, updated_at) => {
+    const url = "https://y9zs7kouqi.execute-api.ap-northeast-1.amazonaws.com/dev/naitei";
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { Authorization: cookies?.token },
+        body: JSON.stringify({
+          student_id: student_id,
+          recruit_year: cookies?.recruit_year,
+          command: command,
+          updated_at: updated_at,
+          function_id: function_id,
+          user: cookies?.user,
+        }),
+      });
+
+      console.log(response)
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (errorData.error === "Record has been updated by another process.") {
+          alert(errorData.error)
+          return;
+        } else {
+          throw new Error(`HTTP error! status: ${errorData.error}`);
+        }
+      } else {
+        const result = await response.json();
+        console.log("Update successful:", result);
+
+        setSelectedButtons((prevState) => {
+          const newState = {
+            ...prevState,
+            [student_id]: {
+              ...prevState[student_id],
+              ["Studentsituation2"]: result.student_data?.result,
+            },
+          };
+
+          console.log(newState[student_id]);
+          return newState;
+        });
+
+        const key = Object.keys(students).find(key => students[key].student_id == student_id)
+        const updatedata = [...students]
+        updatedata[key] = result.student_data
+        setStudents(updatedata || [])
+        setPhaseData(result.phases || {});
+
+        applyFilters(searchQuery, formData.date, selectedPhase, updatedata)
+      }
+    } catch (error) {
+      console.error("Error sending button index to Lambda:", error);
+    }
+  };
+
   //年度切り替え
   const currentYear = new Date().getFullYear();
   const baseYear = cookies?.recruit_year || currentYear;
@@ -427,9 +483,8 @@ function SC01() {
             })
               .then((res) => res.json()) // JSON形式に変換
               .then((data) => {
-                if (data?.errorMesseage) {
-                  alert(data?.errorMesseage + '\n' +
-                    'エラー発生箇所は' + data?.array_count + '行目です。');
+                if (data.errorMesseage) {
+                  alert(data?.errorMesseage);
                 }
                 else {
                   alert("アップロードに成功しました");
@@ -513,13 +568,23 @@ function SC01() {
         }
 
         if (savedSearchQuery) {
-          filterData = filterData.filter((student) =>
-            student.name.includes(savedSearchQuery) ||
-            student.university.includes(savedSearchQuery) ||
-            student.email?.includes(savedSearchQuery) ||
-            student.know_opportunity.includes(savedSearchQuery) ||
-            student.furigana?.includes(savedSearchQuery)
-          );
+          filterData = filterData.filter((student) => {
+            const jobfair_date = formatDate(student.jobfair_date)
+            const interview_date = formatDate(student.interview_date)
+            const roundtable_date = formatDate(student.roundtable_date)
+            const final_date = formatDate(student.final_date)
+            return (
+              student.name.includes(savedSearchQuery) ||
+              student.university.includes(savedSearchQuery) ||
+              student.email?.includes(savedSearchQuery) ||
+              student.know_opportunity.includes(savedSearchQuery) ||
+              student.furigana?.includes(savedSearchQuery) ||
+              `${jobfair_date?.datePart} ${jobfair_date?.timePart}`.includes(savedSearchQuery) ||
+              `${interview_date?.datePart} ${interview_date?.timePart}`.includes(savedSearchQuery) ||
+              `${roundtable_date?.datePart} ${roundtable_date?.timePart}`.includes(savedSearchQuery) ||
+              `${final_date?.datePart} ${final_date?.timePart}`.includes(savedSearchQuery)
+            )
+          });
           setSearchQuery(savedSearchQuery);
         }
 
@@ -570,7 +635,7 @@ function SC01() {
     applyFilters(searchQuery, selectedJobfairId, selectedPhase, students);
   };
 
-  const applyFilters = (query, selectedJobfairId, selectedPhaseNum , student_data) => {
+  const applyFilters = (query, selectedJobfairId, selectedPhaseNum, student_data) => {
     let filtered = [...student_data];
 
     if (selectedPhaseNum > 0) {
@@ -581,13 +646,23 @@ function SC01() {
     }
 
     if (query) {
-      filtered = filtered.filter((student) =>
-        student.name.includes(query) ||
-        student.university.includes(query) ||
-        student.email?.includes(query) ||
-        student.know_opportunity.includes(query) ||
-        student.furigana?.includes(query)
-      );
+      filtered = filtered.filter((student) => {
+        const jobfair_date = formatDate(student.jobfair_date)
+        const interview_date = formatDate(student.interview_date)
+        const roundtable_date = formatDate(student.roundtable_date)
+        const final_date = formatDate(student.final_date)
+        return (
+          student.name.includes(query) ||
+          student.university.includes(query) ||
+          student.email?.includes(query) ||
+          student.know_opportunity.includes(query) ||
+          student.furigana?.includes(query) ||
+          `${jobfair_date?.datePart} ${jobfair_date?.timePart}`.includes(query) ||
+          `${interview_date?.datePart} ${interview_date?.timePart}`.includes(query) ||
+          `${roundtable_date?.datePart} ${roundtable_date?.timePart}`.includes(query) ||
+          `${final_date?.datePart} ${final_date?.timePart}`.includes(query)
+        )
+      });
     }
 
     setCurrentPage(1);
@@ -625,7 +700,7 @@ function SC01() {
                       }`}
                   >
                     <div>
-                      {["エントリー", "説明会", "履歴書提出", "一次面接", "座談会", "最終面接", "内定者"][
+                      {["エントリー", "説明会", "履歴書", "一次面接", "座談会", "最終面接", "内定"][
                         phase
                       ]}
                       <br />
@@ -673,12 +748,10 @@ function SC01() {
                 <option value="">説明会日時</option>
                 {jobfairOptions?.map((option) => {
                   const dateObj = new Date(option.date);
-                  const formattedDate = `${(dateObj.getMonth() + 1).toString().padStart(1)}月${dateObj.getDate().toString().padStart(2, '0')}日`;
-                  const formattedTime = `${dateObj.getHours().toString().padStart(1, '0')}時${dateObj.getMinutes().toString().padStart(2, '0')}分`;
                   return (
                     <option key={option.jobfair_id} value={option.jobfair_id}>
-                      <div>{formattedDate}</div>
-                      <div>{formattedTime}</div>
+                      <div>{formatJapaneseDate(dateObj)}</div>
+                      <div>{formatJapaneseTime(dateObj)}</div>
                     </option>
                   );
                 })}
@@ -808,6 +881,7 @@ function SC01() {
                             student.recruit_is_decline !== 1 ? (
                             <input
                               type="datetime-local"
+                              step="900"
                               value={student.interview_date || ""}
                               onChange={(e) =>
                                 handleDateChange(
@@ -874,6 +948,7 @@ function SC01() {
                             ? (
                               <input
                                 type="datetime-local"
+                                step="900"
                                 value={student.roundtable_date || ""}
                                 onChange={(e) =>
                                   handleDateChange(
@@ -942,6 +1017,7 @@ function SC01() {
                             ? (
                               <input
                                 type="datetime-local"
+                                step="900"
                                 value={student.final_date || ""}
                                 onChange={(e) =>
                                   handleDateChange(
@@ -986,9 +1062,9 @@ function SC01() {
                               }
                             }}
                             className={`${SC01_css.calendar_placeholder} ${student.recruit_is_decline !== 1
-                                && ((student.phase_num == 4 && student.result === 0) || (student.phase_num == 5 && student.result !== 1))
-                                ? SC01_css.abled
-                                : SC01_css.disabled
+                              && ((student.phase_num == 4 && student.result === 0) || (student.phase_num == 5 && student.result !== 1))
+                              ? SC01_css.abled
+                              : SC01_css.disabled
                               }`}
                           >
                             {student.final_date
@@ -1219,7 +1295,7 @@ function SC01() {
                                   </button>
                                 </div>
                               </div>
-                            ) : student.phase_num === 5 ? (
+                            ) : (student.phase_num === 5 && selectedButtons[student.student_id]?.Studentsituation2 !== 0) ? (
                               <div>
                                 <div className={SC01_css.Studentsituation_label}>最終面接</div>
                                 <div className={SC01_css.Studentsituation2}>
@@ -1273,6 +1349,42 @@ function SC01() {
                                     disabled={student.recruit_is_decline === 1}
                                   >
                                     未定
+                                  </button>
+                                </div>
+                              </div>
+                            ) : student.phase_num === 6 || (student.phase_num === 5 && selectedButtons[student.student_id]?.Studentsituation2 === 0) ? (
+                              <div>
+                                <div className={SC01_css.Studentsituation_label}>内定</div>
+                                <div className={SC01_css.Studentsituation1}>
+                                  <button
+                                    className={
+                                      student.phase_num === 6 ? SC01_css.active : ""
+                                    }
+                                    onClick={() =>
+                                      handleNaitei(
+                                        student.student_id,
+                                        1,
+                                        student.updated_at
+                                      )
+                                    }
+                                    disabled={student.recruit_is_decline === 1}
+                                  >
+                                    承諾
+                                  </button>
+                                  <button
+                                    className={
+                                      student.phase_num === 5 ? SC01_css.active : ""
+                                    }
+                                    onClick={() =>
+                                      handleNaitei(
+                                        student.student_id,
+                                        2,
+                                        student.updated_at
+                                      )
+                                    }
+                                    disabled={student.recruit_is_decline === 1}
+                                  >
+                                    未承諾
                                   </button>
                                 </div>
                               </div>

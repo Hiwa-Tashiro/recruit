@@ -80,7 +80,7 @@ export default function Component46(props) {
         right="0%"
         padding="0px 0px 0px 0px"
         whiteSpace="pre-wrap"
-        children="履歴書提出"
+        children="履歴書"
         {...getOverrideProps(overrides, "\u5C65\u6B74\u66F8\u63D0\u51FA")}
       ></Text>
     </View>

@@ -93,7 +93,7 @@ export default function R4(props) {
           right="0%"
           padding="0px 0px 0px 0px"
           whiteSpace="pre-wrap"
-          children="履歴書提出"
+          children="履歴書"
           {...getOverrideProps(overrides, "\u8AAC\u660E\u4F1A\u51FA\u5E2D")}
         ></Text>
       </View>

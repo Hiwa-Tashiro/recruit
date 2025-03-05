@@ -186,7 +186,7 @@ function SC06() {
                 <h1 style={{ textAlign: "center" }}>
                     {status?.phase_num == 3 && (<label>一次面接</label>)}
                     {status?.phase_num == 4 && (<label>座談会</label>)}
-                    {status?.phase_num == 5 && (<label>役員面接</label>)}
+                    {status?.phase_num == 5 && (<label>最終面接</label>)}
                 </h1>
             </div>
             <div className={SC06_css.content}>
@@ -196,6 +196,7 @@ function SC06() {
                             {editingcalender ? (
                                 <input
                                     type="datetime-local"
+                                    step="900"
                                     defaultValue={interview?.date}
                                     onChange={(e) => updateInterview("date", e.target.value)}
                                     onBlur={() => setEditingcalender(null)}
