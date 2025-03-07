@@ -7,10 +7,9 @@ body {
 
 .parent_container {
   display: flex;
-  justify-content: right;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
-  /* 下部余白を追加 */
+  width: 100%;
 }
 
 .parent_container1 {
@@ -30,6 +29,12 @@ body {
   /* 下部余白を追加 */
 }
 
+.images{
+  width: 152px;
+  height: 122px;
+  position: relative;
+}
+
 .return_container {
   position: absolute;
   top: 5%;
@@ -43,12 +48,11 @@ body {
 }
 
 .components_wrapper {
-  position: relative;
+  width: 100%;
   display: flex;
-  gap: 20px;
-  /* コンポーネント間のスペースを調整 */
+  justify-content: space-between;
+  position: relative;
 }
-
 
 .bar_container {
   display: flex;
@@ -294,19 +298,15 @@ button.cancel_button:hover {
 }
 
 .bordered_container {
-  border: 2px solid #000000;
-  /* 枠線の色と太さを指定 */
-  border-radius: 8px;
-  /* 枠線の角を丸くする */
-  margin: 16px 0;
-  /* 外側の余白を指定 */
-  background-color: #ffffff;
-  /* 背景色を薄いグレーにする（任意） */
+  border: 1px solid #000000; /* 枠線の色と太さを指定 */
+  margin: 0px 0; /* 外側の余白を指定 */
+  background-color: #ffffff; /* 背景色を薄いグレーにする（任意） */
   height: 130px;
-}
+  width: 90%;
+  }
 
 .line_overlay {
-  width: 83%;
+  width: 86%;
   height: 2px;
   background-color: #aadffe;
   z-index: 0;
