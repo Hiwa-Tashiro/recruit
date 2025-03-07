@@ -207,7 +207,7 @@ function SC05() {
     }, []);
 
     const [formData, setFormData] = useState({
-        furigana: "", sexual: "", name: "", know_opportunity: "", birthday: "", jobfair_id: "", graduate_year: "2025年度", tel: "",
+        furigana: "", sexual: "", name: "", know_opportunity: "", birthday: "", jobfair_id: "", graduate_year: cookies.recruit_year, tel: "",
         university: "", email_is_own: "", email: "", subject: "", file_path: "", post: "", note: "", address: "", recruit_is_decline: "", updated_at: "",
     });
     // 初期値を student_dataset からコピー
