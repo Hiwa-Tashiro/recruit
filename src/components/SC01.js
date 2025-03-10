@@ -754,7 +754,6 @@ function SC01() {
                   return (
                     <option key={option.jobfair_id} value={option.jobfair_id}>
                       <div>{formatJapaneseDate(dateObj)}</div>
-                      <div>{formatJapaneseTime(dateObj)}</div>
                     </option>
                   );
                 })}
